@@ -1,4 +1,4 @@
-package de.fh.bielefeld;
+package de.fh_bielefeld.newsboard;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package de.fh.bielefeld;
+package de.fh_bielefeld.newsboard;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
