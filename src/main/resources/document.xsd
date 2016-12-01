@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:nb="http://fh-bielefeld.de/newsboard"
+           targetNamespace="http://fh-bielefeld.de/newsboard"
+           elementFormDefault="qualified">
+    <xs:element name="documents">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="nb:document" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="nb:meta" minOccurs="0"/>
+                <xs:choice>
+                    <xs:sequence>
+                        <xs:element ref="nb:sentences"/>
+                        <xs:element ref="nb:classifications"/>
+                    </xs:sequence>
+                    <xs:element name="rawtext" type="xs:string"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="meta">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element name="author" type="xs:string" minOccurs="0"/>
+                <xs:element name="source" type="xs:string"/>
+                <xs:element name="creationTime" type="xs:dateTime" minOccurs="0"/>
+                <xs:element name="crawlTime" type="xs:dateTime"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="sentences">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="id"/>
+                                <xs:attribute name="number"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="classifications">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="classification" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:double">
+                                <xs:attribute name="documentid" type="xs:int"/>
+                                <xs:attribute name="sentenceid" type="xs:string"/>
+                                <xs:attribute name="classifier" type="xs:string" use="required"/>
+                                <xs:attribute name="confidence" type="xs:double"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

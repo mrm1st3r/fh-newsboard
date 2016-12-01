@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<documents xmlns="http://fh-bielefeld.de/newsboard">
+    <document id="12345"> <!-- -1 bei generierten pseudo-Documents, zB ausgeben aller unklassifizierten sentences -->
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+        <sentences>
+            <sentence id="12345_1">
+                Wuppi is very fluppy.
+            </sentence>
+            <sentence id="12345_2">
+                Fluppi is not wuppi.
+            </sentence>
+        </sentences>
+        <classifications>
+            <classification documentid="12345" sentenceid="12345_1" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="12345_2" classifier="RandomClassifier" confidence="1">-1</classification>
+        </classifications>
+    </document>
+</documents>
