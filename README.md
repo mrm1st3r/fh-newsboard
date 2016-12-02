@@ -14,7 +14,7 @@ Additionally, the sample files used to verify the schema can be found at `src/te
 - `GET /document/{id}/` Read a specific document
 - `PUT /document/` Put a new crawled document into the newsboard
 - `GET /unclassified/` Read all sentences from all documents that have
-not been classified by the authorized classifier module
+not been classified by the authenticated classifier module
 - `PUT /classify/` Submit new classifications to the newsboard
 
 **Authentication** is planned to be done via `HTTP-Basic`

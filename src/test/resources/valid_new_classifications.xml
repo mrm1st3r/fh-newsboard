@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Sample document that might be sent from a classifier module to publish new classifications via PUT /classify -->
+<documents xmlns="http://fh-bielefeld.de/newsboard">
+    <document>
+        <classifications>
+            <!-- Some possible alterations of provided attributes -->
+            <classification documentid="12345" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="12345_2" classifier="RandomClassifier">-1</classification>
+            <classification sentenceid="12345_2" classifier="RandomClassifier" confidence="1">-1</classification>
+            <classification documentid="12345" sentenceid="12345_1" classifier="RandomClassifier">-0.5</classification>
+        </classifications>
+    </document>
+</documents>

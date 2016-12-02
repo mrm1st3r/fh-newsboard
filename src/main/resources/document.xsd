@@ -17,8 +17,8 @@
                 <xs:element ref="nb:meta" minOccurs="0"/>
                 <xs:choice>
                     <xs:sequence>
-                        <xs:element ref="nb:sentences"/>
-                        <xs:element ref="nb:classifications"/>
+                        <xs:element ref="nb:sentences" minOccurs="0"/>
+                        <xs:element ref="nb:classifications" minOccurs="0"/>
                     </xs:sequence>
                     <xs:element name="rawtext" type="xs:string"/>
                 </xs:choice>

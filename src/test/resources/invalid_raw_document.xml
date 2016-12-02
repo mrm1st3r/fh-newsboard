@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Sample document that should not be accepted -->
+<documents xmlns="http://fh-bielefeld.de/newsboard">
+    <document>
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+        <rawtext>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+            sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+            no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+            sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+            At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+            no sea takimata sanctus est Lorem ipsum dolor sit amet.
+        </rawtext>
+        <sentences>
+            <sentence>Test</sentence>
+        </sentences>
+    </document>
+</documents>

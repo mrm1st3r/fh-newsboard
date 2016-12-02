@@ -1,5 +1,7 @@
+import org.xml.sax.SAXParseException
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
@@ -15,18 +17,42 @@ class DocumentSchemaTest extends Specification {
     @Shared
     private Validator validator
 
-    private void setup() {
+    private void setupSpec() {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
         URL schemaFile = getClass().getResource("document.xsd")
         Schema schema = factory.newSchema(schemaFile)
         validator = schema.newValidator()
     }
 
-    def "should validate classificated document"() {
+    @Unroll
+    def "should validate #filename"() {
         given:
-        def testDocument = new StreamSource(getClass().getResourceAsStream("classificated_document.xml"))
+        def testDocument = new StreamSource(getClass().getResourceAsStream(filename))
 
         expect:
         validator.validate(testDocument)
+
+        where:
+        filename | _
+        "valid_classified_document.xml"  | _
+        "valid_raw_document.xml" | _
+        "valid_new_classifications.xml" | _
+        "valid_document_list.xml" | _
+    }
+
+    @Unroll
+    def "should not validate #filename"() {
+        given:
+        def testDocument = new StreamSource(getClass().getResourceAsStream(filename))
+
+        when:
+        validator.validate(testDocument)
+
+        then:
+        thrown(SAXParseException.class)
+
+        where:
+        filename | _
+        "invalid_raw_document.xml"  | _
     }
 }

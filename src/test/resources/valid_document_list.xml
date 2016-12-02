@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Sample list of documents that might be returned by GET /document/ -->
+<documents xmlns="http://fh-bielefeld.de/newsboard">
+    <document id="42">
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+    </document>
+    <document id="1337">
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+    </document>
+    <document id="1984">
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+    </document>
+    <document id="12345">
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+    </document>
+    <document id="12346">
+        <meta>
+            <title>Wuppi Fluppi</title>
+            <author>Bla</author>
+            <source>http://wuppi.fluppi</source>
+            <creationTime>2016-11-30T00:00:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00</crawlTime>
+        </meta>
+    </document>
+</documents>

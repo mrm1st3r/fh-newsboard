@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- Sample document that might be received when calling GET /document/12345 or GET /unclassified -->
 <documents xmlns="http://fh-bielefeld.de/newsboard">
-    <document id="12345"> <!-- -1 bei generierten pseudo-Documents, zB ausgeben aller unklassifizierten sentences -->
+    <document id="12345">
         <meta>
             <title>Wuppi Fluppi</title>
             <author>Bla</author>
