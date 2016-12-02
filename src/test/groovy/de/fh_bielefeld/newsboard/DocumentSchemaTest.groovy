@@ -1,3 +1,5 @@
+package de.fh_bielefeld.newsboard
+
 import org.xml.sax.SAXParseException
 import spock.lang.Shared
 import spock.lang.Specification
@@ -19,7 +21,7 @@ class DocumentSchemaTest extends Specification {
 
     private void setupSpec() {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-        URL schemaFile = getClass().getResource("document.xsd")
+        URL schemaFile = getClass().getResource("/document.xsd")
         Schema schema = factory.newSchema(schemaFile)
         validator = schema.newValidator()
     }
@@ -34,10 +36,10 @@ class DocumentSchemaTest extends Specification {
 
         where:
         filename | _
-        "valid_classified_document.xml"  | _
-        "valid_raw_document.xml" | _
-        "valid_new_classifications.xml" | _
-        "valid_document_list.xml" | _
+        "/valid_classified_document.xml"  | _
+        "/valid_raw_document.xml" | _
+        "/valid_new_classifications.xml" | _
+        "/valid_document_list.xml" | _
     }
 
     @Unroll
@@ -53,6 +55,6 @@ class DocumentSchemaTest extends Specification {
 
         where:
         filename | _
-        "invalid_raw_document.xml"  | _
+        "/invalid_raw_document.xml"  | _
     }
 }
