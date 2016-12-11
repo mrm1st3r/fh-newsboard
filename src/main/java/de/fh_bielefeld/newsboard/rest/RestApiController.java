@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.rest;
 
+import de.fh_bielefeld.newsboard.dao.TokenDaoImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,14 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestApiController {
 
     @RequestMapping(path = "/document", method = RequestMethod.GET)
-    public String listDocuments() {
-        return "Hello world!";
-    }
+    public String listDocuments() { return "Hello world"; }
 
     @RequestMapping(path = "/document", method = RequestMethod.PUT)
-    public String putDocument() {
-        return "Hello world!";
-    }
+    public String putDocument() { return "Hello world!"; }
 
     @RequestMapping(path = "/document/{id}", method = RequestMethod.GET)
     public String getDocument() {
