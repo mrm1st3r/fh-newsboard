@@ -3,17 +3,15 @@ package de.fh_bielefeld.newsboard.model;
 /**
  * Created by felixmeyer on 11.12.16.
  */
-public class Sentence {
+public class Token {
     private int id;
-    private int number;
-    private String text;
     private String moduleId;
+    private String token;
 
-    public Sentence(int id, int number, String text, String moduleId) {
+    public Token(int id, String moduleId, String token) {
         this.id = id;
-        this.number = number;
-        this.text = text;
         this.moduleId = moduleId;
+        this.token = token;
     }
 
     public int getId() {
@@ -24,27 +22,19 @@ public class Sentence {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getModuleId() {
         return moduleId;
     }
 
     public void setModuleId(String moduleId) {
         this.moduleId = moduleId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -1,16 +1,15 @@
 package de.fh_bielefeld.newsboard.model;
 
 /**
- * Model class for all kinds of external modules, like crawlers or classifiers.
+ * Created by felixmeyer on 11.12.16.
  */
-public abstract class ExternalModule {
-
+public class ExternModule {
     private String id;
     private String name;
     private String author;
     private String description;
 
-    public ExternalModule(String id, String name, String author, String description) {
+    public ExternModule(String id, String name, String author, String description) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -19,6 +18,10 @@ public abstract class ExternalModule {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

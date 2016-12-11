@@ -3,16 +3,16 @@ package de.fh_bielefeld.newsboard.model;
 /**
  * Created by felixmeyer on 11.12.16.
  */
-public class Sentence {
+public class ExternDocument {
     private int id;
-    private int number;
-    private String text;
+    private String title;
+    private String html;
     private String moduleId;
 
-    public Sentence(int id, int number, String text, String moduleId) {
+    public ExternDocument(int id, String title, String html, String moduleId) {
         this.id = id;
-        this.number = number;
-        this.text = text;
+        this.title = title;
+        this.html = html;
         this.moduleId = moduleId;
     }
 
@@ -24,20 +24,20 @@ public class Sentence {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
+    public String getTitle() {
+        return title;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getHtml() {
+        return html;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setHtml(String html) {
+        this.html = html;
     }
 
     public String getModuleId() {
