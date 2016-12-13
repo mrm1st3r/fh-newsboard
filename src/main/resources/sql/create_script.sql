@@ -55,8 +55,8 @@ ALTER TABLE extern_document
   REFERENCES extern_module (id)
   ON DELETE RESTRICT;
 
-ALTER TABLE token
-  ADD CONSTRAINT fk_token_extern_module
+ALTER TABLE authentication_token
+  ADD CONSTRAINT fk_authentication_token_extern_module
   FOREIGN KEY (module_id)
   REFERENCES extern_module (id)
   ON DELETE CASCADE;
