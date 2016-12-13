@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.model;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by felixmeyer on 11.12.16.
@@ -12,16 +13,21 @@ public class Document {
     private String source;
     private Calendar creationTime;
     private Calendar crawlTime;
-    private String moduleId;
+    private ExternModule module;
+    private List<Sentence> sentences;
 
-    public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime, String moduleId) {
+    public Document(int id, String title, String author,
+                    String source, Calendar creationTime,
+                    Calendar crawlTime, ExternModule module,
+                    List<Sentence> sentences) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.source = source;
         this.creationTime = creationTime;
         this.crawlTime = crawlTime;
-        this.moduleId = moduleId;
+        this.module = module;
+        this.sentences = sentences;
     }
 
     public int getId() {
@@ -72,11 +78,19 @@ public class Document {
         this.crawlTime = crawlTime;
     }
 
-    public String getModuleId() {
-        return moduleId;
+    public ExternModule getModule() {
+        return module;
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public void setModule(ExternModule module) {
+        this.module = module;
+    }
+
+    public List<Sentence> getSentences() {
+        return sentences;
+    }
+
+    public void setSentences(List<Sentence> sentences) {
+        this.sentences = sentences;
     }
 }

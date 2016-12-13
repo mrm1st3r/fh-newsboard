@@ -7,13 +7,13 @@ public class ExternDocument {
     private int id;
     private String title;
     private String html;
-    private String moduleId;
+    private ExternModule externModule;
 
-    public ExternDocument(int id, String title, String html, String moduleId) {
+    public ExternDocument(int id, String title, String html, ExternModule externModule) {
         this.id = id;
         this.title = title;
         this.html = html;
-        this.moduleId = moduleId;
+        this.externModule = externModule;
     }
 
     public int getId() {
@@ -40,11 +40,11 @@ public class ExternDocument {
         this.html = html;
     }
 
-    public String getModuleId() {
-        return moduleId;
+    public ExternModule getExternModule() {
+        return externModule;
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public void setExternModule(ExternModule externModule) {
+        this.externModule = externModule;
     }
 }

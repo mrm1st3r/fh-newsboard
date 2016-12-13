@@ -4,42 +4,42 @@ package de.fh_bielefeld.newsboard.model;
  * Created by felixmeyer on 11.12.16.
  */
 public class Classification {
-    private int sentId;
-    private int docId;
-    private String moduleId;
+    private Sentence sentence;
+    private Document document;
+    private ExternModule externModule;
     private double value;
     private double confidence;
 
-    public Classification(int sentId, int docId, String moduleId, double value, double confidence) {
-        this.sentId = sentId;
-        this.docId = docId;
-        this.moduleId = moduleId;
+    public Classification(Sentence sentence, Document document, ExternModule externModule, double value, double confidence) {
+        this.sentence = sentence;
+        this.document = document;
+        this.externModule = externModule;
         this.value = value;
         this.confidence = confidence;
     }
 
-    public int getSentId() {
-        return sentId;
+    public Sentence getSentence() {
+        return sentence;
     }
 
-    public void setSentId(int sentId) {
-        this.sentId = sentId;
+    public void setSentence(Sentence sentence) {
+        this.sentence = sentence;
     }
 
-    public int getDocId() {
-        return docId;
+    public Document getDocument() {
+        return document;
     }
 
-    public void setDocId(int docId) {
-        this.docId = docId;
+    public void setDocument(Document document) {
+        this.document = document;
     }
 
-    public String getModuleId() {
-        return moduleId;
+    public ExternModule getExternModule() {
+        return externModule;
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public void setExternModule(ExternModule externModule) {
+        this.externModule = externModule;
     }
 
     public double getValue() {

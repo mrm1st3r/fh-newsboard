@@ -7,13 +7,13 @@ public class Sentence {
     private int id;
     private int number;
     private String text;
-    private String moduleId;
+    private ExternModule externModule;
 
-    public Sentence(int id, int number, String text, String moduleId) {
+    public Sentence(int id, int number, String text, ExternModule externModule) {
         this.id = id;
         this.number = number;
         this.text = text;
-        this.moduleId = moduleId;
+        this.externModule = externModule;
     }
 
     public int getId() {
@@ -40,11 +40,11 @@ public class Sentence {
         this.text = text;
     }
 
-    public String getModuleId() {
-        return moduleId;
+    public ExternModule getExternModule() {
+        return externModule;
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public void setExternModule(ExternModule externModule) {
+        this.externModule = externModule;
     }
 }
