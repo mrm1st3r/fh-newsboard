@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS extern_module (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS token (
+CREATE TABLE IF NOT EXISTS authentication_token (
   id INT NOT NULL AUTO_INCREMENT,
   module_id VARCHAR(50) NOT NULL,
   token VARCHAR(30) NOT NULL,

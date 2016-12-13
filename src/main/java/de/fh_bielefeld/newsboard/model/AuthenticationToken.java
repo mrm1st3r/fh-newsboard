@@ -3,12 +3,12 @@ package de.fh_bielefeld.newsboard.model;
 /**
  * Created by felixmeyer on 11.12.16.
  */
-public class Token {
+public class AuthenticationToken {
     private int id;
     private String moduleId;
     private String token;
 
-    public Token(int id, String moduleId, String token) {
+    public AuthenticationToken(int id, String moduleId, String token) {
         this.id = id;
         this.moduleId = moduleId;
         this.token = token;
