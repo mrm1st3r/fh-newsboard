@@ -1,4 +1,4 @@
-package de.fh_bielefeld.newsboard
+package de.fh_bielefeld.newsboard.xml
 
 import org.xml.sax.SAXParseException
 import spock.lang.Shared

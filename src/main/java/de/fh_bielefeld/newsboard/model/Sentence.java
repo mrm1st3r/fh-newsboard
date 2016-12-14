@@ -16,6 +16,13 @@ public class Sentence {
         this.externModule = externModule;
     }
 
+    /**
+     * Default constructor needed for SAX-Parsing.
+     */
+    public Sentence() {
+
+    }
+
     public int getId() {
         return id;
     }

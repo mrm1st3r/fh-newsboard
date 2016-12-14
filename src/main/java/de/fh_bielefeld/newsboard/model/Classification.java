@@ -18,6 +18,13 @@ public class Classification {
         this.confidence = confidence;
     }
 
+    /**
+     * Default constructor needed for SAX-Parsing.
+     */
+    public Classification() {
+
+    }
+
     public Sentence getSentence() {
         return sentence;
     }

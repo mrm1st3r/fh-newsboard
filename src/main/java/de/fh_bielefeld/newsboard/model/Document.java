@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +29,13 @@ public class Document {
         this.crawlTime = crawlTime;
         this.module = module;
         this.sentences = sentences;
+    }
+
+    /**
+     * Default constructor needed for SAX-Parsing.
+     */
+    public Document() {
+        sentences = new ArrayList<>();
     }
 
     public int getId() {
@@ -92,5 +100,9 @@ public class Document {
 
     public void setSentences(List<Sentence> sentences) {
         this.sentences = sentences;
+    }
+
+    public void addSentence(Sentence sentence) {
+        sentences.add(sentence);
     }
 }
