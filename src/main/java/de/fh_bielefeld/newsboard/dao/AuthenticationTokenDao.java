@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.AuthenticationToken;
+import de.fh_bielefeld.newsboard.model.ExternModule;
 
 import java.util.List;
 
@@ -9,5 +10,7 @@ import java.util.List;
  */
 public interface AuthenticationTokenDao {
     public AuthenticationToken getTokenWithId(int id);
-    public List<AuthenticationToken> getAllTokenForModule(String moduleId);
+    public List<AuthenticationToken> getAllTokenForModule(ExternModule externModule);
+    public int updateAuthenticationToken(AuthenticationToken authToken);
+    public int insertAuthenticationToken(AuthenticationToken authToken);
 }

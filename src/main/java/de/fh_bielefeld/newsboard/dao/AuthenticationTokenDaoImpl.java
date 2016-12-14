@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.AuthenticationToken;
+import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,8 +14,14 @@ import java.util.List;
  * Created by felixmeyer on 11.12.16.
  */
 public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
-    private static final String GET_TOKEN_WITH_ID = "SELECT id, module_id, token FROM token WHERE id = ?";
-    private static final String GET_ALL_TOKEN_FOR_MODULE = "SELECT id, module_id, token FROM token WHERE module_id = ?";
+    private static final String GET_TOKEN_WITH_ID =
+            "SELECT id, module_id, token FROM token WHERE id = ?";
+    private static final String GET_ALL_TOKEN_FOR_MODULE =
+            "SELECT id, module_id, token FROM token WHERE module_id = ?";
+    private static final String UPDATE_TOKEN =
+            "UPDATE authentication_token SET id = ?, token = ?, module_id = ? WHERE id = ?";
+    private static final String INSERT_TOKEN =
+            "INSERT INTO authentication_token (token, moduleId) VALUES (?, ?)";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -25,8 +32,24 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     }
 
     @Override
-    public List<AuthenticationToken> getAllTokenForModule(String moduleId) {
-        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, new TokenRowMapper(), moduleId);
+    public List<AuthenticationToken> getAllTokenForModule(ExternModule externModule) {
+        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, new TokenRowMapper(), externModule.getId());
+    }
+
+    @Override
+    public int updateAuthenticationToken(AuthenticationToken authToken) {
+        Object[] values = {
+                authToken.getId(), authToken.getToken(), authToken.getModuleId()
+        };
+        return jdbcTemplate.update(UPDATE_TOKEN, values);
+    }
+
+    @Override
+    public int insertAuthenticationToken(AuthenticationToken authToken) {
+        Object[] values = {
+                authToken.getToken(), authToken.getModuleId()
+        };
+        return jdbcTemplate.update(INSERT_TOKEN, values);
     }
 
     private class TokenRowMapper implements RowMapper<AuthenticationToken> {
