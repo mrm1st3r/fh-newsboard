@@ -1,0 +1,20 @@
+package de.fh_bielefeld.newsboard.dao;
+
+import de.fh_bielefeld.newsboard.model.ExternDocument;
+
+import java.util.List;
+
+/**
+ * Created by felixmeyer on 17.12.16.
+ */
+public class ExternDocumentDaoImpl implements ExternDocumentDao {
+    @Override
+    public ExternDocument getExternDocumentWithId(int id) {
+        return null;
+    }
+
+    @Override
+    public List<ExternDocument> getAllExternDocumentsWithoutData() {
+        return null;
+    }
+}
