@@ -17,4 +17,14 @@ public class SentenceDaoImpl implements SentenceDao {
     public List<Sentence> getAllSentencesInDocument(int documentId) {
         return null;
     }
+
+    @Override
+    public int updateSentence(Sentence sentence) {
+        return 0;
+    }
+
+    @Override
+    public int insertSentence(Sentence sentence) {
+        return 0;
+    }
 }

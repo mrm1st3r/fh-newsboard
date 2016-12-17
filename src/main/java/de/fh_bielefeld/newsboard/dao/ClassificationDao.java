@@ -12,4 +12,6 @@ public interface ClassificationDao {
     public List<Classification> getAllClassificationsForSentence(int sentId);
     public List<Classification> getAllClassificationsForDocument(int docId);
     public List<Classification> getAllClassificationsFromModule(String moduleId);
+    public int updateClassification(Classification classficiation);
+    public int insertClassification(Classification classification);
 }

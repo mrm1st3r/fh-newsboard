@@ -27,4 +27,14 @@ public class ClassificationDaoImpl implements ClassificationDao {
     public List<Classification> getAllClassificationsFromModule(String moduleId) {
         return null;
     }
+
+    @Override
+    public int updateClassification(Classification classficiation) {
+        return 0;
+    }
+
+    @Override
+    public int insertClassification(Classification classification) {
+        return 0;
+    }
 }

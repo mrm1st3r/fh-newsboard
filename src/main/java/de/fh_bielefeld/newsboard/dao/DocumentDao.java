@@ -7,4 +7,6 @@ import de.fh_bielefeld.newsboard.model.Document;
  */
 public interface DocumentDao {
     public Document getDocumentWithId(int id);
+    public int updateDocument(Document document);
+    public int insertDocument(Document document);
 }

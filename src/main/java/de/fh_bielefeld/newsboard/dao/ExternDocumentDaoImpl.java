@@ -17,4 +17,14 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
     public List<ExternDocument> getAllExternDocumentsWithoutData() {
         return null;
     }
+
+    @Override
+    public int updateExternDocument(ExternDocument externDocument) {
+        return 0;
+    }
+
+    @Override
+    public int insertExternDocument(ExternDocument externDocument) {
+        return 0;
+    }
 }

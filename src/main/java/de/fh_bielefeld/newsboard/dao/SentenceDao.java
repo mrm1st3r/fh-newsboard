@@ -10,4 +10,6 @@ import java.util.List;
 public interface SentenceDao {
     public Sentence getSentenceWithId(int id);
     public List<Sentence> getAllSentencesInDocument(int documentId);
+    public int updateSentence(Sentence sentence);
+    public int insertSentence(Sentence sentence);
 }

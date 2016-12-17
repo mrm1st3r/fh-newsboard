@@ -7,4 +7,6 @@ import de.fh_bielefeld.newsboard.model.ExternModule;
  */
 public interface ExternModuleDao {
     public ExternModule getExternModuleWithId(String id);
+    public int updateExternModule(ExternModule externModule);
+    public int insertExternModule(ExternModule externModule);
 }

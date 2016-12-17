@@ -10,4 +10,14 @@ public class DocumentDaoImpl implements DocumentDao {
     public Document getDocumentWithId(int id) {
         return null;
     }
+
+    @Override
+    public int updateDocument(Document document) {
+        return 0;
+    }
+
+    @Override
+    public int insertDocument(Document document) {
+        return 0;
+    }
 }

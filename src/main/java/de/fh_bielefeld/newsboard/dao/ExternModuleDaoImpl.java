@@ -10,4 +10,14 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
     public ExternModule getExternModuleWithId(String id) {
         return null;
     }
+
+    @Override
+    public int updateExternModule(ExternModule externModule) {
+        return 0;
+    }
+
+    @Override
+    public int insertExternModule(ExternModule externModule) {
+        return 0;
+    }
 }
