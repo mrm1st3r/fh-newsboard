@@ -15,9 +15,6 @@ class AuthenticationTokenDaoTest extends Specification {
     }
 
     def "insert AuthenticationToken"() {
-        setup:
-        AuthenticationToken authToken = new AuthenticationToken(1, "testtesttest", 1);
-
 
     }
 
