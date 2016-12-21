@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.ExternModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -9,6 +10,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handler class for efficient XML-SAX-Parsing.
@@ -20,6 +22,7 @@ class DocumentSaxHandler extends DefaultHandler {
     }
 
     private State currentState = State.UNDEFINED;
+    private boolean containsSentences = false;
 
     private List<Document> documentList;
     private Document document;
@@ -57,11 +60,36 @@ class DocumentSaxHandler extends DefaultHandler {
                 break;
             case "sentence":
                 currentState = State.SENTENCE;
+                containsSentences = true;
                 sentence = new Sentence();
+                sentence.setId(Integer.parseInt(attributes.getValue("id")));
                 break;
             case "classification":
                 currentState = State.CLASSIFICATION;
                 classification = new Classification();
+                classification.setExternModule(new ExternModule(attributes.getValue("classifier")));
+                if (attributes.getIndex("confidence") >= 0) {
+                    classification.setConfidence(Double.parseDouble(attributes.getValue("confidence")));
+                }
+                if (attributes.getIndex("documentid") >= 0) {
+                    if (Integer.parseInt(attributes.getValue("documentid")) == document.getId()) {
+                        document.addClassification(classification);
+                    } else {
+                        throw new SAXException("Document ID doesn't match");
+                    }
+                }
+                if (attributes.getIndex("sentenceid") >= 0) {
+                    int it = Integer.parseInt(attributes.getValue("sentenceid"));
+                    Optional<Sentence> s = document.getSentences().stream().filter(sent->sent.getId()==it).findFirst();
+                    if (s.isPresent()) { s.get().addClassification(classification);
+                    } else {
+                        if (!containsSentences) {
+                          Sentence sent = new Sentence();
+                            sent.addClassification(classification);
+                            document.addSentence(sent);
+                        } else throw new SAXException("Sentence not known: " + it);
+                    }
+                }
                 break;
         }
     }

@@ -4,6 +4,8 @@ import org.xml.sax.SAXParseException
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static de.fh_bielefeld.newsboard.TestUtils.sampleXml
+
 class XmlDocumentReaderTest extends Specification {
 
     @Shared
@@ -15,7 +17,7 @@ class XmlDocumentReaderTest extends Specification {
 
     def "should not read invalid document"() {
         given:
-        def xml = new InputStreamReader(getClass().getResourceAsStream("/invalid_raw_document.xml"))
+        def xml = sampleXml("invalid_raw_document")
 
         when:
         reader.readDocument(xml)
@@ -27,7 +29,7 @@ class XmlDocumentReaderTest extends Specification {
 
     def "should read valid document"() {
         given:
-        def xml = new InputStreamReader(getClass().getResourceAsStream("/valid_classified_document.xml"))
+        def xml = sampleXml("valid_classified_document")
 
         when:
         def documents = reader.readDocument(xml)
@@ -38,7 +40,12 @@ class XmlDocumentReaderTest extends Specification {
         documents[0].getAuthor() == "Bla"
         documents[0].getSource() == "http://wuppi.fluppi"
         documents[0].getSentences().size() == 2
+
         def sent = documents[0].getSentences()[0]
         sent.getText() == "Wuppi is very fluppy."
+        sent.getId() == 12345
+
+        documents[0].getClassifications().size() == 1
+        sent.getClassifications().size() == 1
     }
 }

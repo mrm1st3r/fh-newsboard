@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Sample document that might be received when calling GET /document/12345 or GET /unclassified -->
 <documents xmlns="http://fh-bielefeld.de/newsboard">
-    <document id="12345">
+    <document id="123">
         <meta>
             <title>Wuppi Fluppi</title>
             <author>Bla</author>
@@ -10,16 +10,16 @@
             <crawlTime>2016-12-01T00:00:00</crawlTime>
         </meta>
         <sentences>
-            <sentence id="12345_1">
+            <sentence id="12345">
                 Wuppi is very fluppy.
             </sentence>
-            <sentence id="12345_2">
+            <sentence id="12346">
                 Fluppi is not wuppi.
             </sentence>
         </sentences>
         <classifications>
-            <classification documentid="12345" sentenceid="12345_1" classifier="RandomClassifier">-0.5</classification>
-            <classification sentenceid="12345_2" classifier="RandomClassifier" confidence="1">-1</classification>
+            <classification documentid="123" sentenceid="12345" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="12346" classifier="RandomClassifier" confidence="1">-1</classification>
         </classifications>
     </document>
 </documents>

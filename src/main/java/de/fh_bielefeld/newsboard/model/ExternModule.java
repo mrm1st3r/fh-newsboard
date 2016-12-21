@@ -18,6 +18,13 @@ public class ExternModule {
         this.description = description;
     }
 
+    /**
+     * Constructor needed for SAX-parsing.
+     */
+    public ExternModule(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
