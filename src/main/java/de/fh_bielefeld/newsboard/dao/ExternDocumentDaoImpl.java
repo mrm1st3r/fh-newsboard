@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.ExternDocument;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -8,6 +9,13 @@ import java.util.List;
  * Created by felixmeyer on 17.12.16.
  */
 public class ExternDocumentDaoImpl implements ExternDocumentDao {
+
+    private JdbcTemplate jdbcTemplate;
+
+    public ExternDocumentDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public ExternDocument getExternDocumentWithId(int id) {
         return null;
