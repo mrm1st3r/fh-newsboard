@@ -23,8 +23,12 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     private static final String INSERT_TOKEN =
             "INSERT INTO authentication_token (token, moduleId) VALUES (?, ?)";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public AuthenticationTokenDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public AuthenticationToken getTokenWithId(int id) {
