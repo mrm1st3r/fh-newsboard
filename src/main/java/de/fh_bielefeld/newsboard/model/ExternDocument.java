@@ -1,7 +1,9 @@
 package de.fh_bielefeld.newsboard.model;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Domain class representing external documents, which may not be classified.
+ *
+ * @Author Felix Meyer
  */
 public class ExternDocument {
     private int id;

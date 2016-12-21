@@ -1,7 +1,9 @@
 package de.fh_bielefeld.newsboard.model;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Domain class representing a token for module authentication.
+ *
+ * @Author Felix Meyer
  */
 public class AuthenticationToken {
     private int id;

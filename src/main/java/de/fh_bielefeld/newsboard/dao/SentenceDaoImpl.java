@@ -3,13 +3,22 @@ package de.fh_bielefeld.newsboard.dao;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by felixmeyer on 17.12.16.
  */
+@Component
 public class SentenceDaoImpl implements SentenceDao {
+
+    @Autowired
+    private DocumentDao documentDao;
+    @Autowired
+    private ClassificationDao classificationDao;
+    @Autowired
+    private ExternModuleDao externModuleDao;
 
     private JdbcTemplate jdbcTemplate;
 

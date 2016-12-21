@@ -1,7 +1,9 @@
 package de.fh_bielefeld.newsboard.model;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.
+ *
+ * @Author Felix Meyer
  */
 public class ExternModule {
     private String id;
