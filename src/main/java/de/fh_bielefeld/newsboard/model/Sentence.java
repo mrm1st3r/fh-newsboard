@@ -1,26 +1,33 @@
 package de.fh_bielefeld.newsboard.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by felixmeyer on 11.12.16.
+ * Domain class representing a sentente inside a classifiable document.
+ *
+ * @author Felix Meyer, Lukas Taake
  */
 public class Sentence {
     private int id;
     private int number;
     private String text;
     private ExternModule externModule;
+    private List<Classification> classifications;
 
-    public Sentence(int id, int number, String text, ExternModule externModule) {
+    public Sentence(int id, int number, String text, ExternModule externModule, List<Classification> classifications) {
         this.id = id;
         this.number = number;
         this.text = text;
         this.externModule = externModule;
+        this.classifications = classifications;
     }
 
     /**
      * Default constructor needed for SAX-Parsing.
      */
     public Sentence() {
-
+        classifications = new ArrayList<>();
     }
 
     public int getId() {
@@ -53,5 +60,13 @@ public class Sentence {
 
     public void setExternModule(ExternModule externModule) {
         this.externModule = externModule;
+    }
+
+    public void addClassification(Classification classification) {
+        classifications.add(classification);
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
     }
 }

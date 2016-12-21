@@ -5,7 +5,9 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Domain class representing a classifiable document.
+ *
+ * @author Felix Meyer, Lukas Taake
  */
 public class Document {
     private int id;
@@ -16,11 +18,12 @@ public class Document {
     private Calendar crawlTime;
     private ExternModule module;
     private List<Sentence> sentences;
+    private List<Classification> classifications;
 
     public Document(int id, String title, String author,
                     String source, Calendar creationTime,
                     Calendar crawlTime, ExternModule module,
-                    List<Sentence> sentences) {
+                    List<Sentence> sentences, List<Classification> classifications) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -29,6 +32,7 @@ public class Document {
         this.crawlTime = crawlTime;
         this.module = module;
         this.sentences = sentences;
+        this.classifications = classifications;
     }
 
     /**
@@ -36,6 +40,7 @@ public class Document {
      */
     public Document() {
         sentences = new ArrayList<>();
+        classifications = new ArrayList<>();
     }
 
     public int getId() {
@@ -104,5 +109,13 @@ public class Document {
 
     public void addSentence(Sentence sentence) {
         sentences.add(sentence);
+    }
+
+    public void addClassification(Classification classification) {
+        classifications.add(classification);
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
     }
 }
