@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 import static de.fh_bielefeld.newsboard.TestUtils.sampleXml
 
-class XmlDocumentReaderTest extends Specification {
+class RawDocumentReadTest extends Specification {
 
     @Shared
     def XmlDocumentReader reader

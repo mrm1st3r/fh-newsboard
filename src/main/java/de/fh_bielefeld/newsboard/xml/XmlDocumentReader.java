@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.xml;
 
+import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
 import org.springframework.stereotype.Service;
 import org.xml.sax.InputSource;
@@ -35,11 +36,24 @@ public class XmlDocumentReader {
         parserFactory.setNamespaceAware(true);
     }
 
+    /**
+     * Read raw documents from an xml input.
+     */
     public List<Document> readDocument(Reader xmlDocument) throws ParserConfigurationException, SAXException, IOException {
         SAXParser parser = parserFactory.newSAXParser();
         ArrayList<Document> documents = new ArrayList<>();
         DocumentSaxHandler handler = new DocumentSaxHandler(documents);
         parser.parse(new InputSource(xmlDocument), handler);
         return documents;
+    }
+
+    /**
+     * Read classifications from an xml input.
+     */
+    public List<Classification> readClassifications(Reader xmlDocument) throws ParserConfigurationException, SAXException, IOException {
+        SAXParser parser = parserFactory.newSAXParser();
+        ArrayList<Classification> classifications = new ArrayList<>();
+        parser.parse(new InputSource(xmlDocument), new ClassificationSaxHandler(classifications));
+        return classifications;
     }
 }
