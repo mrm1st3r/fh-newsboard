@@ -1,7 +1,7 @@
 package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.RawDocument;
 import org.springframework.stereotype.Service;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,9 +39,9 @@ public class XmlDocumentReader {
     /**
      * Read raw documents from an xml input.
      */
-    public List<Document> readDocument(Reader xmlDocument) throws ParserConfigurationException, SAXException, IOException {
+    public List<RawDocument> readDocument(Reader xmlDocument) throws ParserConfigurationException, SAXException, IOException {
         SAXParser parser = parserFactory.newSAXParser();
-        ArrayList<Document> documents = new ArrayList<>();
+        ArrayList<RawDocument> documents = new ArrayList<>();
         DocumentSaxHandler handler = new DocumentSaxHandler(documents);
         parser.parse(new InputSource(xmlDocument), handler);
         return documents;

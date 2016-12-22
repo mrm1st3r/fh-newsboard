@@ -29,23 +29,19 @@ class RawDocumentReadTest extends Specification {
 
     def "should read valid document"() {
         given:
-        def xml = sampleXml("valid_classified_document")
+        def xml = sampleXml("valid_raw_document")
 
         when:
         def documents = reader.readDocument(xml)
 
         then:
         documents.size() == 1
-        documents[0].getTitle() == "Wuppi Fluppi"
-        documents[0].getAuthor() == "Bla"
-        documents[0].getSource() == "http://wuppi.fluppi"
-        documents[0].getSentences().size() == 2
-
-        def sent = documents[0].getSentences()[0]
-        sent.getText() == "Wuppi is very fluppy."
-        sent.getId() == 12345
-
-        documents[0].getClassifications().size() == 1
-        sent.getClassifications().size() == 1
+        def meta = documents[0].getMetaData()
+        meta.getTitle() == "Wuppi Fluppi"
+        meta.getAuthor() == "Bla"
+        meta.getSource() == "http://wuppi.fluppi"
+        meta.getCrawlTime() == new GregorianCalendar(2016, Calendar.DECEMBER, 01)
+        meta.getCreationTime() == new GregorianCalendar(2016, Calendar.NOVEMBER, 30)
+        documents[0].getRawText().contains("Lorem ipsum")
     }
 }

@@ -1,6 +1,6 @@
 package de.fh_bielefeld.newsboard.rest;
 
-import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.RawDocument;
 import de.fh_bielefeld.newsboard.xml.XmlDocumentReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +36,7 @@ public class RestApiController {
     @RequestMapping(path = "/document", method = RequestMethod.PUT)
     public void putDocument(HttpServletResponse response, @RequestBody String body) {
         StringReader in = new StringReader(body);
-        List<Document> documents = null;
+        List<RawDocument> documents = null;
         try {
             documents = xmlReader.readDocument(in);
         } catch (ParserConfigurationException | IOException | SAXException e) {

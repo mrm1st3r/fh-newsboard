@@ -11,26 +11,14 @@ import java.util.List;
  */
 public class Document {
     private int id;
-    private String title;
-    private String author;
-    private String source;
-    private Calendar creationTime;
-    private Calendar crawlTime;
-    private ExternModule module;
+    private DocumentMetaData metaData;
     private List<Sentence> sentences;
     private List<Classification> classifications;
 
-    public Document(int id, String title, String author,
-                    String source, Calendar creationTime,
-                    Calendar crawlTime, ExternModule module,
+    public Document(int id,DocumentMetaData metaData,
                     List<Sentence> sentences, List<Classification> classifications) {
         this.id = id;
-        this.title = title;
-        this.author = author;
-        this.source = source;
-        this.creationTime = creationTime;
-        this.crawlTime = crawlTime;
-        this.module = module;
+        this.metaData = metaData;
         this.sentences = sentences;
         this.classifications = classifications;
     }
@@ -52,51 +40,27 @@ public class Document {
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        return metaData.getTitle();
     }
 
     public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+        return metaData.getAuthor();
     }
 
     public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
+        return metaData.getSource();
     }
 
     public Calendar getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Calendar creationTime) {
-        this.creationTime = creationTime;
+        return metaData.getCreationTime();
     }
 
     public Calendar getCrawlTime() {
-        return crawlTime;
-    }
-
-    public void setCrawlTime(Calendar crawlTime) {
-        this.crawlTime = crawlTime;
+        return metaData.getCrawlTime();
     }
 
     public ExternModule getModule() {
-        return module;
-    }
-
-    public void setModule(ExternModule module) {
-        this.module = module;
+        return metaData.getModule();
     }
 
     public List<Sentence> getSentences() {
