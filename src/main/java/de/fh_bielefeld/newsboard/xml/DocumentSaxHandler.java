@@ -38,10 +38,7 @@ class DocumentSaxHandler extends DefaultHandler {
         switch (qName) {
             case "document":
                 currentState = State.DOCUMENT;
-                document = new Document();
-                if (attributes.getIndex("id") >= 0) {
-                    document.setId(Integer.parseInt(attributes.getValue("id")));
-                }
+                createDocument(attributes);
                 break;
             case "title":
                 currentState = State.TITLE;
@@ -60,37 +57,70 @@ class DocumentSaxHandler extends DefaultHandler {
                 break;
             case "sentence":
                 currentState = State.SENTENCE;
-                containsSentences = true;
-                sentence = new Sentence();
-                sentence.setId(Integer.parseInt(attributes.getValue("id")));
+                createSentence(attributes);
                 break;
             case "classification":
                 currentState = State.CLASSIFICATION;
-                classification = new Classification();
-                classification.setExternModule(new ExternModule(attributes.getValue("classifier")));
-                if (attributes.getIndex("confidence") >= 0) {
-                    classification.setConfidence(Double.parseDouble(attributes.getValue("confidence")));
-                }
+                createClassification(attributes);
                 if (attributes.getIndex("documentid") >= 0) {
-                    if (Integer.parseInt(attributes.getValue("documentid")) == document.getId()) {
-                        document.addClassification(classification);
-                    } else {
-                        throw new SAXException("Document ID doesn't match");
-                    }
+                    linkClassificationToDocument(attributes);
                 }
                 if (attributes.getIndex("sentenceid") >= 0) {
-                    int it = Integer.parseInt(attributes.getValue("sentenceid"));
-                    Optional<Sentence> s = document.getSentences().stream().filter(sent->sent.getId()==it).findFirst();
-                    if (s.isPresent()) { s.get().addClassification(classification);
-                    } else {
-                        if (!containsSentences) {
-                          Sentence sent = new Sentence();
-                            sent.addClassification(classification);
-                            document.addSentence(sent);
-                        } else throw new SAXException("Sentence not known: " + it);
-                    }
+                    linkClassificationToSentence(attributes);
                 }
                 break;
+        }
+    }
+
+    private void createDocument(Attributes attributes) {
+        document = new Document();
+        if (attributes.getIndex("id") >= 0) {
+            document.setId(Integer.parseInt(attributes.getValue("id")));
+        }
+    }
+
+    private void createSentence(Attributes attributes) {
+        containsSentences = true;
+        sentence = new Sentence();
+        sentence.setId(Integer.parseInt(attributes.getValue("id")));
+    }
+
+    private void createClassification(Attributes attributes) {
+        classification = new Classification();
+        classification.setExternModule(new ExternModule(attributes.getValue("classifier")));
+        if (attributes.getIndex("confidence") >= 0) {
+            classification.setConfidence(Double.parseDouble(attributes.getValue("confidence")));
+        }
+    }
+
+    /**
+     * Link the current classification to the encapsulating document, if a documentId is given and matches.
+     * @throws SAXException if documentId is given but doesn't match encapsulating document
+     */
+    private void linkClassificationToDocument(Attributes attributes) throws SAXException {
+        if (Integer.parseInt(attributes.getValue("documentid")) == document.getId()) {
+            document.addClassification(classification);
+        } else {
+            throw new SAXException("Document ID doesn't match");
+        }
+    }
+
+    /**
+     * Link the current classification to a sentence, if a sentenceId is given.
+     * If the xml contains sentences itself, only those can be linked to.
+     * Otherwise,
+     */
+    private void linkClassificationToSentence(Attributes attributes) throws SAXException {
+        int id = Integer.parseInt(attributes.getValue("sentenceid"));
+        Optional<Sentence> s = document.getSentences().stream().filter(sent->sent.getId()==id).findFirst();
+        if (s.isPresent()) {
+            s.get().addClassification(classification);
+        } else {
+            if (!containsSentences) {
+                Sentence sent = new Sentence();
+                sent.addClassification(classification);
+                document.addSentence(sent);
+            } else throw new SAXException("Sentence not known: " + id);
         }
     }
 
