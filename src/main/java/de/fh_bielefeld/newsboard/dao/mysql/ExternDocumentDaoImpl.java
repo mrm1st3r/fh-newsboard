@@ -1,7 +1,8 @@
-package de.fh_bielefeld.newsboard.dao;
+package de.fh_bielefeld.newsboard.dao.mysql;
 
+import de.fh_bielefeld.newsboard.dao.ExternDocumentDao;
+import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternDocument;
-import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

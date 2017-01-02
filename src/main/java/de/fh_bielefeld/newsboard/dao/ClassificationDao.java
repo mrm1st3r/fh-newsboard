@@ -1,6 +1,9 @@
 package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.Classification;
+import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.Sentence;
 
 import java.util.List;
 
@@ -8,10 +11,10 @@ import java.util.List;
  * Created by felixmeyer on 11.12.16.
  */
 public interface ClassificationDao {
-    public Classification getClassification(int sentenceId, int documentId, String moduleId);
-    public List<Classification> getAllClassificationsForSentence(int sentId);
-    public List<Classification> getAllClassificationsForDocument(int docId);
-    public List<Classification> getAllClassificationsFromModule(String moduleId);
+    public Classification getClassification(Sentence sentence, Document document, ExternModule module);
+    public List<Classification> getAllClassificationsForSentence(Sentence sentence);
+    public List<Classification> getAllClassificationsForDocument(Document document);
+    public List<Classification> getAllClassificationsFromModule(ExternModule module);
     public int updateClassification(Classification classficiation);
     public int insertClassification(Classification classification);
 }

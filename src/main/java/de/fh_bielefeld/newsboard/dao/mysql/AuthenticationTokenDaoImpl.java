@@ -1,5 +1,6 @@
-package de.fh_bielefeld.newsboard.dao;
+package de.fh_bielefeld.newsboard.dao.mysql;
 
+import de.fh_bielefeld.newsboard.dao.AuthenticationTokenDao;
 import de.fh_bielefeld.newsboard.model.AuthenticationToken;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
