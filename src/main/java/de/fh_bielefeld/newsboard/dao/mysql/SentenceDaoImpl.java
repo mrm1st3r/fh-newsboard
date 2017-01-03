@@ -69,9 +69,6 @@ public class SentenceDaoImpl implements SentenceDao {
         List<Sentence> sentences = new ArrayList<>();
         for (SentenceDatabaseObject rawSentence : rawSentences) {
             Sentence sentence = getSentenceFromSentenceDatabaseObject(rawSentence);
-            for (Classification classification : sentence.getClassifications()) {
-                classification.setDocument(document);
-            }
             sentences.add(sentence);
         }
 

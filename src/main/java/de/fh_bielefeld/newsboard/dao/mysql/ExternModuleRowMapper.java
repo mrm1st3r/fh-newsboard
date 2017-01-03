@@ -18,6 +18,7 @@ class ExternModuleRowMapper implements RowMapper<ExternModule> {
                 resultSet.getString("author"),
                 resultSet.getString("description")
         );
+
         return externModule;
     }
 }

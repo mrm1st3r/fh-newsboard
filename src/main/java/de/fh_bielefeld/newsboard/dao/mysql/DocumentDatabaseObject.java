@@ -10,6 +10,7 @@ class DocumentDatabaseObject {
     private String title;
     private String author;
     private String source;
+    private String moduleId;
     private Calendar creationTime;
     private Calendar crawlTime;
 
@@ -59,5 +60,13 @@ class DocumentDatabaseObject {
 
     public void setCrawlTime(Calendar crawlTime) {
         this.crawlTime = crawlTime;
+    }
+
+    public String getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 }

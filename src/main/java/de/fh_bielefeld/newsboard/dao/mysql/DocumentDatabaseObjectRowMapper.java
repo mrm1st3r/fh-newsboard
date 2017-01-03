@@ -20,6 +20,8 @@ class DocumentDatabaseObjectRowMapper implements RowMapper<DocumentDatabaseObjec
         document.setId(resultSet.getInt("id"));
         document.setAuthor(resultSet.getString("author"));
         document.setTitle(resultSet.getString("title"));
+        document.setSource(resultSet.getString("source"));
+        document.setModuleId(resultSet.getString("module_id"));
         document.setCrawlTime(getCalendarFromTime(resultSet.getTime("crawl_time")));
         document.setCreationTime(getCalendarFromTime(resultSet.getTime("creation_time")));
         return document;

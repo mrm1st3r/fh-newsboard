@@ -82,4 +82,12 @@ public class Document {
     public List<Classification> getClassifications() {
         return classifications;
     }
+
+    public void setClassifications(List<Classification> classifications) {
+        this.classifications = classifications;
+    }
+
+    public void setMetaData(DocumentMetaData documentMetaData) {
+        this.metaData = documentMetaData;
+    }
 }
