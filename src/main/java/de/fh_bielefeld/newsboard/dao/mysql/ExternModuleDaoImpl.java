@@ -32,23 +32,23 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
 
     @Override
     public int updateExternModule(ExternModule externModule) {
-        Object args[] = {
+        Object[] attributes = {
                 externModule.getName(),
                 externModule.getAuthor(),
                 externModule.getDescription(),
                 externModule.getId()
         };
-        return jdbcTemplate.update(UPDATE_MODULE, args);
+        return jdbcTemplate.update(UPDATE_MODULE, attributes);
     }
 
     @Override
     public int insertExternModule(ExternModule externModule) {
-        Object args[] = {
+        Object[] attributes = {
                 externModule.getName(),
                 externModule.getAuthor(),
                 externModule.getDescription()
         };
-        return jdbcTemplate.update(INSERT_MODULE, args);
+        return jdbcTemplate.update(INSERT_MODULE, attributes);
     }
 
 }

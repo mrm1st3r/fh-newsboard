@@ -12,14 +12,12 @@ public class Sentence {
     private int id;
     private int number;
     private String text;
-    private ExternModule externModule;
     private List<Classification> classifications;
 
     public Sentence(int id, int number, String text, ExternModule externModule, List<Classification> classifications) {
         this.id = id;
         this.number = number;
         this.text = text;
-        this.externModule = externModule;
         this.classifications = classifications;
     }
 
@@ -52,14 +50,6 @@ public class Sentence {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public ExternModule getExternModule() {
-        return externModule;
-    }
-
-    public void setExternModule(ExternModule externModule) {
-        this.externModule = externModule;
     }
 
     public void addClassification(Classification classification) {

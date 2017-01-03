@@ -68,7 +68,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public List<Classification> getAllClassificationsForSentence(Sentence sentence) {
-        Object[] attributes = new Object[] {
+        Object[] attributes =  {
                 sentence.getId()
         };
 
@@ -82,7 +82,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public List<Classification> getAllClassificationsForDocument(Document document) {
-        Object[] attributes = new Object[] {
+        Object[] attributes = {
                 document.getId()
         };
 
@@ -96,7 +96,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public List<Classification> getAllClassificationsFromModule(ExternModule module) {
-        Object[] attributes = new Object[] {
+        Object[] attributes = {
                 module.getId()
         };
 

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * Created by felixmeyer on 02.01.17.
  */
-public class ClassificationIncludingExternModuleRowMapper implements RowMapper<Classification> {
+class ClassificationIncludingExternModuleRowMapper implements RowMapper<Classification> {
 
     private Object selectingParameterObject;
 
