@@ -97,7 +97,7 @@ public class DocumentDaoImpl implements DocumentDao {
                 moduleId
         };
 
-        return jdbcTemplate.update(UPDATE_DOCUMENT, attributes);
+        return jdbcTemplate.update(INSERT_DOCUMENT, attributes);
     }
 
     private Document getDocumentFromDocumentDatabaseObject(DocumentDatabaseObject rawDocument) {
