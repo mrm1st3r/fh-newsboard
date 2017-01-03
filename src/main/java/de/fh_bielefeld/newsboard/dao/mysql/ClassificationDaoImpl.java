@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
+import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.ExternModule;
@@ -23,9 +24,9 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private static final String GET_CLASSIFICATION =
             "SELECT * FROM classification WHERE sent_id = ? AND document_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
-            "SELECT * FROM classification AS c LEFT JOIN extern_module AS em ON c.module_id = em.id WHERE sent_id = ?";
+            "SELECT * FROM classification WHERE sent_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_DOCUMENT =
-            "SELECT * FROM classification AS c LEFT JOIN extern_module AS em ON c.module_id = em.id WHERE document_id = ?";
+            "SELECT * FROM classification WHERE document_id = ?";
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
@@ -34,130 +35,139 @@ public class ClassificationDaoImpl implements ClassificationDao {
             "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND document_id = ? AND module_id = ?";
 
     private JdbcTemplate jdbcTemplate;
+    private ExternModuleDao externModuleDao;
 
     @Autowired
-    public ClassificationDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ClassificationDaoImpl(JdbcTemplate jdbcTemplate, ExternModuleDao externModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.externModuleDao = externModuleDao;
     }
 
     @Override
     public Classification getClassification(Sentence sentence, Document document, ExternModule module) {
-        Object[] attributes = new Object[] {
+        Object[] attributes = {
                 sentence.getId(),
                 document.getId(),
-                module.getId()
+                module.getId(),
         };
+
         ClassificationDatabaseObject rawClassification = jdbcTemplate.queryForObject(
                 GET_CLASSIFICATION,
-                attributes,
-                new ClassificationDatabaseObjectRowMapper());
+                ClassificationDatabaseObject.class,
+                new ClassificationDatabaseObjectRowMapper(),
+                attributes);
 
         if (rawClassification == null) {
             return null;
         } else {
-            Classification classification = new Classification(
-                sentence,
-                document,
-                module,
-                rawClassification.getValue(),
-                rawClassification.getConfidence()
-            );
-            return classification;
+            return getClassificationFromClassificationDatabaseObject(rawClassification, null);
         }
     }
 
     @Override
     public List<Classification> getAllClassificationsForSentence(Sentence sentence) {
-        Object[] attributes =  {
-                sentence.getId()
-        };
-
-        List<Classification> classifications = jdbcTemplate.query(
-                GET_CLASSIFICATIONS_FOR_SENTENCE,
-                attributes,
-                new ClassificationIncludingExternModuleRowMapper(sentence));
-
-        return classifications;
+        return getListOfClassifications(sentence.getId(), GET_CLASSIFICATIONS_FOR_SENTENCE, null);
     }
 
     @Override
     public List<Classification> getAllClassificationsForDocument(Document document) {
-        Object[] attributes = {
-                document.getId()
-        };
-
-        List<Classification> classifications = jdbcTemplate.query(
-                GET_CLASSIFICATIONS_FOR_DOCUMENT,
-                attributes,
-                new ClassificationIncludingExternModuleRowMapper(document));
-
-        return classifications;
+        return getListOfClassifications(document.getId(), GET_CLASSIFICATIONS_FOR_DOCUMENT, null);
     }
 
     @Override
     public List<Classification> getAllClassificationsFromModule(ExternModule module) {
-        Object[] attributes = {
-                module.getId()
-        };
-
-        List<ClassificationDatabaseObject> rawClassifications = jdbcTemplate.query(
-                GET_CLASSIFICATIONS_FROM_MODULE,
-                attributes,
-                new ClassificationDatabaseObjectRowMapper());
-
-        List<Classification> classifications = new ArrayList<>();
-        for (ClassificationDatabaseObject rawClassification : rawClassifications) {
-            Classification classification = new Classification();
-            Sentence dummySentence = new Sentence();
-            Document dummyDocument = new Document();
-            dummySentence.setId(rawClassification.getSentId());
-            dummyDocument.setId(rawClassification.getDocumentId());
-            classification.setSentence(dummySentence);
-            classification.setDocument(dummyDocument);
-            classification.setExternModule(module);
-            classification.setConfidence(rawClassification.getConfidence());
-            classification.setValue(rawClassification.getValue());
-        }
-
-        return classifications;
+        return getListOfClassifications(module.getId(), GET_CLASSIFICATIONS_FROM_MODULE, module);
     }
 
     @Override
     public int updateClassification(Classification classification) {
-        Sentence sent = classification.getSentence();
-        Document doc = classification.getDocument();
-        ExternModule module = classification.getExternModule();
-
-        Object[] attributes = new Object[5];
-        attributes[0] = sent == null ? null : sent.getId();
-        attributes[1] = doc == null ? null : doc.getId();
-        attributes[2] = module == null ? null : module.getId();
-        attributes[3] = classification.getValue();
-        attributes[4] = classification.getConfidence();
+        Object[] attributes = {
+                classification.getConfidence(),
+                classification.getValue(),
+                classification.getSentenceId(),
+                classification.getDocumentId(),
+                classification.getExternModule().getId()
+        };
 
         return jdbcTemplate.update(UPDATE_CLASSIFICATION, attributes);
     }
 
     @Override
     public int insertClassification(Classification classification) {
-        Sentence sent = classification.getSentence();
-        Document doc = classification.getDocument();
-        ExternModule module = classification.getExternModule();
-
-        Object[] attributes = new Object[5];
-        attributes[0] = classification.getValue();
-        attributes[1] = classification.getConfidence();
-        attributes[2] = sent == null ? null : sent.getId();
-        attributes[3] = doc == null ? null : doc.getId();
-        attributes[4] = module == null ? null : module.getId();
+        Object[] attributes = {
+                classification.getSentenceId(),
+                classification.getDocumentId(),
+                classification.getExternModule().getId(),
+                classification.getValue(),
+                classification.getConfidence()
+        };
 
         return jdbcTemplate.update(INSERT_CLASSIFICATION, attributes);
     }
 
-    protected class ClassificationRowMapper implements RowMapper<Classification> {
-        @Override
-        public Classification mapRow(ResultSet resultSet, int i) throws SQLException {
-            return null;
+    /**
+     * Fetches a list containing all relevant Classifications from the Database.
+     * @param attribute the attribute which will be used to select the rows in the database
+     * @param query the executed query
+     * @param externModule when giving an explicit ExternModule, no try to fetch one from database will be executed
+     * @return List containing the classifications
+     */
+    private List<Classification> getListOfClassifications(Object attribute, String query, ExternModule externModule) {
+        Object[] attributes = {
+                attribute
+        };
+
+        List<ClassificationDatabaseObject> rawClassifications = jdbcTemplate.query(
+                query,
+                new ClassificationDatabaseObjectRowMapper(),
+                attributes);
+
+        List<Classification> classifications = new ArrayList<>();
+        for (ClassificationDatabaseObject rawClassification : rawClassifications) {
+            classifications.add(getClassificationFromClassificationDatabaseObject(rawClassification, externModule));
         }
+
+        return classifications;
+    }
+
+    /**
+     * Conforms a raw ClassificationDatabaseObject to a full modeled Classification.
+     * @param rawClassification the ClassificationDatabaseObject
+     * @param externModule if already an ExternModule for the classification exists,
+     *                     it can be given as a parameter to prevent fetching it from the database
+     * @return Classification the Classification built after the ClassificationDatabaseObject
+     */
+    private Classification getClassificationFromClassificationDatabaseObject(ClassificationDatabaseObject rawClassification, ExternModule externModule) {
+        Classification classification;
+        if (rawClassification != null) {
+            classification = null;
+        } else {
+            classification = new Classification();
+            classification.setDocumentId(rawClassification.getDocumentId());
+            classification.setSentenceId(rawClassification.getSentId());
+            classification.setConfidence(rawClassification.getConfidence());
+            classification.setValue(rawClassification.getValue());
+            if (externModule == null) {
+                classification.setExternModule(getExternModuleForClassification(rawClassification.getModuleId()));
+            } else {
+                classification.setExternModule(externModule);
+            }
+        }
+        return classification;
+    }
+
+    /**
+     * Fetches an ExternModule per Dao from the database.
+     * @param moduleId the ExternModules id
+     * @return the ExternModule
+     */
+    private ExternModule getExternModuleForClassification(String moduleId) {
+        ExternModule externModule;
+        if (moduleId == null) {
+            externModule = null;
+        } else {
+            externModule = externModuleDao.getExternModuleWithId(moduleId);
+        }
+        return externModule;
     }
 }

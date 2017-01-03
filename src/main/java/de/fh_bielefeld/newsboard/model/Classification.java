@@ -6,41 +6,26 @@ package de.fh_bielefeld.newsboard.model;
  * @Author Felix Meyer
  */
 public class Classification {
-    private Sentence sentence;
-    private Document document;
+    private Integer sentenceId;
+    private Integer documentId;
     private ExternModule externModule;
-    private double value;
-    private double confidence;
+    private Double value;
+    private Double confidence;
 
-    public Classification(Sentence sentence, Document document, ExternModule externModule, double value, double confidence) {
-        this.sentence = sentence;
-        this.document = document;
-        this.externModule = externModule;
-        this.value = value;
-        this.confidence = confidence;
+    public Integer getSentenceId() {
+        return sentenceId;
     }
 
-    /**
-     * Default constructor needed for SAX-Parsing.
-     */
-    public Classification() {
-
+    public void setSentenceId(Integer sentenceId) {
+        this.sentenceId = sentenceId;
     }
 
-    public Sentence getSentence() {
-        return sentence;
+    public Integer getDocumentId() {
+        return documentId;
     }
 
-    public void setSentence(Sentence sentence) {
-        this.sentence = sentence;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
+    public void setDocumentId(Integer documentId) {
+        this.documentId = documentId;
     }
 
     public ExternModule getExternModule() {
