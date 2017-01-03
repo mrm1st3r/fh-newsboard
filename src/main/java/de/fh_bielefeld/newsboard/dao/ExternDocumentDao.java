@@ -9,7 +9,6 @@ import java.util.List;
  */
 public interface ExternDocumentDao {
     public ExternDocument getExternDocumentWithId(int id);
-    public List<ExternDocument> getAllExternDocumentsWithoutData();
     public int updateExternDocument(ExternDocument externDocument);
     public int insertExternDocument(ExternDocument externDocument);
 }
