@@ -11,6 +11,8 @@ public class ExternModule {
     private String author;
     private String description;
 
+    public ExternModule() {}
+
     public ExternModule(String id, String name, String author, String description) {
         this.id = id;
         this.name = name;

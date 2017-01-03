@@ -17,13 +17,6 @@ import java.util.List;
 @Component
 public class SentenceDaoImpl implements SentenceDao {
 
-    @Autowired
-    private DocumentDao documentDao;
-    @Autowired
-    private ClassificationDao classificationDao;
-    @Autowired
-    private ExternModuleDao externModuleDao;
-
     private JdbcTemplate jdbcTemplate;
 
     @Autowired

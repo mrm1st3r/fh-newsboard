@@ -5,7 +5,6 @@ import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
-import org.springframework.aop.ClassFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,8 +24,10 @@ public class ClassificationDaoImpl implements ClassificationDao {
             "SELECT * FROM classification WHERE sent_id = ? AND document_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
             "SELECT * FROM classification AS c LEFT JOIN extern_module AS em ON c.module_id = em.id WHERE sent_id = ?";
-    private static final String GET_CLASSIFICATIONS_FOR_DOCUMENT = "";
-    private static final String GET_CLASSIFICATIONS_FROM_MODULE = "";
+    private static final String GET_CLASSIFICATIONS_FOR_DOCUMENT =
+            "SELECT * FROM classification AS c LEFT JOIN extern_module AS em ON c.module_id = em.id WHERE document_id = ?";
+    private static final String GET_CLASSIFICATIONS_FROM_MODULE =
+            "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
             "INSERT INTO classification " + "VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
@@ -49,7 +50,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
         ClassificationDatabaseObject rawClassification = jdbcTemplate.queryForObject(
                 GET_CLASSIFICATION,
                 attributes,
-                new ClassificationObjectRowMapper());
+                new ClassificationDatabaseObjectRowMapper());
 
         if (rawClassification == null) {
             return null;
@@ -71,17 +72,54 @@ public class ClassificationDaoImpl implements ClassificationDao {
                 sentence.getId()
         };
 
-        return null;
+        List<Classification> classifications = jdbcTemplate.query(
+                GET_CLASSIFICATIONS_FOR_SENTENCE,
+                attributes,
+                new ClassificationIncludingExternModuleRowMapper(sentence));
+
+        return classifications;
     }
 
     @Override
     public List<Classification> getAllClassificationsForDocument(Document document) {
-        return null;
+        Object[] attributes = new Object[] {
+                document.getId()
+        };
+
+        List<Classification> classifications = jdbcTemplate.query(
+                GET_CLASSIFICATIONS_FOR_DOCUMENT,
+                attributes,
+                new ClassificationIncludingExternModuleRowMapper(document));
+
+        return classifications;
     }
 
     @Override
     public List<Classification> getAllClassificationsFromModule(ExternModule module) {
-        return null;
+        Object[] attributes = new Object[] {
+                module.getId()
+        };
+
+        List<ClassificationDatabaseObject> rawClassifications = jdbcTemplate.query(
+                GET_CLASSIFICATIONS_FROM_MODULE,
+                attributes,
+                new ClassificationDatabaseObjectRowMapper());
+
+        List<Classification> classifications = new ArrayList<>();
+        for (ClassificationDatabaseObject rawClassification : rawClassifications) {
+            Classification classification = new Classification();
+            Sentence dummySentence = new Sentence();
+            Document dummyDocument = new Document();
+            dummySentence.setId(rawClassification.getSentId());
+            dummyDocument.setId(rawClassification.getDocumentId());
+            classification.setSentence(dummySentence);
+            classification.setDocument(dummyDocument);
+            classification.setExternModule(module);
+            classification.setConfidence(rawClassification.getConfidence());
+            classification.setValue(rawClassification.getValue());
+        }
+
+        return classifications;
     }
 
     @Override
@@ -120,70 +158,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
         @Override
         public Classification mapRow(ResultSet resultSet, int i) throws SQLException {
             return null;
-        }
-    }
-
-    protected class ClassificationObjectRowMapper implements RowMapper<ClassificationDatabaseObject> {
-
-        @Override
-        public ClassificationDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
-            ClassificationDatabaseObject classification = new ClassificationDatabaseObject();
-
-            classification.setSentId(resultSet.getInt("sent_id"));
-            classification.setDocumentId(resultSet.getInt("document_id"));
-            classification.setModuleId(resultSet.getString("module_id"));
-            classification.setValue(resultSet.getDouble("value"));
-            classification.setConfidence(resultSet.getDouble("confidence"));
-
-            return classification;
-        }
-    }
-
-    protected class ClassificationDatabaseObject {
-        private int sentId;
-        private int documentId;
-        private String moduleId;
-        private double value;
-        private double confidence;
-
-        public int getSentId() {
-            return sentId;
-        }
-
-        public void setSentId(int sentId) {
-            this.sentId = sentId;
-        }
-
-        public int getDocumentId() {
-            return documentId;
-        }
-
-        public void setDocumentId(int documentId) {
-            this.documentId = documentId;
-        }
-
-        public String getModuleId() {
-            return moduleId;
-        }
-
-        public void setModuleId(String moduleId) {
-            this.moduleId = moduleId;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public void setValue(double value) {
-            this.value = value;
-        }
-
-        public double getConfidence() {
-            return confidence;
-        }
-
-        public void setConfidence(double confidence) {
-            this.confidence = confidence;
         }
     }
 }

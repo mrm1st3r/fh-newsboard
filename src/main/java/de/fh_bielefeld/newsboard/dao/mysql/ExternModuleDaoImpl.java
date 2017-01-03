@@ -4,11 +4,7 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by felixmeyer on 17.12.16.
@@ -55,16 +51,4 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
         return jdbcTemplate.update(INSERT_MODULE, args);
     }
 
-    protected class ExternModuleRowMapper implements RowMapper<ExternModule> {
-        @Override
-        public ExternModule mapRow(ResultSet resultSet, int i) throws SQLException {
-            ExternModule externModule = new ExternModule(
-                    resultSet.getString("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("author"),
-                    resultSet.getString("description")
-            );
-            return externModule;
-        }
-    }
 }

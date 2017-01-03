@@ -5,11 +5,8 @@ import de.fh_bielefeld.newsboard.model.AuthenticationToken;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -29,7 +26,7 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AuthenticationTokenDaoImpl(JdbcTemplate jdbcTemplate) {
+    public AuthenticationTokenDaoImpl (JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -59,14 +56,4 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
         return jdbcTemplate.update(INSERT_TOKEN, values);
     }
 
-    protected class AuthenticationTokenRowMapper implements RowMapper<AuthenticationToken> {
-        @Override
-        public AuthenticationToken mapRow(ResultSet resultSet, int i) throws SQLException {
-            AuthenticationToken token = new AuthenticationToken(
-                    resultSet.getInt("id"),
-                    resultSet.getString("module_id"),
-                    resultSet.getString("token"));
-            return token;
-        }
-    }
 }
