@@ -7,6 +7,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +26,10 @@ public class XmlDocumentWriter {
 
     public String writeStubList(List<Document> documents) throws XMLStreamException {
         return writeDocument(new DocumentStubWriter(), documents);
+    }
+
+    public String writeDocument(Document document) throws XMLStreamException {
+        return writeDocument(new DocumentWriter(), Collections.singletonList(document));
     }
 
     private String writeDocument(DocumentContentWriter contentWriter, List<Document> documents) throws XMLStreamException {

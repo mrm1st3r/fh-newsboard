@@ -33,6 +33,12 @@ class DocumentStubWriter implements XmlDocumentWriter.DocumentContentWriter {
         writer.writeCharacters(printDateTime(doc.getCrawlTime()));
         writer.writeEndElement();
         writer.writeEndElement();
+        writeSubElements(writer, doc);
         writer.writeEndElement();
     }
+
+    /**
+     * Placeholder to be overridden in {@link DocumentWriter}
+     */
+    void writeSubElements(XMLStreamWriter writer, Document doc) throws XMLStreamException { }
 }
