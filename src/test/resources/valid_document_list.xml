@@ -6,8 +6,8 @@
             <title>Wuppi Fluppi</title>
             <author>Bla</author>
             <source>http://wuppi.fluppi</source>
-            <creationTime>2016-11-30T00:00:00</creationTime>
-            <crawlTime>2016-12-01T00:00:00</crawlTime>
+            <creationTime>2016-11-30T00:00:00+01:00</creationTime>
+            <crawlTime>2016-12-01T00:00:00+01:00</crawlTime>
         </meta>
     </document>
     <document id="1337">
