@@ -27,7 +27,7 @@ class XmlDocumentWriterTest extends Specification {
         documents.add(doc)
 
         when:
-        def result = writer.writeDocumentList(documents)
+        def result = writer.writeStubList(documents)
 
         then:
         result == "<?xml version=\"1.0\" ?><documents xmlns=\"http://fh-bielefeld.de/newsboard\">" +

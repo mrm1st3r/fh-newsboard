@@ -9,8 +9,6 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.StringWriter;
 import java.util.List;
 
-import static javax.xml.bind.DatatypeConverter.printDateTime;
-
 /**
  * Write XML-Documents from domain classes to be transmitted via the REST-API.
  */
@@ -25,7 +23,11 @@ public class XmlDocumentWriter {
         xmlOutputFactory = XMLOutputFactory.newInstance();
     }
 
-    public String writeDocumentList(List<Document> documents) throws XMLStreamException {
+    public String writeStubList(List<Document> documents) throws XMLStreamException {
+        return writeDocument(new DocumentStubWriter(), documents);
+    }
+
+    private String writeDocument(DocumentContentWriter contentWriter, List<Document> documents) throws XMLStreamException {
         StringWriter strWriter = new StringWriter();
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(strWriter);
 
@@ -34,7 +36,7 @@ public class XmlDocumentWriter {
         writer.writeDefaultNamespace(NAMESPACE);
 
         for (Document doc : documents) {
-            writeDocument(writer, doc);
+            contentWriter.writeContent(writer, doc);
         }
 
         writer.writeEndElement();
@@ -43,26 +45,7 @@ public class XmlDocumentWriter {
         return strWriter.getBuffer().toString();
     }
 
-    private void writeDocument(XMLStreamWriter writer, Document doc) throws XMLStreamException {
-        writer.writeStartElement("document");
-        writer.writeAttribute("id", Integer.toString(doc.getId()));
-        writer.writeStartElement("meta");
-        writer.writeStartElement("title");
-        writer.writeCharacters(doc.getTitle());
-        writer.writeEndElement();
-        writer.writeStartElement("author");
-        writer.writeCharacters(doc.getAuthor());
-        writer.writeEndElement();
-        writer.writeStartElement("source");
-        writer.writeCharacters(doc.getSource());
-        writer.writeEndElement();
-        writer.writeStartElement("creationTime");
-        writer.writeCharacters(printDateTime(doc.getCreationTime()));
-        writer.writeEndElement();
-        writer.writeStartElement("crawlTime");
-        writer.writeCharacters(printDateTime(doc.getCrawlTime()));
-        writer.writeEndElement();
-        writer.writeEndElement();
-        writer.writeEndElement();
+    interface DocumentContentWriter {
+        void writeContent(XMLStreamWriter writer, Document doc) throws XMLStreamException;
     }
 }
