@@ -24,10 +24,10 @@ class ClassificationReadTest extends Specification {
         then:
         classifications.size() == 4
         def c = classifications[2]
-        c.getConfidence() == 1
+        c.getConfidence().getAsDouble() == 1
         c.getExternModule().getId() == "RandomClassifier"
-        c.getSentenceId() == 12346
+        c.getSentenceId().getAsInt() == 12346
         c.getValue() == -1
-        classifications[3].getDocumentId() == 123
+        classifications[3].getDocumentId().getAsInt() == 123
     }
 }

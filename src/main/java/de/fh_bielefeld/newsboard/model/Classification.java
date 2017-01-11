@@ -1,31 +1,34 @@
 package de.fh_bielefeld.newsboard.model;
 
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+
 /**
  * Domain class representing a classification of a document or sentence.
  *
- * @Author Felix Meyer
+ * @author Felix Meyer, Lukas Taake
  */
 public class Classification {
-    private Integer sentenceId;
-    private Integer documentId;
+    private OptionalInt sentenceId = OptionalInt.empty();
+    private OptionalInt documentId = OptionalInt.empty();
     private ExternModule externModule;
-    private Double value;
-    private Double confidence;
+    private double value;
+    private OptionalDouble confidence = OptionalDouble.empty();
 
-    public Integer getSentenceId() {
+    public OptionalInt getSentenceId() {
         return sentenceId;
     }
 
-    public void setSentenceId(Integer sentenceId) {
-        this.sentenceId = sentenceId;
+    public void setSentenceId(int sentenceId) {
+        this.sentenceId = OptionalInt.of(sentenceId);
     }
 
-    public Integer getDocumentId() {
+    public OptionalInt getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(Integer documentId) {
-        this.documentId = documentId;
+    public void setDocumentId(int documentId) {
+        this.documentId = OptionalInt.of(documentId);
     }
 
     public ExternModule getExternModule() {
@@ -44,11 +47,22 @@ public class Classification {
         this.value = value;
     }
 
-    public double getConfidence() {
+    public OptionalDouble getConfidence() {
         return confidence;
     }
 
     public void setConfidence(double confidence) {
-        this.confidence = confidence;
+        this.confidence = OptionalDouble.of(confidence);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Classification)) {
+            return false;
+        }
+        Classification that = (Classification) obj;
+        return this.documentId.equals(that.documentId)
+                && this.sentenceId.equals(that.sentenceId)
+                && this.externModule.equals(that.externModule);
     }
 }
