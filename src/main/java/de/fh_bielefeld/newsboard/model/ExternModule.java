@@ -3,7 +3,7 @@ package de.fh_bielefeld.newsboard.model;
 /**
  * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.
  *
- * @Author Felix Meyer
+ * @author Felix Meyer
  */
 public class ExternModule {
     private String id;
@@ -57,5 +57,14 @@ public class ExternModule {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof ExternModule)) {
+            return false;
+        }
+        ExternModule that = (ExternModule) obj;
+        return this.id.equals(that.id);
     }
 }

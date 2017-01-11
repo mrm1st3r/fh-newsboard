@@ -15,8 +15,7 @@ public class Document {
     private List<Sentence> sentences;
     private List<Classification> classifications;
 
-    public Document(int id,DocumentMetaData metaData,
-                    List<Sentence> sentences, List<Classification> classifications) {
+    public Document(int id, DocumentMetaData metaData, List<Sentence> sentences, List<Classification> classifications) {
         this.id = id;
         this.metaData = metaData;
         this.sentences = sentences;
@@ -89,5 +88,14 @@ public class Document {
 
     public void setMetaData(DocumentMetaData documentMetaData) {
         this.metaData = documentMetaData;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Document)) {
+            return false;
+        }
+        Document that = (Document) obj;
+        return this.id == that.id;
     }
 }
