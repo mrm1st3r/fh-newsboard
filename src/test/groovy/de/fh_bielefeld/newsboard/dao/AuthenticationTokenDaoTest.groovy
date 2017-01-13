@@ -42,7 +42,7 @@ class AuthenticationTokenDaoTest extends Specification {
         authenticationTokenDao.updateAuthenticationToken(insertedToken);
         AuthenticationToken testingToken = authenticationTokenDao.getAllTokenForModule(additionalExternModule).get(0);
         testingToken.getToken() == "ghi";
-
+        noExceptionThrown();
     }
 
     def "test selection with id"() {
@@ -73,6 +73,7 @@ class AuthenticationTokenDaoTest extends Specification {
             t.getToken() == token.getToken();
             t.getModuleId() == token.getModuleId();
         }
+        noExceptionThrown();
     }
 
     def "test insertion"() {

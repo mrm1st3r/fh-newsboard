@@ -18,11 +18,11 @@ import java.util.List;
 @Component
 public class ExternDocumentDaoImpl implements ExternDocumentDao {
     public String GET_EXTERN_DOCUMENT_WITH_ID =
-            "SELECT * FROM EXTERN_DOCUMENT WHERE id = ?";
+            "SELECT * FROM extern_document WHERE id = ?";
     public String UPDATE_EXTERN_DOCUMENT =
             "UPDATE extern_document SET title = ?, html = ?, module_id = ? WHERE id = ?";
     public String INSERT_EXTERN_DOCUMENT =
-            "INSERT INTO extern_document VALUES (?, ?, ?)";
+            "INSERT INTO extern_document VALUES (-1, ?, ?, ?)";
 
     @Autowired
     private ExternModuleDao externModuleDao;

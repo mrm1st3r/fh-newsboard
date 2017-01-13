@@ -18,7 +18,7 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
     private static final String GET_MODULE_WITH_ID =
             "SELECT id, name, author, description FROM extern_module WHERE id = ?";
     private static final String UPDATE_MODULE =
-            "UPDATE TABLE extern_module SET name = ?, author = ?, description = ? WHERE id = ?";
+            "UPDATE extern_module SET name = ?, author = ?, description = ? WHERE id = ?";
     private static final String INSERT_MODULE =
             "INSERT INTO extern_module(id, name, author, description) VALUES (?, ?, ?, ?)";
 
