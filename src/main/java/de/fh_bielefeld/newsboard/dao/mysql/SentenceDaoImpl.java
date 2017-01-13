@@ -10,8 +10,11 @@ import de.fh_bielefeld.newsboard.model.ExternModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,5 +136,56 @@ public class SentenceDaoImpl implements SentenceDao {
             addAllClassificationsToSentence(sentence);
         }
         return sentence;
+    }
+
+    protected class SentenceDatabaseObjectRowMapper implements RowMapper<SentenceDatabaseObject> {
+        @Override
+        public SentenceDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
+            SentenceDatabaseObject sentence = new SentenceDatabaseObject();
+            sentence.setId(resultSet.getInt("id"));
+            sentence.setNumber(resultSet.getInt("number"));
+            sentence.setText(resultSet.getString("text"));
+            sentence.setDocumentId(resultSet.getInt("document_id"));
+            return sentence;
+        }
+    }
+
+    protected class SentenceDatabaseObject {
+        private Integer id;
+        private Integer number;
+        private String text;
+        private Integer documentId;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getNumber() {
+            return number;
+        }
+
+        public void setNumber(Integer number) {
+            this.number = number;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public Integer getDocumentId() {
+            return documentId;
+        }
+
+        public void setDocumentId(Integer documentId) {
+            this.documentId = documentId;
+        }
     }
 }

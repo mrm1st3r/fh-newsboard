@@ -170,4 +170,68 @@ public class ClassificationDaoImpl implements ClassificationDao {
         }
         return externModule;
     }
+
+    protected class ClassificationDatabaseObjectRowMapper implements RowMapper<ClassificationDatabaseObject> {
+
+        @Override
+        public ClassificationDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
+            ClassificationDatabaseObject rawClassification = new ClassificationDatabaseObject();
+
+            rawClassification.setSentId(resultSet.getInt("sent_id"));
+            rawClassification.setDocumentId(resultSet.getInt("document_id"));
+            rawClassification.setModuleId(resultSet.getString("module_id"));
+            rawClassification.setValue(resultSet.getDouble("value"));
+            rawClassification.setConfidence(resultSet.getDouble("confidence"));
+
+            return rawClassification;
+        }
+    }
+
+    protected class ClassificationDatabaseObject {
+        private Integer sentId;
+        private Integer documentId;
+        private String moduleId;
+        private Double value;
+        private Double confidence;
+
+        public Integer getSentId() {
+            return sentId;
+        }
+
+        public void setSentId(Integer sentId) {
+            this.sentId = sentId;
+        }
+
+        public Integer getDocumentId() {
+            return documentId;
+        }
+
+        public void setDocumentId(Integer documentId) {
+            this.documentId = documentId;
+        }
+
+        public String getModuleId() {
+            return moduleId;
+        }
+
+        public void setModuleId(String moduleId) {
+            this.moduleId = moduleId;
+        }
+
+        public Double getValue() {
+            return value;
+        }
+
+        public void setValue(Double value) {
+            this.value = value;
+        }
+
+        public Double getConfidence() {
+            return confidence;
+        }
+
+        public void setConfidence(Double confidence) {
+            this.confidence = confidence;
+        }
+    }
 }

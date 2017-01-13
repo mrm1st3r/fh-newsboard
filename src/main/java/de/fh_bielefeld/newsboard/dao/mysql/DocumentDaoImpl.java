@@ -6,9 +6,17 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -134,5 +142,95 @@ public class DocumentDaoImpl implements DocumentDao {
 
     private List<Sentence> getAllSentencesInDocument(Document document) {
         return sentenceDao.getAllSentencesInDocument(document);
+    }
+
+    protected class DocumentDatabaseObjectRowMapper implements RowMapper<DocumentDatabaseObject> {
+        @Override
+        public DocumentDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
+            DocumentDatabaseObject document = new DocumentDatabaseObject();
+            document.setId(resultSet.getInt("id"));
+            document.setAuthor(resultSet.getString("author"));
+            document.setTitle(resultSet.getString("title"));
+            document.setSource(resultSet.getString("source"));
+            document.setModuleId(resultSet.getString("module_id"));
+            document.setCrawlTime(getCalendarFromTime(resultSet.getTime("crawl_time")));
+            document.setCreationTime(getCalendarFromTime(resultSet.getTime("creation_time")));
+            return document;
+        }
+
+        private Calendar getCalendarFromTime(Time time) {
+            if (time == null) {
+                return null;
+            } else {
+                ZonedDateTime dateTime = ZonedDateTime.ofInstant(time.toInstant(), ZoneId.systemDefault());
+                return GregorianCalendar.from(dateTime);
+            }
+        }
+    }
+
+    protected class DocumentDatabaseObject {
+        private Integer id;
+        private String title;
+        private String author;
+        private String source;
+        private String moduleId;
+        private Calendar creationTime;
+        private Calendar crawlTime;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public Calendar getCreationTime() {
+            return creationTime;
+        }
+
+        public void setCreationTime(Calendar creationTime) {
+            this.creationTime = creationTime;
+        }
+
+        public Calendar getCrawlTime() {
+            return crawlTime;
+        }
+
+        public void setCrawlTime(Calendar crawlTime) {
+            this.crawlTime = crawlTime;
+        }
+
+        public String getModuleId() {
+            return moduleId;
+        }
+
+        public void setModuleId(String moduleId) {
+            this.moduleId = moduleId;
+        }
     }
 }

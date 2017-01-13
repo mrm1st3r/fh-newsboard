@@ -5,8 +5,11 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -77,4 +80,58 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
 
         return jdbcTemplate.update(INSERT_EXTERN_DOCUMENT, attributes);
     }
+
+    protected class ExternDocumentDatabaseObjectRowMapper implements RowMapper<ExternDocumentDatabaseObject> {
+        @Override
+        public ExternDocumentDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
+            ExternDocumentDatabaseObject externDocument = new ExternDocumentDatabaseObject();
+
+            externDocument.setId(resultSet.getInt("id"));
+            externDocument.setTitle(resultSet.getString("title"));
+            externDocument.setHtml(resultSet.getString("html"));
+            externDocument.setModuleId(resultSet.getString("module_id"));
+
+            return externDocument;
+        }
+    }
+
+    protected class ExternDocumentDatabaseObject {
+        private Integer id;
+        private String title;
+        private String html;
+        private String moduleId;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getHtml() {
+            return html;
+        }
+
+        public void setHtml(String html) {
+            this.html = html;
+        }
+
+        public String getModuleId() {
+            return moduleId;
+        }
+
+        public void setModuleId(String moduleId) {
+            this.moduleId = moduleId;
+        }
+    }
+
 }
