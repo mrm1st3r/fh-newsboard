@@ -18,13 +18,13 @@ import java.util.List;
 @Component
 public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     private static final String GET_TOKEN_WITH_ID =
-            "SELECT id, module_id, token FROM token WHERE id = ?";
+            "SELECT id, module_id, token FROM authentication_token WHERE id = ?";
     private static final String GET_ALL_TOKEN_FOR_MODULE =
-            "SELECT id, module_id, token FROM token WHERE module_id = ?";
+            "SELECT id, module_id, token FROM authentication_token WHERE module_id = ?";
     private static final String UPDATE_TOKEN =
-            "UPDATE authentication_token SET id = ?, token = ?, module_id = ? WHERE id = ?";
+            "UPDATE authentication_token SET token = ?, module_id = ? WHERE id = ?";
     private static final String INSERT_TOKEN =
-            "INSERT INTO authentication_token (token, moduleId) VALUES (?, ?)";
+            "INSERT INTO authentication_token (token, module_id) VALUES (?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -46,7 +46,7 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     @Override
     public int updateAuthenticationToken(AuthenticationToken authToken) {
         Object[] values = {
-                authToken.getId(), authToken.getToken(), authToken.getModuleId()
+                authToken.getToken(), authToken.getModuleId(), authToken.getId()
         };
         return jdbcTemplate.update(UPDATE_TOKEN, values);
     }

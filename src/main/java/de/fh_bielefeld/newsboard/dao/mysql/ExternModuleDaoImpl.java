@@ -20,7 +20,7 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
     private static final String UPDATE_MODULE =
             "UPDATE TABLE extern_module SET name = ?, author = ?, description = ? WHERE id = ?";
     private static final String INSERT_MODULE =
-            "INSERT INTO extern_module(name, author, description) VALUES (?, ?, ?)";
+            "INSERT INTO extern_module(id, name, author, description) VALUES (?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -48,6 +48,7 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
     @Override
     public int insertExternModule(ExternModule externModule) {
         Object[] attributes = {
+                externModule.getId(),
                 externModule.getName(),
                 externModule.getAuthor(),
                 externModule.getDescription()
