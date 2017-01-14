@@ -22,4 +22,6 @@ application-lukas.properties
 *.pdf
 *.synctex.gz
 *.toc
+*.bbl
+*.blg
 
