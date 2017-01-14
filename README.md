@@ -4,6 +4,12 @@ Jetzt mit Flügeln!
 
 Building & Running
 ---
+**Dependencies** contain only a MySQL database, a Java 8 JDK and Maven.
+
+The **Database Connection** can be configured in a spring-boot configuration file.
+Individual connection details can be stored in custom configuration files as `src/main/resources/application-PROFILENAME.properties`.
+To use such a configuration, append `-Dspring.profiles.active=PROFILENAME` to the launch command.
+
 **Building** the newsboard can be done easily with maven:
 `mvn clean install`. At the first time this might take a little longer,
 as it will download all necessary dependencies.
@@ -12,12 +18,11 @@ as it will download all necessary dependencies.
 Alternatively the generate jar file (found in the target directory)
 can be started directly e.g.: `java -jar target/newsboard-0.0.1-SNAPSHOT.jar`
 
-
 REST API
 ----
 **The Format** for all programmatic interaction with the newsboard is XML based
-and specified in the Schema located at `src/main/resources/document.xsd`.
-Additionally, the sample files used to verify the schema can be found at `src/test/resources/`. 
+and specified in the Schema located at [src/main/resources/document.xsd](src/main/resources/document.xsd).
+Additionally, the sample files used to verify the schema can be found at [src/test/resources/](src/test/resources/). 
 
 **The Resources and Methods** provided by the newsboard will be as follows:
 
