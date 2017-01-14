@@ -47,24 +47,23 @@ public class RestApiController {
         try {
             return xmlWriter.writeStubList(documents);
         } catch (XMLStreamException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return "Internal Error: " + e.getMessage();
+            return handleServerError(response, e);
         }
     }
 
     @RequestMapping(path = "/document", method = RequestMethod.PUT)
-    public void putDocument(HttpServletResponse response, @RequestBody String body) {
+    public String putDocument(HttpServletResponse response, @RequestBody String body) {
         StringReader in = new StringReader(body);
-        List<RawDocument> documents = null;
+        List<RawDocument> documents;
         try {
             documents = xmlReader.readDocument(in);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+            return handleClientError(response, e);
         }
         if (documents == null || documents.size() == 0) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+        return "OK";
     }
 
     @RequestMapping(value = "/document/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
@@ -74,9 +73,7 @@ public class RestApiController {
         try {
             return xmlWriter.writeDocument(doc);
         } catch (XMLStreamException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return "Internal Error: " + e.getMessage();
+            return handleServerError(response, e);
         }
     }
 
@@ -86,9 +83,7 @@ public class RestApiController {
         try {
             return xmlWriter.writeDocumentList(documents);
         } catch (XMLStreamException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return "Internal Error: " + e.getMessage();
+            return handleServerError(response, e);
         }
     }
 
@@ -99,13 +94,23 @@ public class RestApiController {
         try {
             classifications = xmlReader.readClassifications(in);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return "FAILED: " + e.getMessage();
+            return handleClientError(response, e);
         }
         for (Classification c : classifications) {
             classificationDao.insertClassification(c);
         }
         return "OK";
+    }
+
+    private String handleClientError(HttpServletResponse response, Exception e) {
+        e.printStackTrace();
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return "FAILED: " + e.getMessage();
+    }
+
+    private String handleServerError(HttpServletResponse response, XMLStreamException e) {
+        e.printStackTrace();
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return "Internal Error: " + e.getMessage();
     }
 }
