@@ -32,6 +32,10 @@ public class XmlDocumentWriter {
         return writeDocument(new DocumentWriter(), Collections.singletonList(document));
     }
 
+    public String writeDocumentList(List<Document> documents) throws XMLStreamException {
+        return writeDocument(new DocumentWriter(), documents);
+    }
+
     private String writeDocument(DocumentContentWriter contentWriter, List<Document> documents) throws XMLStreamException {
         StringWriter strWriter = new StringWriter();
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(strWriter);
