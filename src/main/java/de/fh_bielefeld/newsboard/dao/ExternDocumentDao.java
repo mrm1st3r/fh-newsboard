@@ -2,8 +2,6 @@ package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.ExternDocument;
 
-import java.util.List;
-
 /**
  * Created by felixmeyer on 11.12.16.
  */

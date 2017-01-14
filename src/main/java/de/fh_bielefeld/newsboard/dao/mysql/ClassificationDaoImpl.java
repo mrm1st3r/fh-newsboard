@@ -30,7 +30,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification " + "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO classification (sent_id, document_id, module_id, value, confidence) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
             "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND document_id = ? AND module_id = ?";
 
@@ -53,14 +53,17 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
         ClassificationDatabaseObject rawClassification = jdbcTemplate.queryForObject(
                 GET_CLASSIFICATION,
-                ClassificationDatabaseObject.class,
                 new ClassificationDatabaseObjectRowMapper(),
                 attributes);
 
         if (rawClassification == null) {
             return null;
         } else {
-            return getClassificationFromClassificationDatabaseObject(rawClassification, null);
+            Classification classification = getClassificationFromClassificationDatabaseObject(rawClassification, null);
+            classification.setDocumentId(document.getId());
+            classification.setExternModule(module);
+            classification.setSentenceId(sentence.getId());
+            return classification;
         }
     }
 
@@ -81,28 +84,39 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public int updateClassification(Classification classification) {
-        Object[] attributes = {
-                classification.getConfidence(),
-                classification.getValue(),
-                classification.getSentenceId(),
-                classification.getDocumentId(),
-                classification.getExternModule().getId()
-        };
-
-        return jdbcTemplate.update(UPDATE_CLASSIFICATION, attributes);
+        return jdbcTemplate.update(UPDATE_CLASSIFICATION, getAttributesForInsertOrUpdate(classification, false));
     }
 
     @Override
     public int insertClassification(Classification classification) {
-        Object[] attributes = {
-                classification.getSentenceId(),
-                classification.getDocumentId(),
-                classification.getExternModule().getId(),
-                classification.getValue(),
-                classification.getConfidence()
-        };
+        return jdbcTemplate.update(INSERT_CLASSIFICATION, getAttributesForInsertOrUpdate(classification, true));
+    }
 
-        return jdbcTemplate.update(INSERT_CLASSIFICATION, attributes);
+    private Object[] getAttributesForInsertOrUpdate(Classification classification, boolean isInsert) {
+        String moduleId = classification.getExternModule() == null ? null : classification.getExternModule().getId();
+        Integer sentenceId = classification.getSentenceId().getAsInt();
+        Integer documentId = classification.getDocumentId().getAsInt();
+        Double confidence = classification.getConfidence().getAsDouble();
+
+        Object[] attributes;
+        if (isInsert) {
+            attributes = new Object[] {
+                    sentenceId,
+                    documentId,
+                    moduleId,
+                    classification.getValue(),
+                    confidence
+            };
+        } else {
+            attributes = new Object[] {
+                    classification.getValue(),
+                    confidence,
+                    sentenceId,
+                    documentId,
+                    moduleId
+            };
+        }
+        return attributes;
     }
 
     /**
@@ -139,7 +153,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
      */
     private Classification getClassificationFromClassificationDatabaseObject(ClassificationDatabaseObject rawClassification, ExternModule externModule) {
         Classification classification;
-        if (rawClassification != null) {
+        if (rawClassification == null) {
             classification = null;
         } else {
             classification = new Classification();

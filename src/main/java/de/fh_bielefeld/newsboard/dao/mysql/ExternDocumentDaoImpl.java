@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by felixmeyer on 17.12.16.
@@ -22,7 +21,7 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
     public String UPDATE_EXTERN_DOCUMENT =
             "UPDATE extern_document SET title = ?, html = ?, module_id = ? WHERE id = ?";
     public String INSERT_EXTERN_DOCUMENT =
-            "INSERT INTO extern_document VALUES (-1, ?, ?, ?)";
+            "INSERT INTO extern_document(title, html, module_id) VALUES (?, ?, ?)";
 
     @Autowired
     private ExternModuleDao externModuleDao;

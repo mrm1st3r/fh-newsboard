@@ -11,13 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by felixmeyer on 17.12.16.
@@ -29,9 +23,9 @@ public class DocumentDaoImpl implements DocumentDao {
     private static final String GET_DOCUMENTS_ONLY_METADATA =
             "SELECT * FROM document";
     private static final String UPDATE_DOCUMENT =
-            "UPDATE DOCUMENT SET title = ?, author = ?, source = ?, creation_time = ?, crawl_time = ?, module_id = ? WHERE id = ?";
+            "UPDATE document SET title = ?, author = ?, source = ?, creation_time = ?, crawl_time = ?, module_id = ? WHERE id = ?";
     private static final String INSERT_DOCUMENT =
-            "INSERT INTO DOCUMENT VALUES (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO document VALUES (null, ?, ?, ?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private SentenceDaoImpl sentenceDao;
@@ -44,6 +38,7 @@ public class DocumentDaoImpl implements DocumentDao {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
         this.classificationDao = classificationDao;
+        this.externModuleDao = externModuleDao;
     }
 
     @Override
@@ -153,17 +148,18 @@ public class DocumentDaoImpl implements DocumentDao {
             document.setTitle(resultSet.getString("title"));
             document.setSource(resultSet.getString("source"));
             document.setModuleId(resultSet.getString("module_id"));
-            document.setCrawlTime(getCalendarFromTime(resultSet.getTime("crawl_time")));
-            document.setCreationTime(getCalendarFromTime(resultSet.getTime("creation_time")));
+            document.setCrawlTime(getCalendarFromTime(resultSet.getDate("crawl_time")));
+            document.setCreationTime(getCalendarFromTime(resultSet.getDate("creation_time")));
             return document;
         }
 
-        private Calendar getCalendarFromTime(Time time) {
-            if (time == null) {
+        private Calendar getCalendarFromTime(Date date) {
+            if (date == null) {
                 return null;
             } else {
-                ZonedDateTime dateTime = ZonedDateTime.ofInstant(time.toInstant(), ZoneId.systemDefault());
-                return GregorianCalendar.from(dateTime);
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(date);
+                return cal;
             }
         }
     }

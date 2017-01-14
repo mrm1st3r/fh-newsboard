@@ -1,12 +1,8 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
-import de.fh_bielefeld.newsboard.dao.ClassificationDao;
-import de.fh_bielefeld.newsboard.dao.DocumentDao;
-import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
-import de.fh_bielefeld.newsboard.model.ExternModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,15 +20,13 @@ import java.util.List;
 @Component
 public class SentenceDaoImpl implements SentenceDao {
     private static final String GET_SENTENCE_WITH_ID =
-            "SELECT * FROM SENTENCE WHERE id = ?";
+            "SELECT * FROM sentence WHERE id = ?";
     private static final String GET_ALL_SENTENCES_IN_DOCUMENT =
-            "SELECT * FROM SENTENCE WHERE document_id = ?";
+            "SELECT * FROM sentence WHERE document_id = ?";
     private static final String UPDATE_SENTENCE_WITHOUT_DOCUMENT_ID =
             "UPDATE sentence SET number = ?, text = ? WHERE id = ?";
-    private static final String UPDATE_SENTENCE_WITH_DOCUMENT_ID =
-            "UPDATE sentence SET number = ?, text = ?, document_id = ? WHERE id = ?";
     private static final String INSERT_SENTENCE =
-            "INSERT INTO sentence VALUES (?, ?, ?)";
+            "INSERT INTO sentence(number, text, document_id) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private ClassificationDaoImpl classificationDao;
@@ -51,9 +45,8 @@ public class SentenceDaoImpl implements SentenceDao {
 
         SentenceDatabaseObject rawSentence = jdbcTemplate.queryForObject(
                 GET_SENTENCE_WITH_ID,
-                SentenceDatabaseObject.class,
-                attributes,
-                new SentenceDatabaseObjectRowMapper());
+                new SentenceDatabaseObjectRowMapper(),
+                attributes);
 
         return getSentenceFromSentenceDatabaseObject(rawSentence);
     }
@@ -87,18 +80,6 @@ public class SentenceDaoImpl implements SentenceDao {
         };
 
         return jdbcTemplate.update(UPDATE_SENTENCE_WITHOUT_DOCUMENT_ID, attributes);
-    }
-
-    @Override
-    public int updateSentenceWithDocument(Sentence sentence, Document document) {
-        Object[] attributes = {
-                sentence.getNumber(),
-                sentence.getText(),
-                document.getId(),
-                sentence.getId()
-        };
-
-        return jdbcTemplate.update(UPDATE_SENTENCE_WITH_DOCUMENT_ID, attributes);
     }
 
     @Override

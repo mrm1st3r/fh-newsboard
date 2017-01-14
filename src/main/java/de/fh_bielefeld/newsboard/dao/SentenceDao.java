@@ -12,6 +12,5 @@ public interface SentenceDao {
     public Sentence getSentenceWithId(int id);
     public List<Sentence> getAllSentencesInDocument(Document document);
     public int updateSentenceWithoutDocument(Sentence sentence);
-    public int updateSentenceWithDocument(Sentence sentence, Document document);
     public int insertSentence(Sentence sentence, Document document);
 }

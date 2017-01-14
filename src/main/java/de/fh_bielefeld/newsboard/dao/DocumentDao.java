@@ -1,7 +1,6 @@
 package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.Document;
-import de.fh_bielefeld.newsboard.model.DocumentMetaData;
 
 import java.util.List;
 
