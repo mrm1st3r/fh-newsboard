@@ -17,101 +17,101 @@ import spock.lang.Specification
 class ExternDocumentDaoTest extends Specification {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate
     @Autowired
-    ExternDocumentDao dao;
+    ExternDocumentDao dao
     @Autowired
-    ExternModuleDao externModuleDao;
+    ExternModuleDao externModuleDao
 
     def "test insertion"() {
         when:
-        ExternDocument doc = getNewExternDocument();
+        ExternDocument doc = getNewExternDocument()
 
         then:
-        dao.insertExternDocument(doc);
+        dao.insertExternDocument(doc)
 
-        ExternDocument testingDoc = getLatestAddedDocument();
-        testingDoc.getExternModule() == doc.getExternModule();
-        testingDoc.getHtml() == doc.getHtml();
-        testingDoc.getTitle() == doc.getTitle();
+        ExternDocument testingDoc = getLatestAddedDocument()
+        testingDoc.getExternModule() == doc.getExternModule()
+        testingDoc.getHtml() == doc.getHtml()
+        testingDoc.getTitle() == doc.getTitle()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test updating"() {
         setup:
-        ExternModule additionalModule = getNewExternModule();
-        additionalModule.setId("extern_module_testing2");
-        externModuleDao.insertExternModule(additionalModule);
+        ExternModule additionalModule = getNewExternModule()
+        additionalModule.setId("extern_module_testing2")
+        externModuleDao.insertExternModule(additionalModule)
 
         when:
-        ExternDocument doc = getNewExternDocument();
-        dao.insertExternDocument(doc);
-        doc = getLatestAddedDocument();
-        doc.setTitle("New title");
-        doc.setHtml("new html");
-        doc.setExternModule(additionalModule);
+        ExternDocument doc = getNewExternDocument()
+        dao.insertExternDocument(doc)
+        doc = getLatestAddedDocument()
+        doc.setTitle("New title")
+        doc.setHtml("new html")
+        doc.setExternModule(additionalModule)
 
         then:
-        dao.updateExternDocument(doc);
+        dao.updateExternDocument(doc)
 
-        ExternDocument testingDoc = getLatestAddedDocument();
-        testingDoc.getTitle() == doc.getTitle();
-        testingDoc.getHtml() == doc.getHtml();
-        testingDoc.getExternModule().getId() == doc.getExternModule().getId();
-        testingDoc.getExternModule().getName() == doc.getExternModule().getName();
-        testingDoc.getExternModule().getAuthor() == doc.getExternModule().getAuthor();
-        testingDoc.getExternModule().getDescription() == doc.getExternModule().getDescription();
+        ExternDocument testingDoc = getLatestAddedDocument()
+        testingDoc.getTitle() == doc.getTitle()
+        testingDoc.getHtml() == doc.getHtml()
+        testingDoc.getExternModule().getId() == doc.getExternModule().getId()
+        testingDoc.getExternModule().getName() == doc.getExternModule().getName()
+        testingDoc.getExternModule().getAuthor() == doc.getExternModule().getAuthor()
+        testingDoc.getExternModule().getDescription() == doc.getExternModule().getDescription()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test selection with id"() {
         when:
-        ExternDocument doc = getNewExternDocument();
-        dao.insertExternDocument(doc);
-        ExternDocument selectedDoc = getLatestAddedDocument();
+        ExternDocument doc = getNewExternDocument()
+        dao.insertExternDocument(doc)
+        ExternDocument selectedDoc = getLatestAddedDocument()
 
         then:
-        ExternDocument testingDoc = dao.getExternDocumentWithId(selectedDoc.getId());
+        ExternDocument testingDoc = dao.getExternDocumentWithId(selectedDoc.getId())
 
-        testingDoc.getId() == selectedDoc.getId();
-        testingDoc.getExternModule() == selectedDoc.getExternModule();
-        testingDoc.getHtml() == selectedDoc.getHtml();
-        testingDoc.getTitle() == selectedDoc.getTitle();
+        testingDoc.getId() == selectedDoc.getId()
+        testingDoc.getExternModule() == selectedDoc.getExternModule()
+        testingDoc.getHtml() == selectedDoc.getHtml()
+        testingDoc.getTitle() == selectedDoc.getTitle()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def getNewExternModule() {
-        ExternModule externModule = new ExternModule();
-        externModule.setId("text_module");
-        externModule.setAuthor("tester");
-        externModule.setDescription("Extern module only for testing purpose");
-        externModule.setName("Test extern module");
-        return externModule;
+        ExternModule externModule = new ExternModule()
+        externModule.setId("text_module")
+        externModule.setAuthor("tester")
+        externModule.setDescription("Extern module only for testing purpose")
+        externModule.setName("Test extern module")
+        return externModule
     }
 
     def getNewExternDocument() {
-        ExternDocument doc = new ExternDocument();
-        doc.setExternModule(getNewExternModule());
-        doc.setHtml("<body>test document</body>");
-        doc.setTitle("Test document");
-        return doc;
+        ExternDocument doc = new ExternDocument()
+        doc.setExternModule(getNewExternModule())
+        doc.setHtml("<body>test document</body>")
+        doc.setTitle("Test document")
+        return doc
     }
 
     def getLatestAddedDocument() {
-        Integer id = jdbcTemplate.queryForObject("SELECT id FROM extern_document", Integer.class);
-        ExternDocument testingDoc = dao.getExternDocumentWithId(id);
-        return testingDoc;
+        Integer id = jdbcTemplate.queryForObject("SELECT id FROM extern_document", Integer.class)
+        ExternDocument testingDoc = dao.getExternDocumentWithId(id)
+        return testingDoc
     }
 
     def setup() {
-        externModuleDao.insertExternModule(getNewExternModule());
+        externModuleDao.insertExternModule(getNewExternModule())
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM extern_document");
-        jdbcTemplate.update("DELETE FROM extern_module");
+        jdbcTemplate.update("DELETE FROM extern_document")
+        jdbcTemplate.update("DELETE FROM extern_module")
     }
 }

@@ -20,118 +20,118 @@ import spock.lang.Specification
 class SentenceDaoTest extends Specification {
 
     @Autowired
-    DocumentDao docDao;
+    DocumentDao docDao
     @Autowired
-    ExternModuleDao extModDao;
+    ExternModuleDao extModDao
     @Autowired
-    SentenceDao dao;
+    SentenceDao dao
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate
 
-    Document doc;
+    Document doc
 
     def "test insertion"() {
         when:
-        Sentence sentence = getNewSentence();
+        Sentence sentence = getNewSentence()
 
         then:
-        dao.insertSentence(sentence, doc);
+        dao.insertSentence(sentence, doc)
 
-        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0);
-        selectedSentence.getClassifications() == sentence.getClassifications();
-        selectedSentence.getNumber() == sentence.getNumber();
-        selectedSentence.getText() == sentence.getText();
+        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0)
+        selectedSentence.getClassifications() == sentence.getClassifications()
+        selectedSentence.getNumber() == sentence.getNumber()
+        selectedSentence.getText() == sentence.getText()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test updating without document"() {
         when:
-        Sentence sentence = getNewSentence();
-        dao.insertSentence(sentence, doc);
-        sentence.setNumber(2);
-        sentence.setText("Another sentence for testing purpose");
-        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0);
-        sentence.setId(selectedSentence.getId());
+        Sentence sentence = getNewSentence()
+        dao.insertSentence(sentence, doc)
+        sentence.setNumber(2)
+        sentence.setText("Another sentence for testing purpose")
+        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0)
+        sentence.setId(selectedSentence.getId())
 
         then:
-        dao.updateSentenceWithoutDocument(sentence);
+        dao.updateSentenceWithoutDocument(sentence)
 
-        Sentence testingSentence = dao.getAllSentencesInDocument(doc).get(0);
-        testingSentence.getClassifications() == sentence.getClassifications();
-        testingSentence.getNumber() == sentence.getNumber();
-        testingSentence.getText() == sentence.getText();
+        Sentence testingSentence = dao.getAllSentencesInDocument(doc).get(0)
+        testingSentence.getClassifications() == sentence.getClassifications()
+        testingSentence.getNumber() == sentence.getNumber()
+        testingSentence.getText() == sentence.getText()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test selection with document"() {
         when:
-        Sentence sentence = getNewSentence();
-        dao.insertSentence(sentence, doc);
-        dao.insertSentence(sentence, doc);
-        dao.insertSentence(sentence, doc);
+        Sentence sentence = getNewSentence()
+        dao.insertSentence(sentence, doc)
+        dao.insertSentence(sentence, doc)
+        dao.insertSentence(sentence, doc)
 
         then:
-        List<Sentence> sentences = dao.getAllSentencesInDocument(doc);
+        List<Sentence> sentences = dao.getAllSentencesInDocument(doc)
 
-        sentences.size() == 3;
+        sentences.size() == 3
         for (Sentence s : sentences) {
-            s.getNumber() == sentence.getNumber();
-            s.getText() == sentence.getText();
+            s.getNumber() == sentence.getNumber()
+            s.getText() == sentence.getText()
         }
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test selection with id"() {
         when:
-        Sentence sentence = getNewSentence();
-        dao.insertSentence(sentence, doc);
-        Integer id = dao.getAllSentencesInDocument(doc).get(0).getId();
+        Sentence sentence = getNewSentence()
+        dao.insertSentence(sentence, doc)
+        Integer id = dao.getAllSentencesInDocument(doc).get(0).getId()
 
         then:
-        Sentence testSentence = dao.getSentenceWithId(id);
+        Sentence testSentence = dao.getSentenceWithId(id)
 
-        testSentence.getText() == sentence.getText();
-        testSentence.getNumber() == sentence.getNumber();
+        testSentence.getText() == sentence.getText()
+        testSentence.getNumber() == sentence.getNumber()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def getNewSentence() {
-        Sentence sentence = new Sentence();
-        sentence.setNumber(1);
-        sentence.setText("Test sentence");
-        return sentence;
+        Sentence sentence = new Sentence()
+        sentence.setNumber(1)
+        sentence.setText("Test sentence")
+        return sentence
     }
 
     def getNewExternModule() {
-        ExternModule externModule = new ExternModule();
-        externModule.setId("text_module");
-        externModule.setAuthor("tester");
-        externModule.setDescription("Extern module only for testing purpose");
-        externModule.setName("Test extern module");
-        return externModule;
+        ExternModule externModule = new ExternModule()
+        externModule.setId("text_module")
+        externModule.setAuthor("tester")
+        externModule.setDescription("Extern module only for testing purpose")
+        externModule.setName("Test extern module")
+        return externModule
     }
 
     def setup() {
-        ExternModule module = getNewExternModule();
-        extModDao.insertExternModule(module);
-        doc = new Document();
-        DocumentMetaData docMd = new DocumentMetaData();
-        docMd.setModule(module);
-        docMd.setTitle("Test document");
-        doc.setMetaData(docMd);
-        docDao.insertDocument(doc);
-        Integer docId = jdbcTemplate.queryForObject("SELECT id FROM document", Integer.class);
-        doc.setId(docId);
+        ExternModule module = getNewExternModule()
+        extModDao.insertExternModule(module)
+        doc = new Document()
+        DocumentMetaData docMd = new DocumentMetaData()
+        docMd.setModule(module)
+        docMd.setTitle("Test document")
+        doc.setMetaData(docMd)
+        docDao.insertDocument(doc)
+        Integer docId = jdbcTemplate.queryForObject("SELECT id FROM document", Integer.class)
+        doc.setId(docId)
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM document");
-        jdbcTemplate.update("DELETE FROM extern_module");
-        jdbcTemplate.update("DELETE FROM sentence");
-        jdbcTemplate.update("DELETE FROM classification");
+        jdbcTemplate.update("DELETE FROM document")
+        jdbcTemplate.update("DELETE FROM extern_module")
+        jdbcTemplate.update("DELETE FROM sentence")
+        jdbcTemplate.update("DELETE FROM classification")
     }
 }

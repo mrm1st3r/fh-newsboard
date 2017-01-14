@@ -16,74 +16,74 @@ import spock.lang.Specification
 class ExternModuleDaoTest extends Specification {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate
     @Autowired
-    ExternModuleDao externModuleDao;
+    ExternModuleDao externModuleDao
 
     def "test insertion"() {
         when:
-        ExternModule module = getNewExternModule();
+        ExternModule module = getNewExternModule()
 
         then:
-        externModuleDao.insertExternModule(module);
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId());
+        externModuleDao.insertExternModule(module)
+        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
-        testingModule != null;
-        testingModule.getAuthor() == module.getAuthor();
-        testingModule.getId() == module.getId();
-        testingModule.getDescription() == module.getDescription();
-        testingModule.getName() == module.getName();
+        testingModule != null
+        testingModule.getAuthor() == module.getAuthor()
+        testingModule.getId() == module.getId()
+        testingModule.getDescription() == module.getDescription()
+        testingModule.getName() == module.getName()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test updating"() {
         when:
-        ExternModule module = getNewExternModule();
-        externModuleDao.insertExternModule(module);
+        ExternModule module = getNewExternModule()
+        externModuleDao.insertExternModule(module)
 
-        module.setDescription("New Description");
-        module.setAuthor("New Author");
-        module.setName("New Name");
+        module.setDescription("New Description")
+        module.setAuthor("New Author")
+        module.setName("New Name")
 
         then:
         externModuleDao.updateExternModule(module)
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId());
+        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
-        testingModule != null;
-        testingModule.getDescription() == module.getDescription();
-        testingModule.getName() == module.getName();
-        testingModule.getAuthor() == testingModule.getAuthor();
+        testingModule != null
+        testingModule.getDescription() == module.getDescription()
+        testingModule.getName() == module.getName()
+        testingModule.getAuthor() == testingModule.getAuthor()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def "test selecting with id"() {
         when:
-        ExternModule module = getNewExternModule();
+        ExternModule module = getNewExternModule()
 
         then:
-        externModuleDao.insertExternModule(module);
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId());
+        externModuleDao.insertExternModule(module)
+        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
-        testingModule != null;
-        testingModule.getDescription() == module.getDescription();
-        testingModule.getName() == module.getName();
-        testingModule.getAuthor() == testingModule.getAuthor();
+        testingModule != null
+        testingModule.getDescription() == module.getDescription()
+        testingModule.getName() == module.getName()
+        testingModule.getAuthor() == testingModule.getAuthor()
 
-        noExceptionThrown();
+        noExceptionThrown()
     }
 
     def getNewExternModule() {
-        ExternModule externModule = new ExternModule();
-        externModule.setId("text_module");
-        externModule.setAuthor("tester");
-        externModule.setDescription("Extern module only for testing purpose");
-        externModule.setName("Test extern module");
-        return externModule;
+        ExternModule externModule = new ExternModule()
+        externModule.setId("text_module")
+        externModule.setAuthor("tester")
+        externModule.setDescription("Extern module only for testing purpose")
+        externModule.setName("Test extern module")
+        return externModule
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM extern_module");
+        jdbcTemplate.update("DELETE FROM extern_module")
     }
 }
