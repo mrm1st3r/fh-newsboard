@@ -1,3 +1,37 @@
+\subsection{Architektur}
+Der erste richtungweisende Punkt für des Konzepts ist die Architektur des Newsboards.
+Da eine Webseite zum Einsehen der bewerteten Nachrichten eine der Voraussetzungen ist,
+bietet sich eine klassische Client-Server-Architektur an.
+Dabei treten neben den Webbrowsern des Benutzer auch die Crawler-
+und Bewertungsmodule als Clients auf.
+
+Um die Komplexität des Newsboads möglichst gering zu halten, sollte die Kommunikation
+mit den Modulen ebenfalls über HTTP stattfinden. Das bringt den Vorteil mit sich,
+dass es für viele Programmiersprachen bereits gute Client-Bibliotheken gibt
+und sich so keine unnötigen Einschränkungen ergeben.
+
 \subsection{Datenmodell}
 
 \subsection{Schnittstelle}
+Die Hauptziele bei der Konzeption der Schnittstelle waren zum einen eine möglichst
+einfache Verwendung, sowie eine verlässliche Validierung der Übertragenen Daten.
+Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, REST zu verwenden.
+
+Als Datenformat für die Schnittstelle bieten sich sowohl JSON, als auch XML an.
+Da XML im Gegensatz zu JSON allerdings eine verlässliche Möglichkeit zur Validierung
+und Dokumentation durch ein Schema besitzt, ist es in diesem Fall die bessere Wahl.
+Der geringfügig höhere Speicherverbrauch, sowie die derzeit geringe Popularität
+von XML sollen hier keine Rolle spielen.
+
+Bei der Konzeption der verwendeten REST-Ressourcen, sowie deren akzeptierten Methoden
+bestehen ebenfalls zwei mögliche Szenarien. Das erste ist die Abbildung sämtlicher
+Datentypen des Datenmodells und das Erlauben aller CRUD-Operationen.
+Das zweite Szenario ist es, ausschließlich einige wenige Ressourcen zur Verfügung
+zu stellen, welche die geplanten Anwendungsfälle abbilden.
+
+Letzteres verlangt komplexere Daten, die von der Schnittstelle verarbeitet werden müssen,
+andernfalls läge diese Komplexität jeweils in den einzelnen Clients und müsste
+mehrfach konzeptioniert und umgesetzt werden. Das führt letztendlich zu mehr
+unnützer Arbeit und gleichzeitig zur mehr potentiellen Fehlerquellen.
+Da für diese Schnittstelle potentiell regelmäßig neue Clients entwickelt werden sollen,
+ist die zweite Variante als deutlich zweckmäßiger, sowie allgemein eleganter anzusehen.
