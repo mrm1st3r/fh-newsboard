@@ -175,7 +175,28 @@ class ClassificationDaoTest extends Specification {
     }
 
     def "test selection with sentence, document and extern module"() {
+        when:
+        Classification classification = new Classification();
+        classification.setExternModule(referenceModule);
+        classification.setSentenceId(referenceSentence.getId());
+        classification.setDocumentId(referenceDocument.getId());
+        classification.setValue(1.0123456789);
+        classification.setConfidence(2.0123456789);
+        dao.insertClassification(classification);
 
+        then:
+        Classification testClassification = dao.getClassification(referenceSentence, referenceDocument, referenceModule);
+
+        testClassification.getConfidence() == classification.getConfidence();
+        testClassification.getValue() == classification.getValue();
+        testClassification.getExternModule().getId() == classification.getExternModule().getId();
+        testClassification.getExternModule().getAuthor() == classification.getExternModule().getAuthor();
+        testClassification.getExternModule().getDescription() == classification.getExternModule().getDescription();
+        testClassification.getExternModule().getName() == classification.getExternModule().getName();
+        testClassification.getSentenceId() == classification.getSentenceId();
+        testClassification.getDocumentId() == classification.getDocumentId();
+
+        noExceptionThrown();
     }
 
     def setup() {
