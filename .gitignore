@@ -12,3 +12,14 @@ target
 
 # personal spring boot properties
 application-lukas.properties
+
+
+## TEX
+*.aux
+*.idx
+*.log
+*.out
+*.pdf
+*.synctex.gz
+*.toc
+
