@@ -13,3 +13,37 @@ gut zu benutzen.
 \subsection{Datenmodell}
 
 \subsection{Schnittstelle}
+Zur Implementierung der REST-Endpoints der Schnittstelle werden die in Spring enthaltenen
+Controller-Features genutzt. Um damit einen Endpoint zu bedienen, reicht es aus,
+eine Methode innerhalb einer Controller-Klasse mit \texttt{RequestMapping} zu annotieren.
+Listing \ref{lst:restExample} zeigt Beispielhaft, wie ein solcher Endpoint unter Angabe der
+Annotations-Parameter implementiert werden kann.
+
+Der Rückgabewert der Methode wird so direkt als Antwort an den Client zurückgeliefert.
+Darüber hinaus können mit Hilfe der Dependency-Injection von Spring weitere Parameter definiert werden, die z.B. die HTTP-Anfrage, oder die Antwort wie im Beispiel.
+\vspace{1em}
+
+\begin{java}{Implementierung eines REST-Endpoints mit Spring}{lst:restExample}
+@RestController
+public class RestApiController {
+	[...]
+	@RequestMapping(path = "/document", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+	public String listDocuments(HttpServletResponse response) {
+		[...]
+		return documents;
+	}
+	[...]
+}
+\end{java}
+
+Über die REST-Endpoints hinaus ist bei der Schnittstelle noch die Verbeitung der XML-Daten,
+sowie das Schema zur Validierung interessant.
+Da die zu erwartende Datenmengen im Vorhinein nicht abschätzbar sind,
+sollte das Lesen und vor allem das Schreiben der XML-Daten möglichst wenig Speicher
+verbrauchen, um eventuelle Engpässe zu vermeiden. Beim Lesen ist eine Validierung
+gegen das Schema unbedingt notwendig, da nicht davon ausgegangen werden kann,
+dass die ankommenden Daten in jedem Fall valide sind.
+
+Aufgrund der Speicheranforderungen ist ein herkömmlicher DOM-Parser in diesem Projekt
+nicht geeignet. Gelesen werden die XML-Daten stattdessen mit einem SAX-Parser.
+
