@@ -87,7 +87,7 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
                 pst.setString(3, moduleId);
                 return pst;
             }
-        });
+        }, keyHolder);
         externDocument.setId(keyHolder.getKey().intValue());
         return numRows;
     }
