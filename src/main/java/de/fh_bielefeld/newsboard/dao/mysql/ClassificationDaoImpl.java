@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,17 +21,15 @@ import java.util.List;
 @Component
 public class ClassificationDaoImpl implements ClassificationDao {
     private static final String GET_CLASSIFICATION =
-            "SELECT * FROM classification WHERE sent_id = ? AND document_id = ? AND module_id = ?";
+            "SELECT * FROM classification WHERE sent_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
             "SELECT * FROM classification WHERE sent_id = ?";
-    private static final String GET_CLASSIFICATIONS_FOR_DOCUMENT =
-            "SELECT * FROM classification WHERE document_id = ?";
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification (sent_id, document_id, module_id, value, confidence) VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO classification (sent_id, value, confidence) VALUES (?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
-            "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND document_id = ? AND module_id = ?";
+            "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND module_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private ExternModuleDao externModuleDao;
@@ -51,15 +48,14 @@ public class ClassificationDaoImpl implements ClassificationDao {
                 module.getId(),
         };
 
-        ClassificationDatabaseObject rawClassification = jdbcTemplate.queryForObject(
+        Classification classification = jdbcTemplate.queryForObject(
                 GET_CLASSIFICATION,
-                new ClassificationDatabaseObjectRowMapper(),
+                new ClassificationRowMapper(),
                 attributes);
 
-        if (rawClassification == null) {
+        if (classification == null) {
             return null;
         } else {
-            Classification classification = getClassificationFromClassificationDatabaseObject(rawClassification, null);
             classification.setExternModule(module);
             classification.setSentenceId(sentence.getId());
             return classification;
@@ -69,11 +65,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
     @Override
     public List<Classification> getAllClassificationsForSentence(Sentence sentence) {
         return getListOfClassifications(sentence.getId(), GET_CLASSIFICATIONS_FOR_SENTENCE, null);
-    }
-
-    @Override
-    public List<Classification> getAllClassificationsForDocument(Document document) {
-        return getListOfClassifications(document.getId(), GET_CLASSIFICATIONS_FOR_DOCUMENT, null);
     }
 
     @Override
@@ -127,42 +118,22 @@ public class ClassificationDaoImpl implements ClassificationDao {
                 attribute
         };
 
-        List<ClassificationDatabaseObject> rawClassifications = jdbcTemplate.query(
+        List<Classification> classifications = jdbcTemplate.query(
                 query,
-                new ClassificationDatabaseObjectRowMapper(),
+                new ClassificationRowMapper(),
                 attributes);
 
-        List<Classification> classifications = new ArrayList<>();
-        for (ClassificationDatabaseObject rawClassification : rawClassifications) {
-            classifications.add(getClassificationFromClassificationDatabaseObject(rawClassification, externModule));
-        }
-
-        return classifications;
-    }
-
-    /**
-     * Conforms a raw ClassificationDatabaseObject to a full modeled Classification.
-     * @param rawClassification the ClassificationDatabaseObject
-     * @param externModule if already an ExternModule for the classification exists,
-     *                     it can be given as a parameter to prevent fetching it from the database
-     * @return Classification the Classification built after the ClassificationDatabaseObject
-     */
-    private Classification getClassificationFromClassificationDatabaseObject(ClassificationDatabaseObject rawClassification, ExternModule externModule) {
-        Classification classification;
-        if (rawClassification == null) {
-            classification = null;
-        } else {
-            classification = new Classification();
-            classification.setSentenceId(rawClassification.getSentId());
-            classification.setConfidence(rawClassification.getConfidence());
-            classification.setValue(rawClassification.getValue());
-            if (externModule == null) {
-                classification.setExternModule(getExternModuleForClassification(rawClassification.getModuleId()));
+        for (Classification classification : classifications) {
+            if (externModule == null && classification.getExternModule() != null) {
+                ExternModule m = getExternModuleForClassification(classification.getExternModule().getId());
+                classification.setExternModule(m);
             } else {
                 classification.setExternModule(externModule);
             }
+            classifications.add(classification);
         }
-        return classification;
+
+        return classifications;
     }
 
     /**
@@ -180,67 +151,18 @@ public class ClassificationDaoImpl implements ClassificationDao {
         return externModule;
     }
 
-    protected class ClassificationDatabaseObjectRowMapper implements RowMapper<ClassificationDatabaseObject> {
+    protected class ClassificationRowMapper implements RowMapper<Classification> {
 
         @Override
-        public ClassificationDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
-            ClassificationDatabaseObject rawClassification = new ClassificationDatabaseObject();
+        public Classification mapRow(ResultSet resultSet, int i) throws SQLException {
+            Classification classification = new Classification();
 
-            rawClassification.setSentId(resultSet.getInt("sent_id"));
-            rawClassification.setDocumentId(resultSet.getInt("document_id"));
-            rawClassification.setModuleId(resultSet.getString("module_id"));
-            rawClassification.setValue(resultSet.getDouble("value"));
-            rawClassification.setConfidence(resultSet.getDouble("confidence"));
+            classification.setSentenceId(resultSet.getInt("sent_id"));
+            classification.setExternModule(new ExternModule(resultSet.getString("module_id")));
+            classification.setValue(resultSet.getDouble("value"));
+            classification.setConfidence(resultSet.getDouble("confidence"));
 
-            return rawClassification;
-        }
-    }
-
-    protected class ClassificationDatabaseObject {
-        private Integer sentId;
-        private Integer documentId;
-        private String moduleId;
-        private Double value;
-        private Double confidence;
-
-        public Integer getSentId() {
-            return sentId;
-        }
-
-        public void setSentId(Integer sentId) {
-            this.sentId = sentId;
-        }
-
-        public Integer getDocumentId() {
-            return documentId;
-        }
-
-        public void setDocumentId(Integer documentId) {
-            this.documentId = documentId;
-        }
-
-        public String getModuleId() {
-            return moduleId;
-        }
-
-        public void setModuleId(String moduleId) {
-            this.moduleId = moduleId;
-        }
-
-        public Double getValue() {
-            return value;
-        }
-
-        public void setValue(Double value) {
-            this.value = value;
-        }
-
-        public Double getConfidence() {
-            return confidence;
-        }
-
-        public void setConfidence(Double confidence) {
-            this.confidence = confidence;
+            return classification;
         }
     }
 }

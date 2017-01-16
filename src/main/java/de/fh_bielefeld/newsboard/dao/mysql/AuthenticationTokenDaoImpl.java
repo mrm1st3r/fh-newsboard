@@ -59,14 +59,8 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
 
     @Override
     public int insertAuthenticationToken(AuthenticationToken authToken) {
-        /*
-        Object[] values = {
-                authToken.getToken(), authToken.getModuleId()
-        };
-        return jdbcTemplate.update(INSERT_TOKEN, values);
-        */
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int rows = jdbcTemplate.update(new PreparedStatementCreator() {
+        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
                     @Override
                     public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                         PreparedStatement pst =
@@ -77,7 +71,7 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
                     }
                 }, keyHolder);
         authToken.setId(keyHolder.getKey().intValue());
-        return rows;
+        return numRows;
     }
 
     protected class AuthenticationTokenRowMapper implements RowMapper<AuthenticationToken> {
