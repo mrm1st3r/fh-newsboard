@@ -23,8 +23,8 @@ class AuthenticationTokenDaoTest extends Specification {
     @Autowired
     ExternModuleDao externModuleDao
 
-    private List<String> moduleIds
-    private List<Integer> authTokenIds
+    List<String> moduleIds
+    List<Integer> authTokenIds
 
     def "test updating"() {
         setup:

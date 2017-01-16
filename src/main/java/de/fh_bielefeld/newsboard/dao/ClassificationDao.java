@@ -11,7 +11,7 @@ import java.util.List;
  * Created by felixmeyer on 11.12.16.
  */
 public interface ClassificationDao {
-    public Classification getClassification(Sentence sentence, Document document, ExternModule module);
+    public Classification getClassification(Sentence sentence, ExternModule module);
     public List<Classification> getAllClassificationsForSentence(Sentence sentence);
     public List<Classification> getAllClassificationsFromModule(ExternModule module);
     public int updateClassification(Classification classficiation);

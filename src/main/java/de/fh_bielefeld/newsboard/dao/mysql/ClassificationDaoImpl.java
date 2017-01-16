@@ -27,7 +27,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification (sent_id, value, confidence) VALUES (?, ?, ?)";
+            "INSERT INTO classification (sent_id, module_id, value, confidence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
             "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND module_id = ?";
 
@@ -41,10 +41,9 @@ public class ClassificationDaoImpl implements ClassificationDao {
     }
 
     @Override
-    public Classification getClassification(Sentence sentence, Document document, ExternModule module) {
+    public Classification getClassification(Sentence sentence, ExternModule module) {
         Object[] attributes = {
                 sentence.getId(),
-                document.getId(),
                 module.getId(),
         };
 
@@ -97,8 +96,8 @@ public class ClassificationDaoImpl implements ClassificationDao {
             };
         } else {
             attributes = new Object[] {
-                    classification.getValue(),
                     confidence,
+                    classification.getValue(),
                     sentenceId,
                     moduleId
             };
@@ -130,7 +129,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
             } else {
                 classification.setExternModule(externModule);
             }
-            classifications.add(classification);
         }
 
         return classifications;
