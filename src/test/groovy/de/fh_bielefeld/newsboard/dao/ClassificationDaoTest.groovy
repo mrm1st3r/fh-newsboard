@@ -30,7 +30,6 @@ class ClassificationDaoTest extends Specification {
     List<String> moduleIds
     List<Integer> documentIds
     List<Integer> sentenceIds
-    List<Object[]> classificationIds
 
     Document dummyDocument
     ExternModule dummyModule
@@ -183,12 +182,6 @@ class ClassificationDaoTest extends Specification {
     }
 
     def cleanup() {
-        for (Object[] id : classificationIds) {
-            jdbcTemplate.update(
-                    "DELETE FROM classification " +
-                            "WHERE sentence_id = " + id[0]
-                            + " AND module_id = '" + id[1] + "'")
-        }
         for (Integer id : sentenceIds) {
             jdbcTemplate.update("DELETE FROM sentence WHERE id = " + id)
         }

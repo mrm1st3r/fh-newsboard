@@ -18,120 +18,162 @@ import spock.lang.Specification
  */
 @SpringBootTest(classes = NewsboardApplication.class)
 class SentenceDaoTest extends Specification {
-
-    @Autowired
-    DocumentDao docDao
-    @Autowired
-    ExternModuleDao extModDao
-    @Autowired
-    SentenceDao dao
     @Autowired
     JdbcTemplate jdbcTemplate
+    @Autowired
+    DocumentDao documentDao
+    @Autowired
+    SentenceDao sentenceDao
+    @Autowired
+    ExternModuleDao externModuleDao
 
-    Document doc
+    List<String> moduleIds
+    List<Integer> documentIds
+    List<Integer> sentenceIds
+
+    Document dummyDocument
+    ExternModule dummyModule
 
     def "test insertion"() {
         when:
-        Sentence sentence = getNewSentence()
+        Sentence sentence = new Sentence()
+        sentence.setNumber(1)
+        sentence.setText("Text for testing purposes")
 
         then:
-        dao.insertSentence(sentence, doc)
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
 
-        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0)
-        selectedSentence.getClassifications() == sentence.getClassifications()
-        selectedSentence.getNumber() == sentence.getNumber()
-        selectedSentence.getText() == sentence.getText()
+        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
+        testSentence.getId() == sentence.getId()
+        testSentence.getNumber() == sentence.getNumber()
+        testSentence.getText() == sentence.getText()
 
         noExceptionThrown()
     }
 
-    def "test updating without document"() {
+    def "test updating"() {
         when:
-        Sentence sentence = getNewSentence()
-        dao.insertSentence(sentence, doc)
-        sentence.setNumber(2)
-        sentence.setText("Another sentence for testing purpose")
-        Sentence selectedSentence = dao.getAllSentencesInDocument(doc).get(0)
-        sentence.setId(selectedSentence.getId())
+        Sentence sentence = new Sentence()
+        sentence.setNumber(1)
+        sentence.setText("Text for testing purposes")
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+        sentence.setText("Another text for testing purposes")
+        sentence.setNumber(2132)
 
         then:
-        dao.updateSentenceWithoutDocument(sentence)
+        sentenceDao.updateSentenceWithoutDocument(sentence)
 
-        Sentence testingSentence = dao.getAllSentencesInDocument(doc).get(0)
-        testingSentence.getClassifications() == sentence.getClassifications()
-        testingSentence.getNumber() == sentence.getNumber()
-        testingSentence.getText() == sentence.getText()
-
-        noExceptionThrown()
-    }
-
-    def "test selection with document"() {
-        when:
-        Sentence sentence = getNewSentence()
-        dao.insertSentence(sentence, doc)
-        dao.insertSentence(sentence, doc)
-        dao.insertSentence(sentence, doc)
-
-        then:
-        List<Sentence> sentences = dao.getAllSentencesInDocument(doc)
-
-        sentences.size() == 3
-        for (Sentence s : sentences) {
-            s.getNumber() == sentence.getNumber()
-            s.getText() == sentence.getText()
-        }
+        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
+        testSentence.getId() == sentence.getId()
+        testSentence.getNumber() == sentence.getNumber()
+        testSentence.getText() == sentence.getText()
 
         noExceptionThrown()
     }
 
     def "test selection with id"() {
         when:
-        Sentence sentence = getNewSentence()
-        dao.insertSentence(sentence, doc)
-        Integer id = dao.getAllSentencesInDocument(doc).get(0).getId()
+        Sentence sentence = new Sentence()
+        sentence.setNumber(1)
+        sentence.setText("Text for testing purposes")
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
 
         then:
-        Sentence testSentence = dao.getSentenceWithId(id)
+        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
 
-        testSentence.getText() == sentence.getText()
+        testSentence.getId() == sentence.getId()
         testSentence.getNumber() == sentence.getNumber()
+        testSentence.getText() == sentence.getText()
 
         noExceptionThrown()
     }
 
-    def getNewSentence() {
+    def "test selection with document"() {
+        when:
         Sentence sentence = new Sentence()
         sentence.setNumber(1)
-        sentence.setText("Test sentence")
-        return sentence
-    }
+        sentence.setText("Text for testing purposes")
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
 
-    def getNewExternModule() {
-        ExternModule externModule = new ExternModule()
-        externModule.setId("text_module")
-        externModule.setAuthor("tester")
-        externModule.setDescription("Extern module only for testing purpose")
-        externModule.setName("Test extern module")
-        return externModule
+
+        then:
+        List<Sentence> testSentences = sentenceDao.getAllSentencesInDocument(dummyDocument)
+
+        testSentences.size() == 3
+        for (Sentence testSentence : testSentences) {
+            testSentence.getId() == sentence.getId()
+            testSentence.getNumber() == sentence.getNumber()
+            testSentence.getText() == sentence.getText()
+        }
+
+        noExceptionThrown()
+
     }
 
     def setup() {
+        moduleIds = new ArrayList<String>()
+        documentIds = new ArrayList<Integer>()
+        sentenceIds = new ArrayList<Integer>()
+
         ExternModule module = getNewExternModule()
-        extModDao.insertExternModule(module)
-        doc = new Document()
-        DocumentMetaData docMd = new DocumentMetaData()
-        docMd.setModule(module)
-        docMd.setTitle("Test document")
-        doc.setMetaData(docMd)
-        docDao.insertDocument(doc)
-        Integer docId = jdbcTemplate.queryForObject("SELECT id FROM document", Integer.class)
-        doc.setId(docId)
+        Document document = getNewDocument(module)
+        insertExternModule(module)
+        insertDocument(document)
+
+        dummyModule = module
+        dummyDocument = document
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM document")
-        jdbcTemplate.update("DELETE FROM extern_module")
-        jdbcTemplate.update("DELETE FROM sentence")
-        jdbcTemplate.update("DELETE FROM classification")
+        for (Integer id : sentenceIds) {
+            jdbcTemplate.update("DELETE FROM sentence WHERE id = " + id)
+        }
+        for (Integer id : documentIds) {
+            jdbcTemplate.update("DELETE FROM document WHERE id = " + id)
+        }
+        for(String id : moduleIds) {
+            jdbcTemplate.update("DELETE FROM extern_module WHERE id = '" + id + "'")
+        }
+    }
+
+    def insertExternModule(ExternModule module) {
+        externModuleDao.insertExternModule(module)
+        moduleIds.add(module.getId())
+    }
+
+    def insertDocument(Document document) {
+        documentDao.insertDocument(document)
+        documentIds.add(document.getId())
+    }
+
+    def getNewDocument(ExternModule module) {
+        Document document = new Document()
+        DocumentMetaData metaData = new DocumentMetaData()
+        metaData.setAuthor("Test author")
+        metaData.setCrawlTime(new GregorianCalendar(2010, 2, 1))
+        metaData.setCreationTime(new GregorianCalendar(2017, 6, 4))
+        metaData.setModule(module)
+        metaData.setSource("Test source")
+        metaData.setTitle("Test document")
+        metaData.setModule(module)
+        document.setMetaData(metaData)
+        return document
+    }
+
+    def getNewExternModule() {
+        ExternModule module = new ExternModule()
+        module.setId("test_module")
+        module.setAuthor("Tester")
+        module.setDescription("Module for testing purpose")
+        module.setName("Test module")
+        return module
     }
 }
