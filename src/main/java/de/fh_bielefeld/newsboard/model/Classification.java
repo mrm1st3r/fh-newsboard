@@ -10,7 +10,6 @@ import java.util.OptionalInt;
  */
 public class Classification {
     private OptionalInt sentenceId = OptionalInt.empty();
-    private OptionalInt documentId = OptionalInt.empty();
     private ExternModule externModule;
     private double value;
     private OptionalDouble confidence = OptionalDouble.empty();
@@ -21,14 +20,6 @@ public class Classification {
 
     public void setSentenceId(int sentenceId) {
         this.sentenceId = OptionalInt.of(sentenceId);
-    }
-
-    public OptionalInt getDocumentId() {
-        return documentId;
-    }
-
-    public void setDocumentId(int documentId) {
-        this.documentId = OptionalInt.of(documentId);
     }
 
     public ExternModule getExternModule() {
@@ -61,8 +52,7 @@ public class Classification {
             return false;
         }
         Classification that = (Classification) obj;
-        return this.documentId.equals(that.documentId)
-                && this.sentenceId.equals(that.sentenceId)
+        return this.sentenceId.equals(that.sentenceId)
                 && this.externModule.equals(that.externModule);
     }
 }
