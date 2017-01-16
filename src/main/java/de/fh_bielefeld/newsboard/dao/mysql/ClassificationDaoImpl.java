@@ -60,7 +60,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
             return null;
         } else {
             Classification classification = getClassificationFromClassificationDatabaseObject(rawClassification, null);
-            classification.setDocumentId(document.getId());
             classification.setExternModule(module);
             classification.setSentenceId(sentence.getId());
             return classification;
@@ -95,14 +94,12 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private Object[] getAttributesForInsertOrUpdate(Classification classification, boolean isInsert) {
         String moduleId = classification.getExternModule() == null ? null : classification.getExternModule().getId();
         Integer sentenceId = classification.getSentenceId().getAsInt();
-        Integer documentId = classification.getDocumentId().getAsInt();
         Double confidence = classification.getConfidence().getAsDouble();
 
         Object[] attributes;
         if (isInsert) {
             attributes = new Object[] {
                     sentenceId,
-                    documentId,
                     moduleId,
                     classification.getValue(),
                     confidence
@@ -112,7 +109,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
                     classification.getValue(),
                     confidence,
                     sentenceId,
-                    documentId,
                     moduleId
             };
         }
@@ -157,7 +153,6 @@ public class ClassificationDaoImpl implements ClassificationDao {
             classification = null;
         } else {
             classification = new Classification();
-            classification.setDocumentId(rawClassification.getDocumentId());
             classification.setSentenceId(rawClassification.getSentId());
             classification.setConfidence(rawClassification.getConfidence());
             classification.setValue(rawClassification.getValue());

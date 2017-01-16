@@ -5,9 +5,15 @@ import de.fh_bielefeld.newsboard.model.AuthenticationToken;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Generated;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -53,10 +59,25 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
 
     @Override
     public int insertAuthenticationToken(AuthenticationToken authToken) {
+        /*
         Object[] values = {
                 authToken.getToken(), authToken.getModuleId()
         };
         return jdbcTemplate.update(INSERT_TOKEN, values);
+        */
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int rows = jdbcTemplate.update(new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                        PreparedStatement pst =
+                                connection.prepareStatement(INSERT_TOKEN, new String[]{"id"});
+                        pst.setString(1, authToken.getToken());
+                        pst.setString(2, authToken.getModuleId());
+                        return pst;
+                    }
+                }, keyHolder);
+        authToken.setId(keyHolder.getKey().intValue());
+        return rows;
     }
 
     protected class AuthenticationTokenRowMapper implements RowMapper<AuthenticationToken> {

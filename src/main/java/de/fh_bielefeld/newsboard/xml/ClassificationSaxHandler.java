@@ -36,9 +36,6 @@ class ClassificationSaxHandler extends DefaultHandler {
         if (attr.getIndex("sentenceid") >= 0) {
             classification.setSentenceId(Integer.parseInt(attr.getValue("sentenceid")));
         }
-        if (attr.getIndex("documentid") >= 0) {
-            classification.setDocumentId(Integer.parseInt(attr.getValue("documentid")));
-        }
     }
 
     @Override
