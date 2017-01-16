@@ -3,7 +3,6 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.ExternModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
