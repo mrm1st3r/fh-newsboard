@@ -6,9 +6,15 @@ import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.GenericArrayType;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -84,13 +90,20 @@ public class SentenceDaoImpl implements SentenceDao {
 
     @Override
     public int insertSentence(Sentence sentence, Document document) {
-        Object[] attributes = {
-                sentence.getNumber(),
-                sentence.getText(),
-                document.getId()
-        };
-
-        return jdbcTemplate.update(INSERT_SENTENCE, attributes);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement pst =
+                        connection.prepareStatement(INSERT_SENTENCE, new String[]{"id"});
+                pst.setInt(1, sentence.getNumber());
+                pst.setString(2, sentence.getText());
+                pst.setInt(3, document.getId());
+                return pst;
+            }
+        }, keyHolder);
+        sentence.setId(keyHolder.getKey().intValue());
+        return numRows;
     }
 
     /**

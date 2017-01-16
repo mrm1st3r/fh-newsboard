@@ -5,9 +5,14 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -70,14 +75,21 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
 
     @Override
     public int insertExternDocument(ExternDocument externDocument) {
-        String moduleId = externDocument.getExternModule() == null ? null : externDocument.getExternModule().getId();
-        Object[] attributes = {
-                externDocument.getTitle(),
-                externDocument.getHtml(),
-                moduleId,
-        };
-
-        return jdbcTemplate.update(INSERT_EXTERN_DOCUMENT, attributes);
+        final String moduleId = externDocument.getExternModule() == null ? null : externDocument.getExternModule().getId();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement pst =
+                        connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"id"});
+                pst.setString(1, externDocument.getTitle());
+                pst.setString(2, externDocument.getHtml());
+                pst.setString(3, moduleId);
+                return pst;
+            }
+        });
+        externDocument.setId(keyHolder.getKey().intValue());
+        return numRows;
     }
 
     protected class ExternDocumentDatabaseObjectRowMapper implements RowMapper<ExternDocumentDatabaseObject> {

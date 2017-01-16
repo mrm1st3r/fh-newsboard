@@ -12,4 +12,5 @@ public interface DocumentDao {
     public List<Document> getAllDocumentsOnlyWithMetaData();
     public int updateDocument(Document document);
     public int insertDocument(Document document);
+    public int insertDocumentWithSentences(Document document);
 }

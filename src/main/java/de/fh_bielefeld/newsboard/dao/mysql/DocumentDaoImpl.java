@@ -1,17 +1,24 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
-import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
-import de.fh_bielefeld.newsboard.model.*;
+import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.DocumentMetaData;
+import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Created by felixmeyer on 17.12.16.
@@ -29,15 +36,13 @@ public class DocumentDaoImpl implements DocumentDao {
 
     private JdbcTemplate jdbcTemplate;
     private SentenceDaoImpl sentenceDao;
-    private ClassificationDao classificationDao;
     private ExternModuleDao externModuleDao;
 
 
     @Autowired
-    public DocumentDaoImpl(JdbcTemplate jdbcTemplate, SentenceDaoImpl sentenceDao, ClassificationDaoImpl classificationDao, ExternModuleDao externModuleDao) {
+    public DocumentDaoImpl(JdbcTemplate jdbcTemplate, SentenceDaoImpl sentenceDao, ExternModuleDao externModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
-        this.classificationDao = classificationDao;
         this.externModuleDao = externModuleDao;
     }
 
@@ -90,17 +95,34 @@ public class DocumentDaoImpl implements DocumentDao {
 
     @Override
     public int insertDocument(Document document) {
-        String moduleId = document.getModule() == null ? null : document.getModule().getId();
-        Object[] attributes = {
-                document.getTitle(),
-                document.getAuthor(),
-                document.getSource(),
-                document.getCreationTime(),
-                document.getCrawlTime(),
-                moduleId
-        };
+        final String moduleId = document.getModule() == null ? null : document.getModule().getId();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement pst =
+                        connection.prepareStatement(INSERT_DOCUMENT, new String[]{"id"});
+                pst.setString(1, document.getTitle());
+                pst.setString(2, document.getAuthor());
+                pst.setString(3, document.getSource());
+                pst.setDate(4, new Date(document.getCreationTime().getTimeInMillis()));
+                pst.setDate(5, new Date(document.getCrawlTime().getTimeInMillis()));
+                pst.setString(6, moduleId);
+                return pst;
+            }
+        }, keyHolder);
 
-        return jdbcTemplate.update(INSERT_DOCUMENT, attributes);
+        document.setId(keyHolder.getKey().intValue());
+        return numRows;
+    }
+
+    @Override
+    public int insertDocumentWithSentences(Document document) {
+        int rows = insertDocument(document);
+        for (Sentence s : document.getSentences()) {
+            rows += sentenceDao.insertSentence(s, document);
+        }
+        return rows;
     }
 
     private Document getDocumentFromDocumentDatabaseObject(DocumentDatabaseObject rawDocument) {
@@ -111,7 +133,6 @@ public class DocumentDaoImpl implements DocumentDao {
             document.setId(rawDocument.getId());
             document.setMetaData(getDocumentMetaDataFromDocumentDatabaseObject(rawDocument));
             document.setSentences(getAllSentencesInDocument(document));
-            document.setClassifications(getAllClassificationsForDocument(document));
             return document;
         }
     }
@@ -129,10 +150,6 @@ public class DocumentDaoImpl implements DocumentDao {
 
     private ExternModule getExternModuleWithModuleId(String moduleId) {
         return externModuleDao.getExternModuleWithId(moduleId);
-    }
-
-    private List<Classification> getAllClassificationsForDocument(Document document) {
-        return classificationDao.getAllClassificationsForDocument(document);
     }
 
     private List<Sentence> getAllSentencesInDocument(Document document) {
