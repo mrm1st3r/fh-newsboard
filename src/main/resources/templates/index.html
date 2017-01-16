@@ -36,6 +36,10 @@
     <div class="row" th:each="doc : ${documents}">
         <div class="column-md-12">
             <h2 th:text="${doc.title}"></h2><small th:text="${doc.author}"></small>
+            <p>
+                <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text}"></span>
+            </p>
+            <hr />
         </div>
     </div>
 </div>
