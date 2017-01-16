@@ -16,5 +16,5 @@ INSERT INTO sentence(id, number, text, document_id) VALUES
   (4, 2, "Wichtige Nachrichten gibt's hier nicht.", 2);
 
 -- Classifications
-INSERT INTO classification(sent_id, document_id, module_id, value, confidence) VALUES
+INSERT INTO classification(sent_id, module_id, value, confidence) VALUES
   (4, "test-classifier", 0.8, NULL);
