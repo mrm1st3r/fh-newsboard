@@ -36,6 +36,14 @@
 			<scope>test</scope>
 		</dependency>
 
+        <!-- Dependency for Apache openNLP for sentence splitting -->
+        <!-- https://mvnrepository.com/artifact/org.apache.opennlp/opennlp-tools -->
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
         <!-- Dependency for Apache Lucene -->
         <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
         <dependency>
