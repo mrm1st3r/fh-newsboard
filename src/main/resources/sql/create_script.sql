@@ -79,7 +79,7 @@ ALTER TABLE classification
   ON DELETE CASCADE;
 
 ALTER TABLE classification
-  ADD CONSTRAINT fk_classification_extern_document
+  ADD CONSTRAINT fk_classification_extern_module
   FOREIGN KEY (module_id)
   REFERENCES extern_module (id)
   ON DELETE RESTRICT;
