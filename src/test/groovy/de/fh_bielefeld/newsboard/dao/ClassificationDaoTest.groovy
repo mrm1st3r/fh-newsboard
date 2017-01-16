@@ -5,11 +5,7 @@ import de.fh_bielefeld.newsboard.dao.ClassificationDao
 import de.fh_bielefeld.newsboard.dao.DocumentDao
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao
 import de.fh_bielefeld.newsboard.dao.SentenceDao
-import de.fh_bielefeld.newsboard.model.Classification
-import de.fh_bielefeld.newsboard.model.Document
-import de.fh_bielefeld.newsboard.model.DocumentMetaData
-import de.fh_bielefeld.newsboard.model.ExternModule
-import de.fh_bielefeld.newsboard.model.Sentence
+import de.fh_bielefeld.newsboard.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate

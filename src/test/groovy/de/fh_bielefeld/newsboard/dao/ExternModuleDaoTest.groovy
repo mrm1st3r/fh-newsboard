@@ -76,7 +76,7 @@ class ExternModuleDaoTest extends Specification {
 
     def getNewExternModule() {
         ExternModule externModule = new ExternModule()
-        externModule.setId("text_module")
+        externModule.setId("test_module")
         externModule.setAuthor("tester")
         externModule.setDescription("Extern module only for testing purpose")
         externModule.setName("Test extern module")
@@ -84,6 +84,6 @@ class ExternModuleDaoTest extends Specification {
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM extern_module")
+        jdbcTemplate.update("DELETE FROM extern_module WHERE id = 'test_module'")
     }
 }
