@@ -3,9 +3,11 @@ package groovy.de.fh_bielefeld.newsboard.dao
 import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.dao.DocumentDao
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao
+import de.fh_bielefeld.newsboard.dao.SentenceDao
 import de.fh_bielefeld.newsboard.model.Document
 import de.fh_bielefeld.newsboard.model.DocumentMetaData
 import de.fh_bielefeld.newsboard.model.ExternModule
+import de.fh_bielefeld.newsboard.model.Sentence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -16,178 +18,216 @@ import spock.lang.Specification
  */
 @SpringBootTest(classes = NewsboardApplication.class)
 class DocumentDaoTest extends Specification {
-
-    @Autowired
-    DocumentDao docDao
-    @Autowired
-    ExternModuleDao extModDao
     @Autowired
     JdbcTemplate jdbcTemplate
+    @Autowired
+    DocumentDao documentDao
+    @Autowired
+    SentenceDao sentenceDao
+    @Autowired
+    ExternModuleDao externModuleDao
+
+    List<String> moduleIds
+    List<Integer> documentIds
+    List<Integer> sentenceIds
+
+    Document dummyDocument
+    ExternModule dummyModule
 
     def "test insertion"() {
         when:
-        Document doc = new Document()
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setTitle("Test title")
-        metaData.setAuthor("Test author")
-        metaData.setSource("Test source")
-        metaData.setCrawlTime(getCrawlTime())
-        metaData.setCreationTime(getCreationTime())
-        metaData.setModule(getExternModule())
-        doc.setMetaData(metaData)
+        Document document = getNewDocument(getNewExternModule())
+        documentDao.insertDocument(document)
+        documentIds.add(document.getId())
 
         then:
-        docDao.insertDocument(doc)
+        Document testDocument = documentDao.getDocumentWithId(document.getId())
+        testDocument.getId() == document.getId()
+        testDocument.getAuthor() == document.getAuthor()
+        testDocument.getCrawlTime().getTimeInMillis() == document.getCrawlTime().getTimeInMillis()
+        testDocument.getCreationTime().getTimeInMillis() == document.getCreationTime().getTimeInMillis()
+        testDocument.getSource() == document.getSource()
+        testDocument.getTitle() == document.getTitle()
+        testDocument.getModule().getId() == document.getModule().getId()
+        testDocument.getModule().getAuthor() == document.getModule().getAuthor()
+        testDocument.getModule().getDescription() == document.getModule().getDescription()
+        testDocument.getModule().getName() == document.getModule().getName()
 
-        Document testDoc = docDao.getAllDocumentsOnlyWithMetaData().get(0)
-        testDoc != null
-        testDoc.getCreationTime() == metaData.getCreationTime()
-        testDoc.getCrawlTime() == metaData.getCrawlTime()
-        testDoc.getTitle() == metaData.getTitle()
-        testDoc.getAuthor() == metaData.getAuthor()
-        testDoc.getModule().getId() == testDoc.getModule().getId()
-        testDoc.getModule().getAuthor() == testDoc.getModule().getAuthor()
-        testDoc.getModule().getDescription() == testDoc.getModule().getDescription()
-        testDoc.getModule().getName() == testDoc.getModule().getName()
-        testDoc.getSource() == testDoc.getSource()
+        noExceptionThrown()
+    }
+
+    def "test insertion with sentences"() {
+        when:
+        insertDocument(dummyDocument)
+
+        then:
+        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
+        testDocument.getId() == dummyDocument.getId()
+        testDocument.getAuthor() == dummyDocument.getAuthor()
+        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
+        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
+        testDocument.getSource() == dummyDocument.getSource()
+        testDocument.getTitle() == dummyDocument.getTitle()
+
+        testDocument.getSentences().size() == dummyDocument.getSentences().size()
+        for (int i = 0; i < testDocument.getSentences().size(); i++) {
+            testDocument.getSentences().get(i).getId() == dummyDocument.getSentences().get(i).getId()
+            testDocument.getSentences().get(i).getNumber() == dummyDocument.getSentences().get(i).getNumber()
+            testDocument.getSentences().get(i).getText() == dummyDocument.getSentences().get(i).getText()
+        }
 
         noExceptionThrown()
     }
 
     def "test updating"() {
         when:
-        Document doc = new Document()
+        insertDocument(dummyDocument)
         DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setTitle("Test title")
-        metaData.setAuthor("Test author")
-        metaData.setSource("Test source")
-        metaData.setCrawlTime(getCrawlTime())
-        metaData.setCreationTime(getCreationTime())
-        metaData.setModule(getExternModule())
-        doc.setMetaData(metaData)
-        docDao.insertDocument(doc)
-
-        DocumentMetaData testMetaData = new DocumentMetaData()
-        testMetaData.setCrawlTime(getCreationTime())
-        testMetaData.setCreationTime(getCrawlTime())
-        testMetaData.setTitle("Test title2")
-        testMetaData.setAuthor("Test author2")
-        testMetaData.setSource("Test source2")
-        testMetaData.setModule(getExternModule())
-        Integer id = jdbcTemplate.queryForObject("SELECT id FROM document", Integer.class)
-        doc.setId(id)
-        doc.setMetaData(testMetaData)
+        metaData.setTitle("Test document again")
+        metaData.setSource("Test source again")
+        metaData.setAuthor("Test author again")
+        metaData.setCrawlTime(dummyDocument.getCreationTime())
+        metaData.setCreationTime(dummyDocument.getCrawlTime())
+        ExternModule externModule =  getNewExternModule()
+        externModule.setId("test_module_again")
+        insertExternModule(externModule)
+        metaData.setModule(externModule)
+        dummyDocument.setMetaData(metaData)
 
         then:
-        docDao.updateDocument(doc)
+        documentDao.updateDocument(dummyDocument)
 
-        Document testDoc = docDao.getAllDocumentsOnlyWithMetaData().get(0)
-        testDoc != null
-        testDoc.getCreationTime() == doc.getCreationTime()
-        testDoc.getCrawlTime() == doc.getCrawlTime()
-        testDoc.getTitle() == doc.getTitle()
-        testDoc.getAuthor() == doc.getAuthor()
-        testDoc.getModule().getId() == doc.getModule().getId()
-        testDoc.getModule().getAuthor() == doc.getModule().getAuthor()
-        testDoc.getModule().getDescription() == doc.getModule().getDescription()
-        testDoc.getModule().getName() == doc.getModule().getName()
-        testDoc.getSource() == doc.getSource()
+        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
+        testDocument.getId() == dummyDocument.getId()
+        testDocument.getAuthor() == dummyDocument.getAuthor()
+        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
+        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
+        testDocument.getSource() == dummyDocument.getSource()
+        testDocument.getTitle() == dummyDocument.getTitle()
+        testDocument.getModule().getId() == dummyDocument.getModule().getId()
+        testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
+        testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
+        testDocument.getModule().getName() == dummyDocument.getModule().getName()
 
         noExceptionThrown()
     }
 
     def "test selection with id"() {
         when:
-        Document doc = new Document()
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setTitle("Test title")
-        metaData.setAuthor("Test author")
-        metaData.setSource("Test source")
-        metaData.setCrawlTime(getCrawlTime())
-        metaData.setCreationTime(getCreationTime())
-        metaData.setModule(getExternModule())
-        doc.setMetaData(metaData)
-        docDao.insertDocument(doc)
-        doc = docDao.getAllDocumentsOnlyWithMetaData().get(0)
+        insertDocument(dummyDocument)
 
         then:
-        Document testDoc = docDao.getDocumentWithId(doc.getId())
+        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
 
-        testDoc != null
-        testDoc.getCreationTime() == doc.getCreationTime()
-        testDoc.getCrawlTime() == doc.getCrawlTime()
-        testDoc.getTitle() == doc.getTitle()
-        testDoc.getAuthor() == doc.getAuthor()
-        testDoc.getModule().getId() == doc.getModule().getId()
-        testDoc.getModule().getAuthor() == doc.getModule().getAuthor()
-        testDoc.getModule().getDescription() == doc.getModule().getDescription()
-        testDoc.getModule().getName() == doc.getModule().getName()
-        testDoc.getSource() == doc.getSource()
+        testDocument.getId() == dummyDocument.getId()
+        testDocument.getAuthor() == dummyDocument.getAuthor()
+        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
+        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
+        testDocument.getSource() == dummyDocument.getSource()
+        testDocument.getTitle() == dummyDocument.getTitle()
+        testDocument.getModule().getId() == dummyDocument.getModule().getId()
+        testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
+        testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
+        testDocument.getModule().getName() == dummyDocument.getModule().getName()
 
         noExceptionThrown()
     }
 
-    def "test selection all documents with metadata"() {
+    def "test selection only with metadata"() {
         when:
-        Document doc = new Document()
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setTitle("Test title")
-        metaData.setAuthor("Test author")
-        metaData.setSource("Test source")
-        metaData.setCrawlTime(getCrawlTime())
-        metaData.setCreationTime(getCreationTime())
-        metaData.setModule(getExternModule())
-        doc.setMetaData(metaData)
-        docDao.insertDocument(doc)
-        docDao.insertDocument(doc)
-        docDao.insertDocument(doc)
-        docDao.insertDocument(doc)
-        docDao.insertDocument(doc)
+        insertDocument(dummyDocument)
+        insertDocument(dummyDocument)
+        insertDocument(dummyDocument)
 
         then:
-        List<Document> allDocuments = docDao.getAllDocumentsOnlyWithMetaData()
-        allDocuments.size() == 5
-        for (Document testDoc : allDocuments) {
-            testDoc.getCreationTime() == doc.getCreationTime()
-            testDoc.getCrawlTime() == doc.getCrawlTime()
-            testDoc.getTitle() == doc.getTitle()
-            testDoc.getAuthor() == doc.getAuthor()
-            testDoc.getModule().getId() == doc.getModule().getId()
-            testDoc.getModule().getAuthor() == doc.getModule().getAuthor()
-            testDoc.getModule().getDescription() == doc.getModule().getDescription()
-            testDoc.getModule().getName() == doc.getModule().getName()
-            testDoc.getSource() == doc.getSource()
+        List<Document> allDocuments = documentDao.getAllDocumentsOnlyWithMetaData()
+
+        for (Document testDocument : allDocuments) {
+            testDocument.getId() == dummyDocument.getId()
+            testDocument.getAuthor() == dummyDocument.getAuthor()
+            testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
+            testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
+            testDocument.getSource() == dummyDocument.getSource()
+            testDocument.getTitle() == dummyDocument.getTitle()
+            testDocument.getModule().getId() == dummyDocument.getModule().getId()
+            testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
+            testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
+            testDocument.getModule().getName() == dummyDocument.getModule().getName()
+            testDocument.getSentences().size() == 0
         }
 
         noExceptionThrown()
     }
 
     def setup() {
-        ExternModule module = getExternModule()
-        extModDao.insertExternModule(module)
+        moduleIds = new ArrayList<String>()
+        documentIds = new ArrayList<Integer>()
+        sentenceIds = new ArrayList<Integer>()
+
+        ExternModule module = getNewExternModule()
+        Document document = getNewDocument(module)
+        insertExternModule(module)
+        insertDocument(document)
+
+        dummyModule = module
+        dummyDocument = document
     }
 
     def cleanup() {
-        jdbcTemplate.update("DELETE FROM document")
-        jdbcTemplate.update("DELETE FROM extern_module")
+        for (Integer id : sentenceIds) {
+            jdbcTemplate.update("DELETE FROM sentence WHERE id = " + id)
+        }
+        for (Integer id : documentIds) {
+            jdbcTemplate.update("DELETE FROM document WHERE id = " + id)
+        }
+        for(String id : moduleIds) {
+            jdbcTemplate.update("DELETE FROM extern_module WHERE id = '" + id + "'")
+        }
     }
 
-    def getExternModule() {
-        ExternModule externModule = new ExternModule()
-        externModule.setId("text_module")
-        externModule.setAuthor("tester")
-        externModule.setDescription("Extern module only for testing purpose")
-        externModule.setName("Test extern module")
-        return externModule
+    def insertExternModule(ExternModule module) {
+        externModuleDao.insertExternModule(module)
+        moduleIds.add(module.getId())
     }
 
-    def getCrawlTime() {
-        Calendar calendar = new GregorianCalendar(2000, 1, 1)
-        return calendar
+    def insertDocument(Document document) {
+        documentDao.insertDocumentWithSentences(document)
+        documentIds.add(document.getId())
+        for (Sentence s : document.getSentences()) {
+            sentenceIds.add(s.getId())
+        }
     }
 
-    def getCreationTime() {
-        Calendar calendar = new GregorianCalendar(2005, 2, 2)
-        return calendar
+    def getNewDocument(ExternModule module) {
+        Document document = new Document()
+        DocumentMetaData metaData = new DocumentMetaData()
+        metaData.setAuthor("Test author")
+        metaData.setCrawlTime(new GregorianCalendar(2010, 2, 1))
+        metaData.setCreationTime(new GregorianCalendar(2017, 6, 4))
+        metaData.setModule(module)
+        metaData.setSource("Test source")
+        metaData.setTitle("Test document")
+        metaData.setModule(module)
+        document.setMetaData(metaData)
+        for (int i = 0; i < 3; i++) {
+            document.addSentence(getNewSentence())
+        }
+        return document
+    }
+
+    def getNewExternModule() {
+        ExternModule module = new ExternModule()
+        module.setId("test_module")
+        module.setAuthor("Tester")
+        module.setDescription("Module for testing purpose")
+        module.setName("Test module")
+        return module
+    }
+
+    def getNewSentence() {
+        Sentence sentence = new Sentence()
+        sentence.setNumber(1)
+        sentence.setText("Example text of a sentence object for testing purposes.")
+        return sentence
     }
 }

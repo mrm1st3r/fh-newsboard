@@ -30,7 +30,6 @@ class ClassificationDaoTest extends Specification {
     List<String> moduleIds
     List<Integer> documentIds
     List<Integer> sentenceIds
-    List<Object[]> classificationIds
 
     Document dummyDocument
     ExternModule dummyModule
