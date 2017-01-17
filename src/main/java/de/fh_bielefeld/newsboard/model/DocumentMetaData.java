@@ -12,7 +12,7 @@ public class DocumentMetaData {
     private String source;
     private Calendar creationTime;
     private Calendar crawlTime;
-    private ExternModule module;
+    private ExternalModule module;
 
     public String getTitle() {
         return title;
@@ -54,11 +54,11 @@ public class DocumentMetaData {
         this.crawlTime = crawlTime;
     }
 
-    public ExternModule getModule() {
+    public ExternalModule getModule() {
         return module;
     }
 
-    public void setModule(ExternModule module) {
+    public void setModule(ExternalModule module) {
         this.module = module;
     }
 }

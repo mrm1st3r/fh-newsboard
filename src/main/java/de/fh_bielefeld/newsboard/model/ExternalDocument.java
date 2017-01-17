@@ -5,11 +5,11 @@ package de.fh_bielefeld.newsboard.model;
  *
  * @Author Felix Meyer
  */
-public class ExternDocument {
+public class ExternalDocument {
     private int id;
     private String title;
     private String html;
-    private ExternModule externModule;
+    private ExternalModule externalModule;
 
     public int getId() {
         return id;
@@ -35,11 +35,11 @@ public class ExternDocument {
         this.html = html;
     }
 
-    public ExternModule getExternModule() {
-        return externModule;
+    public ExternalModule getExternalModule() {
+        return externalModule;
     }
 
-    public void setExternModule(ExternModule externModule) {
-        this.externModule = externModule;
+    public void setExternalModule(ExternalModule externalModule) {
+        this.externalModule = externalModule;
     }
 }

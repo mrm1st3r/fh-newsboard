@@ -9,7 +9,7 @@ import java.util.OptionalDouble;
  */
 public class Classification {
     private int sentenceId;
-    private ExternModule externModule;
+    private ExternalModule externalModule;
     private double value;
     private OptionalDouble confidence = OptionalDouble.empty();
 
@@ -21,12 +21,12 @@ public class Classification {
         this.sentenceId = sentenceId;
     }
 
-    public ExternModule getExternModule() {
-        return externModule;
+    public ExternalModule getExternalModule() {
+        return externalModule;
     }
 
-    public void setExternModule(ExternModule externModule) {
-        this.externModule = externModule;
+    public void setExternalModule(ExternalModule externalModule) {
+        this.externalModule = externalModule;
     }
 
     public double getValue() {
@@ -51,6 +51,6 @@ public class Classification {
             return false;
         }
         Classification that = (Classification) obj;
-        return this.sentenceId == that.sentenceId && this.externModule.equals(that.externModule);
+        return this.sentenceId == that.sentenceId && this.externalModule.equals(that.externalModule);
     }
 }

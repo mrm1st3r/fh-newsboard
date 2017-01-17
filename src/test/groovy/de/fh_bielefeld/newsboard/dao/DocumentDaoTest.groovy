@@ -6,7 +6,7 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao
 import de.fh_bielefeld.newsboard.dao.SentenceDao
 import de.fh_bielefeld.newsboard.model.Document
 import de.fh_bielefeld.newsboard.model.DocumentMetaData
-import de.fh_bielefeld.newsboard.model.ExternModule
+import de.fh_bielefeld.newsboard.model.ExternalModule
 import de.fh_bielefeld.newsboard.model.Sentence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -32,7 +32,7 @@ class DocumentDaoTest extends Specification {
     List<Integer> sentenceIds
 
     Document dummyDocument
-    ExternModule dummyModule
+    ExternalModule dummyModule
 
     def "test insertion"() {
         when:
@@ -88,7 +88,7 @@ class DocumentDaoTest extends Specification {
         metaData.setAuthor("Test author again")
         metaData.setCrawlTime(dummyDocument.getCreationTime())
         metaData.setCreationTime(dummyDocument.getCrawlTime())
-        ExternModule externModule =  getNewExternModule()
+        ExternalModule externModule =  getNewExternModule()
         externModule.setId("test_module_again")
         insertExternModule(externModule)
         metaData.setModule(externModule)
@@ -164,7 +164,7 @@ class DocumentDaoTest extends Specification {
         documentIds = new ArrayList<Integer>()
         sentenceIds = new ArrayList<Integer>()
 
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
         Document document = getNewDocument(module)
         insertExternModule(module)
         insertDocument(document)
@@ -185,7 +185,7 @@ class DocumentDaoTest extends Specification {
         }
     }
 
-    def insertExternModule(ExternModule module) {
+    def insertExternModule(ExternalModule module) {
         externModuleDao.insertExternModule(module)
         moduleIds.add(module.getId())
     }
@@ -198,7 +198,7 @@ class DocumentDaoTest extends Specification {
         }
     }
 
-    def getNewDocument(ExternModule module) {
+    def getNewDocument(ExternalModule module) {
         Document document = new Document()
         DocumentMetaData metaData = new DocumentMetaData()
         metaData.setAuthor("Test author")
@@ -216,7 +216,7 @@ class DocumentDaoTest extends Specification {
     }
 
     def getNewExternModule() {
-        ExternModule module = new ExternModule()
+        ExternalModule module = new ExternalModule()
         module.setId("test_module")
         module.setAuthor("Tester")
         module.setDescription("Module for testing purpose")

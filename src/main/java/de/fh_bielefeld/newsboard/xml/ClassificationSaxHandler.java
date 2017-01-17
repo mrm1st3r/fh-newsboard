@@ -1,7 +1,7 @@
 package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -28,8 +28,8 @@ class ClassificationSaxHandler extends DefaultHandler {
     }
 
     private void parseAttributes(Classification classification, Attributes attr) {
-        ExternModule classifier = new ExternModule(attr.getValue("classifier"));
-        classification.setExternModule(classifier);
+        ExternalModule classifier = new ExternalModule(attr.getValue("classifier"));
+        classification.setExternalModule(classifier);
         if (attr.getIndex("confidence") >= 0) {
             classification.setConfidence(Double.parseDouble(attr.getValue("confidence")));
         }

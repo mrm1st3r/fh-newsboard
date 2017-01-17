@@ -55,7 +55,7 @@ public class Document {
         return metaData.getCrawlTime();
     }
 
-    public ExternModule getModule() {
+    public ExternalModule getModule() {
         return metaData.getModule();
     }
 

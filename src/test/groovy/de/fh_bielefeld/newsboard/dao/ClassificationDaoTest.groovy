@@ -32,14 +32,14 @@ class ClassificationDaoTest extends Specification {
     List<Integer> sentenceIds
 
     Document dummyDocument
-    ExternModule dummyModule
+    ExternalModule dummyModule
 
     def "test insertion"() {
         when:
         Classification classification = new Classification()
         classification.setConfidence(1.0123456789)
         classification.setValue(2.0123456789)
-        classification.setExternModule(dummyModule)
+        classification.setExternalModule(dummyModule)
         List<Sentence> dummySentences = dummyDocument.getSentences()
         classification.setSentenceId(dummySentences.get(0).getId())
 
@@ -50,7 +50,7 @@ class ClassificationDaoTest extends Specification {
         testClassification.getConfidence() == classification.getConfidence()
         testClassification.getValue() == classification.getValue()
         testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternModule() == classification.getExternModule()
+        testClassification.getExternalModule() == classification.getExternalModule()
 
         noExceptionThrown()
     }
@@ -60,7 +60,7 @@ class ClassificationDaoTest extends Specification {
         Classification classification = new Classification()
         classification.setConfidence(1.0123456789)
         classification.setValue(2.0123456789)
-        classification.setExternModule(dummyModule)
+        classification.setExternalModule(dummyModule)
         List<Sentence> dummySentences = dummyDocument.getSentences()
         classification.setSentenceId(dummySentences.get(0).getId())
         classificationDao.insertClassification(classification)
@@ -75,7 +75,7 @@ class ClassificationDaoTest extends Specification {
         testClassification.getConfidence() == classification.getConfidence()
         testClassification.getValue() == classification.getValue()
         testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternModule() == classification.getExternModule()
+        testClassification.getExternalModule() == classification.getExternalModule()
 
         noExceptionThrown()
     }
@@ -85,7 +85,7 @@ class ClassificationDaoTest extends Specification {
         Classification classification = new Classification()
         classification.setConfidence(1.0123456789)
         classification.setValue(2.0123456789)
-        classification.setExternModule(dummyModule)
+        classification.setExternalModule(dummyModule)
         List<Sentence> dummySentences = dummyDocument.getSentences()
         classification.setSentenceId(dummySentences.get(0).getId())
         classificationDao.insertClassification(classification)
@@ -96,7 +96,7 @@ class ClassificationDaoTest extends Specification {
         testClassification.getConfidence() == classification.getConfidence()
         testClassification.getValue() == classification.getValue()
         testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternModule() == classification.getExternModule()
+        testClassification.getExternalModule() == classification.getExternalModule()
 
         noExceptionThrown()
     }
@@ -106,16 +106,16 @@ class ClassificationDaoTest extends Specification {
         Classification classification = new Classification()
         classification.setConfidence(1.0123456789)
         classification.setValue(2.0123456789)
-        classification.setExternModule(dummyModule)
+        classification.setExternalModule(dummyModule)
         List<Sentence> dummySentences = dummyDocument.getSentences()
         classification.setSentenceId(dummySentences.get(0).getId())
         classificationDao.insertClassification(classification)
 
-        ExternModule additionalModule = getNewExternModule()
+        ExternalModule additionalModule = getNewExternModule()
         additionalModule.setId("additional_testing_module")
         insertExternModule(additionalModule)
 
-        classification.setExternModule(additionalModule)
+        classification.setExternalModule(additionalModule)
         classificationDao.insertClassification(classification)
 
 
@@ -127,8 +127,8 @@ class ClassificationDaoTest extends Specification {
             c.getValue() == classification.getValue()
             c.getSentenceId() == classification.getSentenceId()
         }
-        testClassifications.get(0).getExternModule().getId() == "additional_testing_module"
-        testClassifications.get(1).getExternModule().getId() == "test_module"
+        testClassifications.get(0).getExternalModule().getId() == "additional_testing_module"
+        testClassifications.get(1).getExternalModule().getId() == "test_module"
 
         noExceptionThrown()
     }
@@ -138,16 +138,16 @@ class ClassificationDaoTest extends Specification {
         Classification classification = new Classification()
         classification.setConfidence(1.0123456789)
         classification.setValue(2.0123456789)
-        classification.setExternModule(dummyModule)
+        classification.setExternalModule(dummyModule)
         List<Sentence> dummySentences = dummyDocument.getSentences()
         classification.setSentenceId(dummySentences.get(0).getId())
         classificationDao.insertClassification(classification)
 
-        ExternModule additionalModule = getNewExternModule()
+        ExternalModule additionalModule = getNewExternModule()
         additionalModule.setId("additional_testing_module")
         insertExternModule(additionalModule)
 
-        classification.setExternModule(additionalModule)
+        classification.setExternalModule(additionalModule)
         classification.setSentenceId(dummySentences.get(1).getId())
         classificationDao.insertClassification(classification)
         classification.setSentenceId(dummySentences.get(2).getId())
@@ -172,7 +172,7 @@ class ClassificationDaoTest extends Specification {
         documentIds = new ArrayList<Integer>()
         sentenceIds = new ArrayList<Integer>()
 
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
         Document document = getNewDocument(module)
         insertExternModule(module)
         insertDocument(document)
@@ -193,7 +193,7 @@ class ClassificationDaoTest extends Specification {
         }
     }
 
-    def insertExternModule(ExternModule module) {
+    def insertExternModule(ExternalModule module) {
         externModuleDao.insertExternModule(module)
         moduleIds.add(module.getId())
     }
@@ -206,7 +206,7 @@ class ClassificationDaoTest extends Specification {
         }
     }
 
-    def getNewDocument(ExternModule module) {
+    def getNewDocument(ExternalModule module) {
         Document document = new Document()
         DocumentMetaData metaData = new DocumentMetaData()
         metaData.setAuthor("Test author")
@@ -224,7 +224,7 @@ class ClassificationDaoTest extends Specification {
     }
 
     def getNewExternModule() {
-        ExternModule module = new ExternModule()
+        ExternalModule module = new ExternalModule()
         module.setId("test_module")
         module.setAuthor("Tester")
         module.setDescription("Module for testing purpose")

@@ -4,7 +4,7 @@ import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.DocumentMetaData;
-import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -148,7 +148,7 @@ public class DocumentDaoImpl implements DocumentDao {
         return documentMetaData;
     }
 
-    private ExternModule getExternModuleWithModuleId(String moduleId) {
+    private ExternalModule getExternModuleWithModuleId(String moduleId) {
         return externModuleDao.getExternModuleWithId(moduleId);
     }
 

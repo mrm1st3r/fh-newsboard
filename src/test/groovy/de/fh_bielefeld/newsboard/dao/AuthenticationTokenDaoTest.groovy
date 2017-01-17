@@ -4,7 +4,7 @@ import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.dao.AuthenticationTokenDao
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao
 import de.fh_bielefeld.newsboard.model.AuthenticationToken
-import de.fh_bielefeld.newsboard.model.ExternModule
+import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -28,7 +28,7 @@ class AuthenticationTokenDaoTest extends Specification {
 
     def "test updating"() {
         setup:
-        ExternModule additionalExternModule = getNewExternModule()
+        ExternalModule additionalExternModule = getNewExternModule()
         additionalExternModule.setId("extern_module_testing_2")
         additionalExternModule.setAuthor("test_author_2")
         additionalExternModule.setName("Additional extern module for testing purpose")
@@ -69,7 +69,7 @@ class AuthenticationTokenDaoTest extends Specification {
     def "test selection with extern module"() {
         when:
         AuthenticationToken token = getNewAuthenticationToken()
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
         insertToken(token)
         insertToken(token)
         insertToken(token)
@@ -124,7 +124,7 @@ class AuthenticationTokenDaoTest extends Specification {
         authTokenIds.add(token.getId())
     }
 
-    def insertExternModule(ExternModule module) {
+    def insertExternModule(ExternalModule module) {
         externModuleDao.insertExternModule(module)
         moduleIds.add(module.getId())
     }
@@ -134,7 +134,7 @@ class AuthenticationTokenDaoTest extends Specification {
     }
 
     def getNewExternModule() {
-        ExternModule externModule = new ExternModule()
+        ExternalModule externModule = new ExternalModule()
         externModule.setId("extern_module_test")
         externModule.setAuthor("test_author")
         externModule.setName("Extern_Module for testing purpose")

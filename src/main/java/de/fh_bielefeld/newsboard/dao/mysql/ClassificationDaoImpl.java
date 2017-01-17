@@ -3,7 +3,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +41,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     }
 
     @Override
-    public Classification getClassification(Sentence sentence, ExternModule module) {
+    public Classification getClassification(Sentence sentence, ExternalModule module) {
         Object[] attributes = {
                 sentence.getId(),
                 module.getId(),
@@ -55,7 +55,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
         if (classification == null) {
             return null;
         } else {
-            classification.setExternModule(module);
+            classification.setExternalModule(module);
             classification.setSentenceId(sentence.getId());
             return classification;
         }
@@ -67,7 +67,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     }
 
     @Override
-    public List<Classification> getAllClassificationsFromModule(ExternModule module) {
+    public List<Classification> getAllClassificationsFromModule(ExternalModule module) {
         return getListOfClassifications(module.getId(), GET_CLASSIFICATIONS_FROM_MODULE, module);
     }
 
@@ -91,7 +91,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
                 confidence,
                 classification.getValue(),
                 classification.getSentenceId(),
-                classification.getExternModule().getId()
+                classification.getExternalModule().getId()
         };
     }
 
@@ -99,10 +99,10 @@ public class ClassificationDaoImpl implements ClassificationDao {
      * Fetches a list containing all relevant Classifications from the Database.
      * @param attribute the attribute which will be used to select the rows in the database
      * @param query the executed query
-     * @param externModule when giving an explicit ExternModule, no try to fetch one from database will be executed
+     * @param externalModule when giving an explicit ExternalModule, no try to fetch one from database will be executed
      * @return List containing the classifications
      */
-    private List<Classification> getListOfClassifications(Object attribute, String query, ExternModule externModule) {
+    private List<Classification> getListOfClassifications(Object attribute, String query, ExternalModule externalModule) {
         Object[] attributes = {
                 attribute
         };
@@ -113,11 +113,11 @@ public class ClassificationDaoImpl implements ClassificationDao {
                 attributes);
 
         for (Classification classification : classifications) {
-            if (externModule == null && classification.getExternModule() != null) {
-                ExternModule m = getExternModuleForClassification(classification.getExternModule().getId());
-                classification.setExternModule(m);
+            if (externalModule == null && classification.getExternalModule() != null) {
+                ExternalModule m = getExternModuleForClassification(classification.getExternalModule().getId());
+                classification.setExternalModule(m);
             } else {
-                classification.setExternModule(externModule);
+                classification.setExternalModule(externalModule);
             }
         }
 
@@ -125,18 +125,18 @@ public class ClassificationDaoImpl implements ClassificationDao {
     }
 
     /**
-     * Fetches an ExternModule per Dao from the database.
+     * Fetches an ExternalModule per Dao from the database.
      * @param moduleId the ExternModules id
-     * @return the ExternModule
+     * @return the ExternalModule
      */
-    private ExternModule getExternModuleForClassification(String moduleId) {
-        ExternModule externModule;
+    private ExternalModule getExternModuleForClassification(String moduleId) {
+        ExternalModule externalModule;
         if (moduleId == null) {
-            externModule = null;
+            externalModule = null;
         } else {
-            externModule = externModuleDao.getExternModuleWithId(moduleId);
+            externalModule = externModuleDao.getExternModuleWithId(moduleId);
         }
-        return externModule;
+        return externalModule;
     }
 
     private class ClassificationRowMapper implements RowMapper<Classification> {
@@ -146,7 +146,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
             Classification classification = new Classification();
 
             classification.setSentenceId(resultSet.getInt("sent_id"));
-            classification.setExternModule(new ExternModule(resultSet.getString("module_id")));
+            classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
             classification.setValue(resultSet.getDouble("value"));
             classification.setConfidence(resultSet.getDouble("confidence"));
 

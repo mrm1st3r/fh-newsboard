@@ -2,7 +2,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ExternDocumentDao;
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
-import de.fh_bielefeld.newsboard.model.ExternDocument;
+import de.fh_bielefeld.newsboard.model.ExternalDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -40,55 +40,55 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
     }
 
     @Override
-    public ExternDocument getExternDocumentWithId(int id) {
+    public ExternalDocument getExternDocumentWithId(int id) {
         ExternDocumentDatabaseObject rawExternDocument = jdbcTemplate.queryForObject(
                 GET_EXTERN_DOCUMENT_WITH_ID,
                 new ExternDocumentDatabaseObjectRowMapper(),
                 id);
 
-        ExternDocument externDocument = new ExternDocument();
-        externDocument.setId(rawExternDocument.getId());
-        externDocument.setTitle(rawExternDocument.getTitle());
-        externDocument.setHtml(rawExternDocument.getHtml());
+        ExternalDocument externalDocument = new ExternalDocument();
+        externalDocument.setId(rawExternDocument.getId());
+        externalDocument.setTitle(rawExternDocument.getTitle());
+        externalDocument.setHtml(rawExternDocument.getHtml());
         String externModuleId = rawExternDocument.getModuleId();
         if (externModuleId == null) {
-            externDocument.setExternModule(null);
+            externalDocument.setExternalModule(null);
         } else {
-            externDocument.setExternModule(externModuleDao.getExternModuleWithId(externModuleId));
+            externalDocument.setExternalModule(externModuleDao.getExternModuleWithId(externModuleId));
         }
 
-        return externDocument;
+        return externalDocument;
     }
 
     @Override
-    public int updateExternDocument(ExternDocument externDocument) {
-        String moduleId = externDocument.getExternModule() == null ? null : externDocument.getExternModule().getId();
+    public int updateExternDocument(ExternalDocument externalDocument) {
+        String moduleId = externalDocument.getExternalModule() == null ? null : externalDocument.getExternalModule().getId();
         Object[] attributes = {
-                externDocument.getTitle(),
-                externDocument.getHtml(),
+                externalDocument.getTitle(),
+                externalDocument.getHtml(),
                 moduleId,
-                externDocument.getId()
+                externalDocument.getId()
         };
 
         return jdbcTemplate.update(UPDATE_EXTERN_DOCUMENT, attributes);
     }
 
     @Override
-    public int insertExternDocument(ExternDocument externDocument) {
-        final String moduleId = externDocument.getExternModule() == null ? null : externDocument.getExternModule().getId();
+    public int insertExternDocument(ExternalDocument externalDocument) {
+        final String moduleId = externalDocument.getExternalModule() == null ? null : externalDocument.getExternalModule().getId();
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement pst =
                         connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"id"});
-                pst.setString(1, externDocument.getTitle());
-                pst.setString(2, externDocument.getHtml());
+                pst.setString(1, externalDocument.getTitle());
+                pst.setString(2, externalDocument.getHtml());
                 pst.setString(3, moduleId);
                 return pst;
             }
         }, keyHolder);
-        externDocument.setId(keyHolder.getKey().intValue());
+        externalDocument.setId(keyHolder.getKey().intValue());
         return numRows;
     }
 

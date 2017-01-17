@@ -41,7 +41,9 @@ class DocumentWriter extends DocumentStubWriter {
         for (Classification c : collectedClassifications) {
             writer.writeStartElement("classification");
             writer.writeAttribute("sentenceid", Integer.toString(c.getSentenceId()));
-            if (c.getConfidence().isPresent()) writer.writeAttribute("confidence", Double.toString(c.getConfidence().getAsDouble()));
+            if (c.getConfidence().isPresent()) {
+                writer.writeAttribute("confidence", Double.toString(c.getConfidence().getAsDouble()));
+            }
             writer.writeCharacters(Double.toString(c.getValue()));
             writer.writeEndElement();
         }

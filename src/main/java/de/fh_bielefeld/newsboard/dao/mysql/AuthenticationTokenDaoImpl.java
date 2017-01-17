@@ -2,7 +2,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.AuthenticationTokenDao;
 import de.fh_bielefeld.newsboard.model.AuthenticationToken;
-import de.fh_bielefeld.newsboard.model.ExternModule;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -44,8 +44,8 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     }
 
     @Override
-    public List<AuthenticationToken> getAllTokenForModule(ExternModule externModule) {
-        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, new AuthenticationTokenRowMapper(), externModule.getId());
+    public List<AuthenticationToken> getAllTokenForModule(ExternalModule externalModule) {
+        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, new AuthenticationTokenRowMapper(), externalModule.getId());
     }
 
     @Override

@@ -3,8 +3,8 @@ package groovy.de.fh_bielefeld.newsboard.dao
 import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.dao.ExternDocumentDao
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao
-import de.fh_bielefeld.newsboard.model.ExternDocument
-import de.fh_bielefeld.newsboard.model.ExternModule
+import de.fh_bielefeld.newsboard.model.ExternalDocument
+import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -14,7 +14,7 @@ import spock.lang.Specification
  * Created by Felix on 13.01.2017.
  */
 @SpringBootTest(classes = NewsboardApplication.class)
-class ExternDocumentDaoTest extends Specification {
+class ExternalDocumentDaoTest extends Specification {
 
     @Autowired
     JdbcTemplate jdbcTemplate
@@ -26,36 +26,36 @@ class ExternDocumentDaoTest extends Specification {
     List<String> moduleIds
     List<Integer> documentIds
 
-    ExternModule dummyModule
+    ExternalModule dummyModule
 
     def "test insertion"() {
         when:
-        ExternDocument document = new ExternDocument()
+        ExternalDocument document = new ExternalDocument()
         document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternModule(dummyModule)
+        document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
 
         then:
         externDocumentDao.insertExternDocument(document);
         documentIds.add(document.getId())
 
-        ExternDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
-        testDocument.getExternModule().getId() == document.getExternModule().getId()
-        testDocument.getExternModule().getAuthor() == document.getExternModule().getAuthor()
-        testDocument.getExternModule().getDescription() == document.getExternModule().getDescription()
-        testDocument.getExternModule().getName() == document.getExternModule().getName()
+        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
+        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
+        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
+        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
 
         noExceptionThrown()
     }
 
     def "test updating"() {
         when:
-        ExternDocument document = new ExternDocument()
+        ExternalDocument document = new ExternalDocument()
         document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternModule(dummyModule)
+        document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
         externDocumentDao.insertExternDocument(document);
         documentIds.add(document.getId())
@@ -65,36 +65,36 @@ class ExternDocumentDaoTest extends Specification {
         then:
         externDocumentDao.updateExternDocument(document)
 
-        ExternDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
-        testDocument.getExternModule().getId() == document.getExternModule().getId()
-        testDocument.getExternModule().getAuthor() == document.getExternModule().getAuthor()
-        testDocument.getExternModule().getDescription() == document.getExternModule().getDescription()
-        testDocument.getExternModule().getName() == document.getExternModule().getName()
+        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
+        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
+        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
+        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
 
         noExceptionThrown()
     }
 
     def "test selection with id"() {
         when:
-        ExternDocument document = new ExternDocument()
+        ExternalDocument document = new ExternalDocument()
         document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternModule(dummyModule)
+        document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
         externDocumentDao.insertExternDocument(document);
         documentIds.add(document.getId())
 
         then:
-        ExternDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
-        testDocument.getExternModule().getId() == document.getExternModule().getId()
-        testDocument.getExternModule().getAuthor() == document.getExternModule().getAuthor()
-        testDocument.getExternModule().getDescription() == document.getExternModule().getDescription()
-        testDocument.getExternModule().getName() == document.getExternModule().getName()
+        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
+        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
+        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
+        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
 
         noExceptionThrown()
     }
@@ -103,7 +103,7 @@ class ExternDocumentDaoTest extends Specification {
         documentIds = new ArrayList<>()
         moduleIds = new ArrayList<>()
 
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
         insertExternModule(module)
         dummyModule = module
     }
@@ -117,13 +117,13 @@ class ExternDocumentDaoTest extends Specification {
         }
     }
 
-    def insertExternModule(ExternModule module) {
+    def insertExternModule(ExternalModule module) {
         externModuleDao.insertExternModule(module)
         moduleIds.add(module.getId())
     }
 
     def getNewExternModule() {
-        ExternModule module = new ExternModule()
+        ExternalModule module = new ExternalModule()
         module.setId("test_module")
         module.setAuthor("Tester")
         module.setDescription("Module for testing purpose")

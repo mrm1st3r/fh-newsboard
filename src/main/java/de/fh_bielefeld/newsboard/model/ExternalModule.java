@@ -5,15 +5,15 @@ package de.fh_bielefeld.newsboard.model;
  *
  * @author Felix Meyer
  */
-public class ExternModule {
+public class ExternalModule {
     private String id;
     private String name;
     private String author;
     private String description;
 
-    public ExternModule() {}
+    public ExternalModule() {}
 
-    public ExternModule(String id, String name, String author, String description) {
+    public ExternalModule(String id, String name, String author, String description) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -23,7 +23,7 @@ public class ExternModule {
     /**
      * Constructor needed for SAX-parsing.
      */
-    public ExternModule(String id) {
+    public ExternalModule(String id) {
         this.id = id;
     }
 
@@ -61,10 +61,10 @@ public class ExternModule {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof ExternModule)) {
+        if (obj == null || !(obj instanceof ExternalModule)) {
             return false;
         }
-        ExternModule that = (ExternModule) obj;
+        ExternalModule that = (ExternalModule) obj;
         return this.id.equals(that.id);
     }
 }

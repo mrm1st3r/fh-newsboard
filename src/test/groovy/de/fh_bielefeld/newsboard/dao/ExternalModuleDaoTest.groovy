@@ -2,7 +2,7 @@ package groovy.de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.dao.ExternModuleDao
-import de.fh_bielefeld.newsboard.model.ExternModule
+import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -13,7 +13,7 @@ import spock.lang.Specification
  */
 
 @SpringBootTest(classes = NewsboardApplication.class)
-class ExternModuleDaoTest extends Specification {
+class ExternalModuleDaoTest extends Specification {
 
     @Autowired
     JdbcTemplate jdbcTemplate
@@ -22,11 +22,11 @@ class ExternModuleDaoTest extends Specification {
 
     def "test insertion"() {
         when:
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
 
         then:
         externModuleDao.insertExternModule(module)
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
         testingModule != null
         testingModule.getAuthor() == module.getAuthor()
@@ -39,7 +39,7 @@ class ExternModuleDaoTest extends Specification {
 
     def "test updating"() {
         when:
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
         externModuleDao.insertExternModule(module)
 
         module.setDescription("New Description")
@@ -48,7 +48,7 @@ class ExternModuleDaoTest extends Specification {
 
         then:
         externModuleDao.updateExternModule(module)
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
         testingModule != null
         testingModule.getDescription() == module.getDescription()
@@ -60,11 +60,11 @@ class ExternModuleDaoTest extends Specification {
 
     def "test selecting with id"() {
         when:
-        ExternModule module = getNewExternModule()
+        ExternalModule module = getNewExternModule()
 
         then:
         externModuleDao.insertExternModule(module)
-        ExternModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
 
         testingModule != null
         testingModule.getDescription() == module.getDescription()
@@ -75,7 +75,7 @@ class ExternModuleDaoTest extends Specification {
     }
 
     def getNewExternModule() {
-        ExternModule externModule = new ExternModule()
+        ExternalModule externModule = new ExternalModule()
         externModule.setId("test_module")
         externModule.setAuthor("tester")
         externModule.setDescription("Extern module only for testing purpose")

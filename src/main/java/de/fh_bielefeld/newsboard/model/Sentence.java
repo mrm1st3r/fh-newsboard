@@ -14,7 +14,7 @@ public class Sentence {
     private String text;
     private List<Classification> classifications;
 
-    public Sentence(int id, int number, String text, ExternModule externModule, List<Classification> classifications) {
+    public Sentence(int id, int number, String text, ExternalModule externalModule, List<Classification> classifications) {
         this.id = id;
         this.number = number;
         this.text = text;
