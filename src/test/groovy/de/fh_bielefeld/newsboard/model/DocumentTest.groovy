@@ -22,4 +22,25 @@ class DocumentTest extends Specification {
         doc1 == doc1
         doc1 == doc3
     }
+
+    def "should calculate average classification value"() {
+        given:
+        def d = new Document()
+        def s1 = new Sentence()
+        def s2 = new Sentence()
+        def c1 = new Classification()
+        def c2 = new Classification()
+        def c3 = new Classification()
+        c1.setValue(0.6)
+        s1.addClassification(c1)
+        c2.setValue(0.4)
+        s1.addClassification(c2)
+        c3.setValue(-0.1)
+        s2.addClassification(c3)
+        d.addSentence(s1)
+        d.addSentence(s2)
+
+        expect:
+        d.getAverageClassificationValue() == 0.2d
+    }
 }

@@ -11,7 +11,8 @@
     </div>
     <div class="row" th:each="doc : ${documents}">
         <div class="column-md-12">
-            <h2><a th:text="${doc.title}" th:href="@{/document/{docId}(docId=${doc.id})}">Hallo, Welt!</a>
+            <h2><span th:text="${doc.averageClassificationValue}">-0.42</span>
+                <a th:text="${doc.title}" th:href="@{/document/{docId}(docId=${doc.id})}">Hallo, Welt!</a>
                 <small th:text="${doc.author}">Wuppi Fluppi</small>
             </h2>
             <p>

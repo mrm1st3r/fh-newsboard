@@ -75,6 +75,17 @@ public class Document {
         this.metaData = documentMetaData;
     }
 
+    public double getAverageClassificationValue() {
+        if (sentences.size() == 0) {
+            return 0;
+        }
+        double sum = 0;
+        for (Sentence s : sentences) {
+            sum += s.getAverageClassificationValue();
+        }
+        return sum / sentences.size();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Document)) {

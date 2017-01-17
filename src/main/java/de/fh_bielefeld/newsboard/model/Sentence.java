@@ -2,9 +2,10 @@ package de.fh_bielefeld.newsboard.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 
 /**
- * Domain class representing a sentente inside a classifiable document.
+ * Domain class representing a sentence inside a classifiable document.
  *
  * @author Felix Meyer, Lukas Taake
  */
@@ -14,16 +15,6 @@ public class Sentence {
     private String text;
     private List<Classification> classifications;
 
-    public Sentence(int id, int number, String text, ExternalModule externalModule, List<Classification> classifications) {
-        this.id = id;
-        this.number = number;
-        this.text = text;
-        this.classifications = classifications;
-    }
-
-    /**
-     * Default constructor needed for SAX-Parsing.
-     */
     public Sentence() {
         classifications = new ArrayList<>();
     }
@@ -58,5 +49,21 @@ public class Sentence {
 
     public List<Classification> getClassifications() {
         return classifications;
+    }
+
+    public double getAverageClassificationValue() {
+        if (classifications.size() == 0) {
+            return 0;
+        }
+        double sum = 0;
+        for (Classification c : classifications) {
+            OptionalDouble confidence = c.getConfidence();
+            if (confidence.isPresent()) {
+                sum += c.getValue() * confidence.getAsDouble();
+            } else {
+                sum += c.getValue();
+            }
+        }
+        return sum / classifications.size();
     }
 }
