@@ -18,7 +18,7 @@
             </sentence>
         </sentences>
         <classifications>
-            <classification documentid="123" sentenceid="12345" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="12345" classifier="RandomClassifier">-0.5</classification>
             <classification sentenceid="12346" classifier="RandomClassifier" confidence="1">-1</classification>
         </classifications>
     </document>

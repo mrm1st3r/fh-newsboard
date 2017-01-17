@@ -4,10 +4,9 @@
     <document>
         <classifications>
             <!-- Some possible alterations of provided attributes -->
-            <classification documentid="123" classifier="RandomClassifier">-0.5</classification>
             <classification sentenceid="12345" classifier="RandomClassifier">-1</classification>
             <classification sentenceid="12346" classifier="RandomClassifier" confidence="1">-1</classification>
-            <classification documentid="123" sentenceid="12347" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="12347" classifier="RandomClassifier">-0.5</classification>
         </classifications>
     </document>
 </documents>

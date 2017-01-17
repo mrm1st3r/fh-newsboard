@@ -22,8 +22,8 @@ class ClassificationReadTest extends Specification {
         def classifications = reader.readClassifications(xml)
 
         then:
-        classifications.size() == 4
-        def c = classifications[2]
+        classifications.size() == 3
+        def c = classifications[1]
         c.getConfidence().getAsDouble() == 1
         c.getExternModule().getId() == "RandomClassifier"
         c.getSentenceId().getAsInt() == 12346
