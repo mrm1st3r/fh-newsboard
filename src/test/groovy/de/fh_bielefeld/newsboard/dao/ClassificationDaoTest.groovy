@@ -1,19 +1,12 @@
-package groovy.de.fh_bielefeld.newsboard.dao
+package de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
-import de.fh_bielefeld.newsboard.dao.ClassificationDao
-import de.fh_bielefeld.newsboard.dao.DocumentDao
-import de.fh_bielefeld.newsboard.dao.ExternModuleDao
-import de.fh_bielefeld.newsboard.dao.SentenceDao
 import de.fh_bielefeld.newsboard.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import spock.lang.Specification
 
-/**
- * Created by Felix on 14.01.2017.
- */
 @SpringBootTest(classes = NewsboardApplication)
 class ClassificationDaoTest extends Specification {
     @Autowired
