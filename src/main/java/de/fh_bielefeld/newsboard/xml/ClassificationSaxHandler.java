@@ -4,6 +4,7 @@ import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
@@ -50,5 +51,10 @@ class ClassificationSaxHandler extends DefaultHandler {
             classifications.add(classification);
             classification = null;
         }
+    }
+
+    @Override
+    public void error(SAXParseException e) throws SAXException {
+        throw e;
     }
 }
