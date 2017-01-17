@@ -1,3 +1,9 @@
+-- Clean up
+DELETE FROM classification;
+DELETE FROM sentence;
+DELETE FROM document;
+DELETE FROM extern_module;
+
 -- Crawler and classifier
 INSERT INTO extern_module(id, name, author, description) VALUES
   ("test-crawler", "test-crawler", "Hans Wurst", "Crawler zum testen"),
