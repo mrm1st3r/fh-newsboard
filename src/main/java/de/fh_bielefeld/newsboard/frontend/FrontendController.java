@@ -40,4 +40,9 @@ public class FrontendController {
         model.addAttribute("doc", doc);
         return "detail";
     }
+
+    @RequestMapping("/about")
+    public String about() {
+        return "about";
+    }
 }
