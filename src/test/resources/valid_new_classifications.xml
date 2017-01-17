@@ -9,9 +9,9 @@
         </meta>
         <classifications>
             <!-- Some possible alterations of provided attributes -->
-            <classification sentenceid="12345" classifier="RandomClassifier">-1</classification>
-            <classification sentenceid="12346" classifier="RandomClassifier" confidence="1">-1</classification>
-            <classification sentenceid="12347" classifier="RandomClassifier">-0.5</classification>
+            <classification sentenceid="1" classifier="test-classifier">-1</classification>
+            <classification sentenceid="2" classifier="test-classifier" confidence="1">-1</classification>
+            <classification sentenceid="3" classifier="test-classifier">-0.5</classification>
         </classifications>
     </document>
 </documents>
