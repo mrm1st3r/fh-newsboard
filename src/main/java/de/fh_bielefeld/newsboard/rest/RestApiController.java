@@ -77,9 +77,9 @@ public class RestApiController {
         }
     }
 
-    @RequestMapping(path = "/unclassified", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public String getUnclassified(HttpServletResponse response) {
-        List<Document> documents = documentDao.getAllDocumentsOnlyWithMetaData();
+    @RequestMapping(path = "/unclassified/{moduleid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+    public String getUnclassified(HttpServletResponse response, @PathVariable String moduleid) {
+        List<Document> documents = documentDao.getUnclassifiedDocumentStubs(moduleid);
         try {
             return xmlWriter.writeDocumentList(documents);
         } catch (XMLStreamException e) {

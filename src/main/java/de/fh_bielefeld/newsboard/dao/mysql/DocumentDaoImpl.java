@@ -8,20 +8,23 @@ import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Created by felixmeyer on 17.12.16.
+ * MySQL implementation for document DAO.
  */
 @Component
 public class DocumentDaoImpl implements DocumentDao {
@@ -33,6 +36,9 @@ public class DocumentDaoImpl implements DocumentDao {
             "UPDATE document SET title = ?, author = ?, source = ?, creation_time = ?, crawl_time = ?, module_id = ? WHERE id = ?";
     private static final String INSERT_DOCUMENT =
             "INSERT INTO document VALUES (null, ?, ?, ?, ?, ?, ?)";
+    private static final String GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE =
+            "SELECT * FROM document WHERE id NOT IN(SELECT document_id FROM sentence WHERE id IN " +
+                    "(SELECT sent_id FROM classification WHERE module_id = ?))";
 
     private JdbcTemplate jdbcTemplate;
     private SentenceDaoImpl sentenceDao;
@@ -97,19 +103,16 @@ public class DocumentDaoImpl implements DocumentDao {
     public int insertDocument(Document document) {
         final String moduleId = document.getModule() == null ? null : document.getModule().getId();
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement pst =
-                        connection.prepareStatement(INSERT_DOCUMENT, new String[]{"id"});
-                pst.setString(1, document.getTitle());
-                pst.setString(2, document.getAuthor());
-                pst.setString(3, document.getSource());
-                pst.setDate(4, new Date(document.getCreationTime().getTimeInMillis()));
-                pst.setDate(5, new Date(document.getCrawlTime().getTimeInMillis()));
-                pst.setString(6, moduleId);
-                return pst;
-            }
+        int numRows = jdbcTemplate.update(connection -> {
+            PreparedStatement pst =
+                    connection.prepareStatement(INSERT_DOCUMENT, new String[]{"id"});
+            pst.setString(1, document.getTitle());
+            pst.setString(2, document.getAuthor());
+            pst.setString(3, document.getSource());
+            pst.setDate(4, new Date(document.getCreationTime().getTimeInMillis()));
+            pst.setDate(5, new Date(document.getCrawlTime().getTimeInMillis()));
+            pst.setString(6, moduleId);
+            return pst;
         }, keyHolder);
 
         document.setId(keyHolder.getKey().intValue());
@@ -125,16 +128,26 @@ public class DocumentDaoImpl implements DocumentDao {
         return rows;
     }
 
+    @Override
+    public List<Document> getUnclassifiedDocumentStubs(String externalModuleId) {
+        Object[] attributes = { externalModuleId };
+        List<DocumentDatabaseObject> rawDocuments = jdbcTemplate.query(
+                GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE,
+                new DocumentDatabaseObjectRowMapper(), attributes);
+
+        return rawDocuments.stream().map(
+                this::getDocumentFromDocumentDatabaseObject).collect(Collectors.toList());
+    }
+
     private Document getDocumentFromDocumentDatabaseObject(DocumentDatabaseObject rawDocument) {
         if (rawDocument == null) {
             return null;
-        } else {
-            Document document = new Document();
-            document.setId(rawDocument.getId());
-            document.setMetaData(getDocumentMetaDataFromDocumentDatabaseObject(rawDocument));
-            document.setSentences(getAllSentencesInDocument(document));
-            return document;
         }
+        Document document = new Document();
+        document.setId(rawDocument.getId());
+        document.setMetaData(getDocumentMetaDataFromDocumentDatabaseObject(rawDocument));
+        document.setSentences(getAllSentencesInDocument(document));
+        return document;
     }
 
     private DocumentMetaData getDocumentMetaDataFromDocumentDatabaseObject(DocumentDatabaseObject rawDocument) {
@@ -156,7 +169,7 @@ public class DocumentDaoImpl implements DocumentDao {
         return sentenceDao.getAllSentencesInDocument(document);
     }
 
-    protected class DocumentDatabaseObjectRowMapper implements RowMapper<DocumentDatabaseObject> {
+    private class DocumentDatabaseObjectRowMapper implements RowMapper<DocumentDatabaseObject> {
         @Override
         public DocumentDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
             DocumentDatabaseObject document = new DocumentDatabaseObject();
@@ -181,7 +194,7 @@ public class DocumentDaoImpl implements DocumentDao {
         }
     }
 
-    protected class DocumentDatabaseObject {
+    private class DocumentDatabaseObject {
         private Integer id;
         private String title;
         private String author;

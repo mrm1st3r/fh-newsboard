@@ -5,12 +5,13 @@ import de.fh_bielefeld.newsboard.model.Document;
 import java.util.List;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Data access interface for classifiable documents.
  */
 public interface DocumentDao {
-    public Document getDocumentWithId(int id);
-    public List<Document> getAllDocumentsOnlyWithMetaData();
-    public int updateDocument(Document document);
-    public int insertDocument(Document document);
-    public int insertDocumentWithSentences(Document document);
+    Document getDocumentWithId(int id);
+    List<Document> getAllDocumentsOnlyWithMetaData();
+    List<Document> getUnclassifiedDocumentStubs(String externalModuleId);
+    int updateDocument(Document document);
+    int insertDocument(Document document);
+    int insertDocumentWithSentences(Document document);
 }
