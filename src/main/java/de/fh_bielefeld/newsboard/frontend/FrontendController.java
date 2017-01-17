@@ -25,6 +25,9 @@ public class FrontendController {
         this.documentDao = documentDao;
     }
 
+    /**
+     * Start page displaying the latest 10 documents and their average classification.
+     */
     @RequestMapping("/")
     public String index(Model model) {
         List<Document> documentStubs = documentDao.getAllDocumentsOnlyWithMetaData();
@@ -34,6 +37,9 @@ public class FrontendController {
         return "index";
     }
 
+    /**
+     * Article page showing a single article including more details than the start page.
+     */
     @RequestMapping(value = "/document/{id}")
     public String details(Model model, @PathVariable String id) {
         Document doc = documentDao.getDocumentWithId(Integer.parseInt(id));
@@ -41,6 +47,9 @@ public class FrontendController {
         return "detail";
     }
 
+    /**
+     * About page showing static text about the newsboard including copyright information.
+     */
     @RequestMapping("/about")
     public String about() {
         return "about";
