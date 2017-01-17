@@ -2,6 +2,7 @@
 DELETE FROM classification;
 DELETE FROM sentence;
 DELETE FROM document;
+DELETE FROM authentication_token;
 DELETE FROM extern_module;
 
 -- Crawler and classifier
@@ -24,3 +25,8 @@ INSERT INTO sentence(id, number, text, document_id) VALUES
 -- Classifications
 INSERT INTO classification(sent_id, module_id, value, confidence) VALUES
   (4, "test-classifier", 0.8, NULL);
+
+-- Authentication tokens
+INSERT INTO authentication_token(module_id, token) VALUES
+  ("test-crawler", "omglol123"),
+  ("test-classifier", "abc123");
