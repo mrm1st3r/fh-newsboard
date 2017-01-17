@@ -1,11 +1,17 @@
 package de.fh_bielefeld.newsboard.rest
 
+import de.fh_bielefeld.newsboard.dao.DocumentDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.io.ClassPathResource
+import org.springframework.jdbc.datasource.init.ScriptUtils
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import spock.lang.Shared
 import spock.lang.Specification
+
+import javax.sql.DataSource
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -21,6 +27,21 @@ class RestApiControllerTest extends Specification {
     @Autowired
     MockMvc mvc
 
+    @Autowired
+    DocumentDao documentDao
+
+    @Shared
+    boolean initialized
+
+    @Autowired
+    void poorMansSetupSpec(DataSource dataSource) {
+        if (!initialized) {
+            def script = new ClassPathResource("/sql/example_data.sql")
+            ScriptUtils.executeSqlScript(dataSource.connection, script)
+            initialized = true
+        }
+    }
+
     def "can access document list"() {
         expect:
         mvc.perform(get("/rest/document")).andExpect(status().isOk())
@@ -33,7 +54,33 @@ class RestApiControllerTest extends Specification {
 
     def "cannot put empty document list"() {
         expect:
-        mvc.perform(put("/rest/document").content("")).andExpect(status().is4xxClientError())
+        mvc.perform(put("/rest/document").content("<documents xmlns=\"http://fh-bielefeld.de/newsboard\"></documents>"))
+                .andExpect(status().is4xxClientError())
+    }
+
+    def "can read specific document"() {
+        when:
+        def docs = documentDao.allDocumentsOnlyWithMetaData;
+        int id = docs[0].getId()
+
+        then:
+        mvc.perform(get("/rest/document/" + id)).andExpect(status().isOk())
+    }
+
+    def "can read unclassified documents"() {
+       expect:
+       mvc.perform(get("/rest/unclassified/test-classifier")).andExpect(status().isOk())
+    }
+
+    def "cannot put empty classification list"() {
+        expect:
+        mvc.perform(put("/rest/classify").content("<documents xmlns=\"http://fh-bielefeld.de/newsboard\"></documents>"))
+                .andExpect(status().is4xxClientError())
+    }
+
+    def "can put classification list"() {
+        expect:
+        putRequest("/rest/classify", "/valid_new_classifications.xml").andExpect(status().isOk())
     }
 
     private ResultActions putRequest(String url, String resourceFile) {
