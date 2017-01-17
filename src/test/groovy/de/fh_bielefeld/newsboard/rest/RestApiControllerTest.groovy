@@ -33,7 +33,7 @@ class RestApiControllerTest extends Specification {
 
     def "cannot put empty document list"() {
         expect:
-        mvc.perform(put("/rest/document")).andExpect(status().is4xxClientError())
+        mvc.perform(put("/rest/document").content("")).andExpect(status().is4xxClientError())
     }
 
     private ResultActions putRequest(String url, String resourceFile) {

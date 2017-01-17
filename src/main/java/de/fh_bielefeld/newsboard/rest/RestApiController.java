@@ -4,7 +4,9 @@ import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.RawDocument;
+import de.fh_bielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fh_bielefeld.newsboard.xml.XmlDocumentReader;
 import de.fh_bielefeld.newsboard.xml.XmlDocumentWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +32,16 @@ public class RestApiController {
 
     private XmlDocumentReader xmlReader;
     private XmlDocumentWriter xmlWriter;
+    private RawDocumentProcessor documentProcessor;
     private DocumentDao documentDao;
     private ClassificationDao classificationDao;
 
     @Autowired
-    public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, DocumentDao documentDao, ClassificationDao classificationDao) {
+    public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
+                             DocumentDao documentDao, ClassificationDao classificationDao) {
         this.xmlReader = xmlReader;
         this.xmlWriter = xmlWriter;
+        this.documentProcessor = documentProcessor;
         this.documentDao = documentDao;
         this.classificationDao = classificationDao;
     }
@@ -68,8 +73,13 @@ public class RestApiController {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return handleClientError(response, e);
         }
-        if (documents == null || documents.size() == 0) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        //TODO: replace with authentication based module check
+        ExternalModule crawler = new ExternalModule();
+        crawler.setId("test-crawler");
+        for (RawDocument rawDoc : documents) {
+            rawDoc.getMetaData().setModule(crawler);
+            Document document = documentProcessor.processDocument(rawDoc);
+            documentDao.insertDocumentWithSentences(document);
         }
         return "OK";
     }
