@@ -13,9 +13,10 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.OptionalDouble;
 
 /**
- * Created by felixmeyer on 17.12.16.
+ * Mysql implementation for Classification DAO.
  */
 @Component
 public class ClassificationDaoImpl implements ClassificationDao {
@@ -26,7 +27,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification (sent_id, module_id, value, confidence) VALUES (?, ?, ?, ?)";
+            "INSERT INTO classification (confidence, value, sent_id, module_id) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
             "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND module_id = ?";
 
@@ -72,36 +73,26 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public int updateClassification(Classification classification) {
-        return jdbcTemplate.update(UPDATE_CLASSIFICATION, getAttributesForInsertOrUpdate(classification, false));
+        return jdbcTemplate.update(UPDATE_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
     }
 
     @Override
     public int insertClassification(Classification classification) {
-        return jdbcTemplate.update(INSERT_CLASSIFICATION, getAttributesForInsertOrUpdate(classification, true));
+        return jdbcTemplate.update(INSERT_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
     }
 
-    private Object[] getAttributesForInsertOrUpdate(Classification classification, boolean isInsert) {
-        String moduleId = classification.getExternModule() == null ? null : classification.getExternModule().getId();
-        Integer sentenceId = classification.getSentenceId().getAsInt();
-        Double confidence = classification.getConfidence().getAsDouble();
-
-        Object[] attributes;
-        if (isInsert) {
-            attributes = new Object[] {
-                    sentenceId,
-                    moduleId,
-                    classification.getValue(),
-                    confidence
-            };
-        } else {
-            attributes = new Object[] {
-                    confidence,
-                    classification.getValue(),
-                    sentenceId,
-                    moduleId
-            };
+    private Object[] getAttributesForInsertOrUpdate(Classification classification) {
+        Double confidence = null;
+        OptionalDouble optionalConfidence = classification.getConfidence();
+        if (optionalConfidence.isPresent()) {
+            confidence = optionalConfidence.getAsDouble();
         }
-        return attributes;
+        return new Object[] {
+                confidence,
+                classification.getValue(),
+                classification.getSentenceId(),
+                classification.getExternModule().getId()
+        };
     }
 
     /**
@@ -148,7 +139,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
         return externModule;
     }
 
-    protected class ClassificationRowMapper implements RowMapper<Classification> {
+    private class ClassificationRowMapper implements RowMapper<Classification> {
 
         @Override
         public Classification mapRow(ResultSet resultSet, int i) throws SQLException {

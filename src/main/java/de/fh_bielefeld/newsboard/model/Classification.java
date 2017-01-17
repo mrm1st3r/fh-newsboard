@@ -1,7 +1,6 @@
 package de.fh_bielefeld.newsboard.model;
 
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 /**
  * Domain class representing a classification of a document or sentence.
@@ -9,17 +8,17 @@ import java.util.OptionalInt;
  * @author Felix Meyer, Lukas Taake
  */
 public class Classification {
-    private OptionalInt sentenceId = OptionalInt.empty();
+    private int sentenceId;
     private ExternModule externModule;
     private double value;
     private OptionalDouble confidence = OptionalDouble.empty();
 
-    public OptionalInt getSentenceId() {
+    public int getSentenceId() {
         return sentenceId;
     }
 
     public void setSentenceId(int sentenceId) {
-        this.sentenceId = OptionalInt.of(sentenceId);
+        this.sentenceId = sentenceId;
     }
 
     public ExternModule getExternModule() {
@@ -52,7 +51,6 @@ public class Classification {
             return false;
         }
         Classification that = (Classification) obj;
-        return this.sentenceId.equals(that.sentenceId)
-                && this.externModule.equals(that.externModule);
+        return this.sentenceId == that.sentenceId && this.externModule.equals(that.externModule);
     }
 }

@@ -19,7 +19,7 @@ class DocumentWriter extends DocumentStubWriter {
 
     @Override
     void writeSubElements(XMLStreamWriter writer, Document doc) throws XMLStreamException {
-        collectedClassifications = new ArrayList<>(doc.getClassifications());
+        collectedClassifications = new ArrayList<>();
         writeSentences(writer, doc);
         writeClassifications(writer);
     }
@@ -40,7 +40,7 @@ class DocumentWriter extends DocumentStubWriter {
         writer.writeStartElement("classifications");
         for (Classification c : collectedClassifications) {
             writer.writeStartElement("classification");
-            if (c.getSentenceId().isPresent()) writer.writeAttribute("sentenceid", Integer.toString(c.getSentenceId().getAsInt()));
+            writer.writeAttribute("sentenceid", Integer.toString(c.getSentenceId()));
             if (c.getConfidence().isPresent()) writer.writeAttribute("confidence", Double.toString(c.getConfidence().getAsDouble()));
             writer.writeCharacters(Double.toString(c.getValue()));
             writer.writeEndElement();

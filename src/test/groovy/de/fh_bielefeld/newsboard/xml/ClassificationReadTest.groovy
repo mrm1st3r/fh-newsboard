@@ -26,7 +26,7 @@ class ClassificationReadTest extends Specification {
         def c = classifications[1]
         c.getConfidence().getAsDouble() == 1
         c.getExternModule().getId() == "RandomClassifier"
-        c.getSentenceId().getAsInt() == 12346
+        c.getSentenceId() == 12346
         c.getValue() == -1
     }
 }

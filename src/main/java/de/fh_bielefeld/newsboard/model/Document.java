@@ -13,13 +13,11 @@ public class Document {
     private int id;
     private DocumentMetaData metaData;
     private List<Sentence> sentences;
-    private List<Classification> classifications;
 
-    public Document(int id, DocumentMetaData metaData, List<Sentence> sentences, List<Classification> classifications) {
+    public Document(int id, DocumentMetaData metaData, List<Sentence> sentences) {
         this.id = id;
         this.metaData = metaData;
         this.sentences = sentences;
-        this.classifications = classifications;
     }
 
     /**
@@ -27,7 +25,6 @@ public class Document {
      */
     public Document() {
         sentences = new ArrayList<>();
-        classifications = new ArrayList<>();
     }
 
     public int getId() {
@@ -72,18 +69,6 @@ public class Document {
 
     public void addSentence(Sentence sentence) {
         sentences.add(sentence);
-    }
-
-    public void addClassification(Classification classification) {
-        classifications.add(classification);
-    }
-
-    public List<Classification> getClassifications() {
-        return classifications;
-    }
-
-    public void setClassifications(List<Classification> classifications) {
-        this.classifications = classifications;
     }
 
     public void setMetaData(DocumentMetaData documentMetaData) {
