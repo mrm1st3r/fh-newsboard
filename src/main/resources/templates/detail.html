@@ -7,13 +7,10 @@
 
 <div class="container">
     <div class="row">
-        <div class="column-md-12"><h1>Neueste Nachrichten</h1></div>
+        <div class="column-md-12"><h1 th:text="${doc.title}"></h1></div>
     </div>
-    <div class="row" th:each="doc : ${documents}">
         <div class="column-md-12">
-            <h2><a th:text="${doc.title}" th:href="@{/document/{docId}(docId=${doc.id})}">Hallo, Welt!</a>
-                <small th:text="${doc.author}">Wuppi Fluppi</small>
-            </h2>
+            <small th:text="${doc.author}">Wuppi Fluppi</small>
             <p>
                 <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text}"></span>
             </p>
