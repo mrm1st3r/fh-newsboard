@@ -1,11 +1,7 @@
-package groovy.de.fh_bielefeld.newsboard.opennlp
+package de.fh_bielefeld.newsboard.opennlp
 
-import de.fh_bielefeld.newsboard.opennlp.DocumentToSentenceTokenizer
 import spock.lang.Specification
 
-/**
- * Created by Felix on 17.01.2017.
- */
 class DocumentToSentenceTokenizerTest extends Specification {
     String exampleText = "Ich fahre schnell zum Knäckebrot-Laden! " +
             "Der Sprit ist aber auch schon wieder sehr teuer. Fi" +
@@ -13,7 +9,7 @@ class DocumentToSentenceTokenizerTest extends Specification {
 
     def "test tokenizing"() {
         when:
-        DocumentToSentenceTokenizer tokenizer = new DocumentToSentenceTokenizer("src\\main\\resources\\de-sent.bin")
+        DocumentToSentenceTokenizer tokenizer = new DocumentToSentenceTokenizer()
 
         then:
         String[] sentences = tokenizer.tokenizePlaintext(exampleText)

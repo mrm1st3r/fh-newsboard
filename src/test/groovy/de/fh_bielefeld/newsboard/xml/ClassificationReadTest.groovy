@@ -28,6 +28,5 @@ class ClassificationReadTest extends Specification {
         c.getExternModule().getId() == "RandomClassifier"
         c.getSentenceId().getAsInt() == 12346
         c.getValue() == -1
-        classifications[3].getDocumentId().getAsInt() == 123
     }
 }

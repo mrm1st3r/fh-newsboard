@@ -12,7 +12,7 @@ class ClassificationTest extends Specification {
         c1.setSentenceId(1)
         c1.setExternModule(mod1)
         def c2 = new Classification()
-        c2.setSentenceId(1)
+        c2.setSentenceId(2)
         c2.setExternModule(mod1)
         def c3 = new Classification()
         c3.setSentenceId(1)
