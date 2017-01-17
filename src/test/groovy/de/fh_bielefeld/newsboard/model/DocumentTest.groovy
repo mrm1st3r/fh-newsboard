@@ -43,4 +43,12 @@ class DocumentTest extends Specification {
         expect:
         d.getAverageClassificationValue() == 0.2d
     }
+
+    def "should calculate average without sentences"() {
+        given:
+        def d = new Document()
+
+        expect:
+        d.getAverageClassificationValue() == 0
+    }
 }

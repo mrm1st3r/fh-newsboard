@@ -30,11 +30,9 @@ class ClassificationSaxHandler extends DefaultHandler {
     private void parseAttributes(Classification classification, Attributes attr) {
         ExternalModule classifier = new ExternalModule(attr.getValue("classifier"));
         classification.setExternalModule(classifier);
+        classification.setSentenceId(Integer.parseInt(attr.getValue("sentenceid")));
         if (attr.getIndex("confidence") >= 0) {
             classification.setConfidence(Double.parseDouble(attr.getValue("confidence")));
-        }
-        if (attr.getIndex("sentenceid") >= 0) {
-            classification.setSentenceId(Integer.parseInt(attr.getValue("sentenceid")));
         }
     }
 

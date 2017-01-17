@@ -53,7 +53,7 @@ class XmlDocumentWriterTest extends Specification {
                 "<sentence id=\"1\">Lorem ipsum dolor sit amet.</sentence>" +
                 "<sentence id=\"24\">Die Würde des Tasters ist unanmenschbar.</sentence>" +
                 "</sentences><classifications>" +
-                "<classification sentenceid=\"1\" confidence=\"0.7\">1.0</classification>" +
+                "<classification sentenceid=\"1\">1.0</classification>" +
                 "<classification sentenceid=\"24\" confidence=\"0.95\">0.9</classification>" +
                 "</classifications></document></documents>"
     }
@@ -75,7 +75,6 @@ class XmlDocumentWriterTest extends Specification {
         s2.setText("Die Würde des Tasters ist unanmenschbar.")
         def c1 = new Classification()
         c1.setSentenceId(1)
-        c1.setConfidence(0.7)
         c1.setValue(1)
         s1.addClassification(c1)
         def c2 = new Classification();

@@ -2,6 +2,11 @@
 <!-- Sample document that might be sent from a classifier module to publish new classifications via PUT /classify -->
 <documents xmlns="http://fh-bielefeld.de/newsboard">
     <document>
+        <meta>
+            <title>Optional Meta Information</title>
+            <source>Will be thrown away when parsing</source>
+            <crawlTime>2017-01-13T13:37:00+01:00</crawlTime>
+        </meta>
         <classifications>
             <!-- Some possible alterations of provided attributes -->
             <classification sentenceid="12345" classifier="RandomClassifier">-1</classification>
