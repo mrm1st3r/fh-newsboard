@@ -41,6 +41,10 @@ public class RestApiController {
         this.classificationDao = classificationDao;
     }
 
+    /**
+     * Print out a list of all documents, containing only their metadata.
+     * Intended for: any kind of user interface (like a single-page-app, or a mobile app).
+     */
     @RequestMapping(path = "/document", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String listDocuments(HttpServletResponse response) {
         List<Document> documents = documentDao.getAllDocumentsOnlyWithMetaData();
@@ -51,6 +55,10 @@ public class RestApiController {
         }
     }
 
+    /**
+     * Put one or more new documents into the newsboard.
+     * Intended for: external crawler modules
+     */
     @RequestMapping(path = "/document", method = RequestMethod.PUT)
     public String putDocument(HttpServletResponse response, @RequestBody String body) {
         StringReader in = new StringReader(body);
@@ -66,6 +74,10 @@ public class RestApiController {
         return "OK";
     }
 
+    /**
+     * Print out a single document in it's complete structure including sentences and their classifications.
+     * Intended for: external UI modules
+     */
     @RequestMapping(value = "/document/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getDocument(HttpServletResponse response, @PathVariable String id) {
         int docId = Integer.valueOf(id);
@@ -77,6 +89,10 @@ public class RestApiController {
         }
     }
 
+    /**
+     * Print out a list of all documents that aren't classified by a specified external module.
+     * Intended for: external classifiers modules
+     */
     @RequestMapping(path = "/unclassified/{moduleid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getUnclassified(HttpServletResponse response, @PathVariable String moduleid) {
         List<Document> documents = documentDao.getUnclassifiedDocumentStubs(moduleid);
@@ -87,6 +103,10 @@ public class RestApiController {
         }
     }
 
+    /**
+     * Put one or more new classifications for existing documents into the newsboard.
+     * Intended for: external classifier modules
+     */
     @RequestMapping(path = "/classify", method = RequestMethod.PUT)
     public String classify(HttpServletResponse response, @RequestBody String body) {
         StringReader in = new StringReader(body);
