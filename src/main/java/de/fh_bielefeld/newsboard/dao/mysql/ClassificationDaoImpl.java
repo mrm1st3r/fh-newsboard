@@ -148,8 +148,10 @@ public class ClassificationDaoImpl implements ClassificationDao {
             classification.setSentenceId(resultSet.getInt("sent_id"));
             classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
             classification.setValue(resultSet.getDouble("value"));
-            classification.setConfidence(resultSet.getDouble("confidence"));
-
+            double confidence = resultSet.getDouble("confidence");
+            if (!resultSet.wasNull()) {
+                classification.setConfidence(confidence);
+            }
             return classification;
         }
     }
