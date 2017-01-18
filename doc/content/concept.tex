@@ -34,44 +34,45 @@ vorhandenen Entitäten und ihren Attributen.
 	\label{erd}
 \end{figure}
 
+\newpage
 Wie aus dem ERD ersichtlich, besteht das Newsboard aus diesen nun näher beschriebenen 
 Entitäten:
 \begin{itemize}
 	\item \textbf{Externe Module}\\
-	Die externen Systeme, die Daten für das Newsboard hochladen, werden in dieser Tabelle
-	gespeichert. Von Interesse sind Informationen über den Autor des Moduls,
+	Die externen Systeme, die Daten für das Newsboard hochladen, werden in dieser Entität
+	abgebildet. Von Interesse sind Informationen über den Autor des Moduls,
 	den Namen sowie eine kurze Beschreibung.
 	\item \textbf{Authentifizierungstoken}\\
 	Authentifizierungstokens dienen zur Bestätigung der Identität von externen Modulen.
 	Nur Module, die über ein gültiges Authentifizierungstoken verfügen, dürfen in der Lage
 	sein, Daten für das Newsboard hochzuladen. Ein Token besteht aus einer zufälligen
 	Zeichenkette.
+	\item \textbf{Dokumente}\\
+	Nachrichten und Texte, die im Newsboard dargestellt werden sollen oder zur
+	Klassifizierung bereitstehen, werden als Dokumente im System abgelegt. Der Text wird in
+	Sätze aufgeteilt, über die Dokumente werden einige Metainformationen gespeichert. Hierzu
+	zählen zum Beispiel das Datum der Erstellung und des Crawlens, der Autor sowie der Titel
+	und die Quelle des Dokumentes.
 	\item \textbf{Externe Dokumente}\\
 	Dokumente oder Nachrichten, die nicht klassifiziert, dem Gesamtsystem aber dennoch zur
 	Verfügung stehen sollen, werden als externe Dokumente gespeichert. Der Inhalt dieser
 	Dokumente wird als Plaintext abgelegt. Auch der Titel des Dokumentes ist von Interesse.
-	\item \textbf{Dokumente}\\
-	Nachrichten und Texte, die im Newsboard dargestellt werden sollen oder zur
-	Klassifizierung bereitstehen, werden als Dokumente im System abgelegt. Der eigentliche
-	Text wird in Sätze aufgeteilt abgelegt, über die Dokumente selbst werden aber einige
-	Metainformationen gespeichert. Hierzu zählen zum Beispiel das Datum der Erstellung und
-	des Crawlens, der Autor sowie der Titel und die Quelle des Dokumentes
 	\item \textbf{Sätze}\\
 	Die eigentlichen Sätze, die in einem Dokument geschrieben sind, werden separat 
 	gespeichert. Sie sind es auch, die zur Klassifizierung von externen Modulen 
 	bereitstehen. Um ein Dokument wieder korrekt zusammenzusetzen, wird zu dem die 
 	Position eines jeden Satzes im Dokument als Nummer gespeichert.
 	\item \textbf{Klassifizierungen}\\
-	Die Klassifizierungen der Sätze werden in dieser Tabelle gespeichert. Neben den 
+	Die Klassifizierungen der Sätze werden in Form dieser Entität gespeichert. Neben den 
 	Informationen, zu welchem Satz eine Klassifizierung gehört, muss zudem das 
 	klassifizierende Modul abgelegt werden. Sie besteht aus zwei
-	Werten: einem für die errechnete Klassifizierung und einem für die Zuversichtlichkeit des Moduls,
-	wie genau die Klassifizierung ist. 
+	Werten: einem für die errechnete Klassifizierung und einem für die Zuversichtlichkeit
+	des Moduls. 
 \end{itemize}
 
 \subsection{Schnittstelle}
 Die Hauptziele bei der Konzeption der Schnittstelle sind zum einen eine möglichst
-einfache Verwendung, zum anderen eine verlässliche Validierung der Übertragenen Daten.
+einfache Verwendung, zum anderen eine verlässliche Validierung der übertragenen Daten.
 Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, mit einer REST-Schnittstelle
 die Möglichkeiten von HTTP zu nutzen und auf eine zusätzliche Zwischenschicht
 zu verzichten.
@@ -82,7 +83,7 @@ und Dokumentation durch ein Schema besitzt, ist es in diesem Fall die bessere Wa
 Der geringfügig höhere Speicherverbrauch, sowie die derzeit geringe Popularität
 von XML sollen hier keine Rolle spielen.
 
-Bei der Konzeption der verwendeten REST-Ressourcen, sowie deren akzeptierten Methoden
+Bei der Konzeption der verwendeten REST-Ressourcen, sowie deren akzeptierten Methoden,
 bestehen ebenfalls zwei mögliche Szenarien. Das erste ist die Abbildung sämtlicher
 Datentypen des Datenmodells und das Erlauben aller CRUD-Operationen.
 Das zweite Szenario ist es, ausschließlich einige wenige Ressourcen zur Verfügung
@@ -91,9 +92,9 @@ zu stellen, welche die geplanten Anwendungsfälle abbilden.
 Letzteres verlangt komplexere Daten, die von der Schnittstelle verarbeitet werden müssen,
 andernfalls läge diese Komplexität jeweils in den einzelnen Clients und müsste
 mehrfach konzeptioniert und umgesetzt werden. Das führt letztendlich zu mehr
-unnützer Arbeit und gleichzeitig zur mehr potentiellen Fehlerquellen.
+unnützer Arbeit und gleichzeitig zur mehr möglichen Fehlerquellen.
 Da für diese Schnittstelle potentiell regelmäßig neue Clients entwickelt werden sollen,
-ist die zweite Variante als deutlich zweckmäßiger, sowie allgemein eleganter anzusehen.
+ist die zweite Variante als deutlich zweckmäßiger sowie allgemein eleganter anzusehen.
 
 Die sich aus den Anwendungsfällen und konzeptionellen Vorüberlegungen resultierenden
 Aktionen, welche durch die REST-Schnittstelle ermöglicht werden, lauten wie folgt:
