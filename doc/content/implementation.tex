@@ -1,3 +1,6 @@
+Nach dem Konzept wird nun dessen konkrete Umsetzung behandelt,
+um einen tieferen Einblick in die Funktionsweise des Newsboard zu geben.
+
 \subsection{Technische Basis}
 Umgesetzt wird das Newsboard in Java, sowohl wegen persönlicher Präferenzen der Autoren,
 sowie der Tatsache, dass hauptsächlich Java als Programmiersprache
@@ -5,25 +8,29 @@ an der FH Bielefeld gelehrt wird. So werden der Weiterentwicklung des Newsboards
 durch weitere Studenten keine vermeidbaren Hürden in den Weg gestellt.
 Darüber hinaus gibt es für Java eine große Zahl an ausgereiften
 und gut dokumentierten Bibliotheken, sowie verlässliche Frameworks zum 
-Build-Management.
+Build-Management. Verwendet wird das aktuelle Feature-Level von Java 8,
+da es keinerlei Altlasten gibt, auf die Rücksicht genommen werden müsste.
 
 Als Basis für das Newsboard wird das Spring-Framework im Zusammenspiel mit Maven
 als Build-Management-Tool verwendet. Diese Kombination ist in der Praxis bewährt,
 ist flexibel für verschiedenste Anwendungsfälle, sowie ohne große Einarbeitungszeit
-gut zu benutzen. Außerdem besteht keinerlei Bindung an eine bestimmte Entwicklungsumgebung.
+gut zu benutzen. Außerdem besteht so keinerlei Bindung
+an eine bestimmte Entwicklungsumgebung.
 
-Spring bietet außerdem eine sehr ausgereifte Inversion-of-Control, wodurch eine
-lose Kopplung der einzelnen Komponenten untereinander gewährt wird\cite{fowler-ioc}.
+Spring bietet außerdem eine sehr ausgereifte Inversion-of-Control bzw.
+Dependency Injection, wodurch eine lose Kopplung der einzelnen Komponenten
+untereinander gewährt wird\cite{fowler-ioc}.
 In der Umsetzung von Spring werden dabei die einzelnen Klassen nur mit
 Annotationen versehen und haben ansonsten keine zwingenden Abhängigkeiten
 zum Spring Framework.
 
 Darüber hinaus können neben konkreten Klassen auch Abhängigkeiten zu Interfaces
-aufgelöst werden, welche wiederum in ihrer Auflösung in konkrete Klassen
+injiziert werden, welche wiederum in ihrer Auflösung in konkrete Klassen
 durch die Konfiguration von Spring beeinflusst werden können.
 So kann zum Beispiel entweder eine Konfiguration für eine SQL-Datenbank,
 oder einen anderen Datenspeicher angelegt werden und in Abhängigkeit
-der aktivierten Konfiguration werden unterschiedliche Implementierungen injiziert.
+der aktivierten Konfiguration wird eine andere Implementierung für das
+Interface injiziert.
 
 \subsection{Datenmodell}
 Das Datenmodell des Newsboards wird mit dem relationalen Datenbankmanagementsystem MySQL
@@ -109,27 +116,86 @@ public class RestApiController {
 }
 \end{java}
 
+Auf diese Weise werden jeweils die im Konzept aufgezählten Aktionen implementiert.
+Es ergeben sich zur wesentlichen Vereinfachung der Benutzung der Schnittstelle,
+sowie um möglichst effektiv arbeiten zu können, mehrere Endpoints zum Lesen
+der Dokumente. Insgesamt ergibt sich somit die folgende Liste an vorhandenen
+Kombinationen von Aktionen und Ressourcen:
+
 \begin{itemize}
 	\item \textbf{GET /document}
-	Lesen einer Liste aller Dokumente
+	Lesen einer Liste der Metadaten aller Dokumente
 	\item \textbf{GET /document/\{id\}}
-	Lesen eines spezifizierten Dokuments
+	Lesen eines vollständigen, spezifizierten Dokuments inklusive
+	einzelnen Sätzen und Klassifikationen
 	\item \textbf{PUT /document}
 	Einfügen eines neuen Dokuments durch einen Crawler
 	\item \textbf{GET /unclassified}
-	Lesen aller Dokumente, die vom aktuellen Classifier noch nicht bewertet wurden
+	Lesen aller Dokumente, die vom aktuell authentifizierten Classifier
+	noch nicht bewertet wurden
 	\item \textbf{PUT /classify}
 	Einfügen neuer Klassifizierungen durch einen Classifier
 \end{itemize}
 
-Über die REST-Endpoints hinaus ist bei der Schnittstelle noch die Verbeitung der XML-Daten,
-sowie das Schema zur Validierung interessant.
-Da die zu erwartende Datenmengen im Vorhinein nicht abschätzbar sind,
+Um die Ressourcen der REST-Schnittstelle klar von der Web-Oberfläche zu trennen,
+sind die angegebenen Pfade relativ zum Verzeichnis \texttt{/rest}.
+
+Da nicht jeder beliebige Nutzer neue Dokumente oder Klassifizierungen einfügen
+können soll, muss eine Art von Authentifizierung vorhanden sein.
+Es bietet sich an, auch der Lesen von unklassifizierten Dokumenten nur authentifizierten
+Nutzern zugänglich zu machen, da dies immer spezifisch
+für einen bestimmten Classifier ist.
+Umgesetzt wird dies mit einer HTTP-Basic Authentifizierung, die sehr einfach umzusetzen
+ist, aber für die vorgesehenen Einsatzzwecke ausreicht.
+Als Benutzername dient immer die ID des Crawlers oder Classifiers, die in der Datenbank hinterlegt ist. Als Passwort dient ein in der Datenbank hinterlegtes AuthenticationToken.
+
+\subsection{XML-Format}
+Über die REST-Endpoints hinaus ist bei der Schnittstelle noch die Verarbeitung
+der XML-Daten, sowie das Schema zur Validierung interessant.
+Da die zu erwartenden Datenmengen im Vorhinein nicht abschätzbar sind,
 sollte das Lesen und vor allem das Schreiben der XML-Daten möglichst wenig Speicher
 verbrauchen, um eventuelle Engpässe zu vermeiden. Beim Lesen ist eine Validierung
 gegen das Schema unbedingt notwendig, da nicht davon ausgegangen werden kann,
 dass die ankommenden Daten in jedem Fall valide sind.
 
 Aufgrund der Speicheranforderungen ist ein herkömmlicher DOM-Parser in diesem Projekt
-nicht geeignet. Gelesen werden die XML-Daten stattdessen mit einem SAX-Parser.
+nicht geeignet. Gelesen werden die XML-Daten stattdessen mit einem SAX-Parser\cite{insel-xml}. Dieser ist weniger Speicher belastend als ein DOM-Parser
+und kann, anders als ein StAX-Parser eine Validierung des Dokuments während
+des Einlesens durchführen. Verwendet wird die Standard Implementierung
+des JDK: \texttt{javax.xml.parsers.SAXParser}.
 
+Da SAX-Parser üblicherweise nur lesen, aber nicht schreiben können, kommt dazu ein
+anderer Parser zum Einsatz. In diesem Fall ein StAX-Parser,
+da Validierung nicht zwingend zur Laufzeit erfolgen muss, sondern im Vorhinein
+im Zuge automatisierter Tests durchgeführt werden kann.
+Verwendet wird hier ebenfalls eine Implementierung, die Bestandteil des JDK ist:
+\texttt{javax.xml.stream.XMLStreamWriter}.
+Um die genauere Arbeitsweise beim Verarbeiten der XML-Daten zu beschreiben,
+wird an dieser Stelle das erstellte Schema beschrieben.
+
+Das im Schema spezifizierte XML-Format erlaubt Dokumente verschiedenster Ausprägung.
+Das ist notwendig, damit einerseits nicht mehrere Schemata angelegt und gepflegt
+werden zu müssen, und andererseits die Anforderungen der verschiedenen
+REST-Endpoints erfüllt werden.
+
+Das Schema ist so spezifiziert, dass jedes XML-Dokument eine Liste von Dokumenten
+im Sinne des Datenmodells enthalten kann.
+Dabei kann jedes Dokument Metadaten enthalten (z.B. Autor, Quelle), die beim Einlesen
+neuer Dokumente und beim Ausgeben vorhandener Dokumente vorhanden sein müssen.
+Dazu kommt entweder ein Element mit Rohtext beim Einfügen der Dokumente,
+oder eine Liste von Sätzen und Klassifikationen.
+
+Die Sätze sind nur beim Ausgeben von Dokumenten wichtig, beim Einlesen
+neuer Klassifikationen sind sie, wie die Metadaten auch,
+optional und werden nicht beachtet.
+Wenn eine Liste von Sätzen vorhanden ist, muss sie mindestens einen Satz enthalten.
+Die Liste von Klassifikationen ist beim Ausgeben spezifizierter
+und unklassifizierter Dokumente von Belang, sowie natürlich
+beim Einlesen neuer Klassifikationen. Da z.B. bei frisch eingelesenen Dokumenten noch keine Klassifizierungen vorliegen können, darf die Liste auch leer sein.
+
+Um das Arbeiten mit diesen Dokumenten deutlich zu vereinfachen, können XML-Dokumente
+weder in beliebiger Ausprägung geschrieben noch gelesen werden. Stattdessen können
+nur XML-Daten eingelesen werden, wie sie zum Einfügen neuer Dokumente
+oder Klassifizierungen benötigt werden.
+Geschrieben werden können nur Dokumentenausschnitte (intern Stub genannt),
+die nur Metadaten beinhalten, und vollständige Dokument-Strukturen ausgegeben werden.
