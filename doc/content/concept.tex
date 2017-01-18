@@ -1,4 +1,4 @@
-Um die Funktionsweise des Newsboards wird zuerst das zugrunde liegende Konzept erläutert.
+Um die Funktionsweise des Newsboards aufzuzeigen, wird zuerst das zugrunde liegende Konzept erläutert.
 Dazu gehören neben Architekturentscheidungen auch das Datenmodell und die Schnittstelle
 zur Kommunikation mit den externen Modulen.
 
@@ -6,7 +6,7 @@ zur Kommunikation mit den externen Modulen.
 Der erste richtungweisende Punkt des Konzepts ist die Architektur des Newsboards.
 Da eine Webseite zum Einsehen der bewerteten Nachrichten eine der Voraussetzungen ist,
 bietet sich eine klassische Client-Server-Architektur an.
-Dabei treten neben den Webbrowsern des Benutzer auch die Crawler-
+Dabei treten neben den Webbrowsern der Benutzer auch die Crawler-
 und Bewertungsmodule als Clients auf.
 
 Um die Komplexität des Newsboads möglichst gering zu halten, sollte die Kommunikation
@@ -16,13 +16,15 @@ und sich so keine unnötigen Einschränkungen ergeben.
 
 \subsection{Datenmodell}
 Bei der Analyse der zu persistierenden Daten wurde ebenfalls darauf geachtet, ein
-sowohl möglichst einfaches, aber auch flexibles Datenmodell zu entwickeln. Zu Projektbeginn wurden verschiedene klassisch-relationale Datenbanksysteme mit diversen 
-NoSQL-Techniken verglichen. So schien es durchaus plausibel, eine der verschiedenen
+sowohl möglichst einfaches, aber auch flexibles Datenmodell zu entwickeln. Zu Projektbeginn wurden diverse NoSQL-Systeme mit verschiedenen relationalen Datenbanksystemen verglichen.
+So schien es durchaus plausibel, eine der verschiedenen
 NoSQL-Varianten einsetzen zu können, um Daten schemafrei und somit sehr flexibel 
-ablegen zu können. Bei der Recherche dieser Systeme konnte jedoch keine NoSQL-
-Technologie überzeugend Mehrwert liefern. Deshalb setzt das Newsboard in der jetzigen Form 
-auf ein relationales Modell zur Persistenz, da diese Systeme mehr
+ablegen zu können. Bei der Recherche dieser Systeme konnte jedoch keine Variante
+überzeugenden Mehrwert liefern. Deshalb setzt das Newsboard in der jetzigen Form 
+auf ein relationales Modell zur Persistenz, da diese Systeme weiter
 verbreitet, ausgereift und dokumentiert sind.
+Darüber hinaus werden an der FH Bielefeld relationale Datenbanken als Pflichtfach gelehrt,
+was der Weiterentwicklung des Newsboards zu Gute kommen kann.
 
 Das Entity-Relationship-Diagramm in Abbildung \ref{erd} gibt eine Übersicht über die im Newsboard
 vorhandenen Entitäten und ihren Attributen.
