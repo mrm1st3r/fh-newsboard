@@ -18,11 +18,11 @@ und sich so keine unnötigen Einschränkungen ergeben.
 Bei der Analyse der zu persistierenden Daten wurde ebenfalls darauf geachtet, ein
 sowohl möglichst einfaches, aber auch flexibles Datenmodell zu entwickeln. Zu Projektbeginn wurden verschiedene klassisch-relationale Datenbanksysteme mit diversen 
 NoSQL-Techniken verglichen. So schien es durchaus plausibel, eine der verschiedenen
-NoSQL-Varianten einsetzen zu können um Daten eventuell schemafrei und somit sehr flexibel 
+NoSQL-Varianten einsetzen zu können, um Daten schemafrei und somit sehr flexibel 
 ablegen zu können. Bei der Recherche dieser Systeme konnte jedoch keine NoSQL-
 Technologie überzeugend Mehrwert liefern. Deshalb setzt das Newsboard in der jetzigen Form 
-auf ein relationales Modell zur Persistenz, da diese Systeme deutlich 
-verbreitet, ausgereift und wohldokumentiert sind.
+auf ein relationales Modell zur Persistenz, da diese Systeme mehr
+verbreitet, ausgereift und dokumentiert sind.
 
 Das folgende Entity-Relationship-Diagramm gibt eine Übersicht über die im Newsboard
 vorhandenen Entitäten und ihre Attributen:
@@ -34,7 +34,8 @@ vorhandenen Entitäten und ihre Attributen:
 	\caption{ERD des Newsboards}
 \end{figure}
 
-Wie aus dem ERD ersichtlich, enthält das Newsboard insgesamt sechs Tabellen, um die im Folgenden näher beschriebenen Entitäten abzubilden.
+Wie aus dem ERD ersichtlich, besteht das Newsboard aus diesen nun näher beschriebenen 
+Entitäten:
 \begin{itemize}
 	\item \textbf{Externe Module}\\
 	Die externen Systeme, die Daten für das Newsboard hochladen, werden in dieser Tabelle
@@ -43,16 +44,16 @@ Wie aus dem ERD ersichtlich, enthält das Newsboard insgesamt sechs Tabellen, um
 	\item \textbf{Authentifizierungstoken}\\
 	Authentifizierungstokens dienen zur Bestätigung der Identität von externen Modulen.
 	Nur Module, die über ein gültiges Authentifizierungstoken verfügen, dürfen in der Lage
-	sein, Daten für das Newsboard hochzuladen. Ein Token selbst ist eine zufällige
+	sein, Daten für das Newsboard hochzuladen. Ein Token besteht aus einer zufälligen
 	Zeichenkette.
 	\item \textbf{Externe Dokumente}\\
-	Dokumente, die nicht klassifiziert, dem Gesamtsystem aber dennoch zur Verfügung 
-	stehen sollen, werden als externe Dokumente gespeichert. Der Inhalt dieser Dokumente 
-	wird als Plaintext abgelegt. Auch der Titel des Dokumentes ist von Interesse.
+	Dokumente oder Nachrichten, die nicht klassifiziert, dem Gesamtsystem aber dennoch zur
+	Verfügung stehen sollen, werden als externe Dokumente gespeichert. Der Inhalt dieser
+	Dokumente wird als Plaintext abgelegt. Auch der Titel des Dokumentes ist von Interesse.
 	\item \textbf{Dokumente}\\
-	Texte, die im Newsboard dargestellt werden sollen oder zur Klassifizierung 
-	bereitstehen, werden als Dokumente im System abgelegt. Der eigentliche Text wird 
-	in Sätze aufgeteilt abgelegt, über die Dokumente selbst werden aber einige 
+	Nachrichten und Texte, die im Newsboard dargestellt werden sollen oder zur
+	Klassifizierung bereitstehen, werden als Dokumente im System abgelegt. Der eigentliche
+	Text wird in Sätze aufgeteilt abgelegt, über die Dokumente selbst werden aber einige
 	Metainformationen gespeichert. Hierzu zählen zum Beispiel das Datum der Erstellung und
 	des Crawlens, der Autor sowie der Titel und die Quelle des Dokumentes
 	\item \textbf{Sätze}\\
@@ -64,8 +65,8 @@ Wie aus dem ERD ersichtlich, enthält das Newsboard insgesamt sechs Tabellen, um
 	Die Klassifizierungen der Sätze werden in dieser Tabelle gespeichert. Neben den 
 	Informationen, zu welchem Satz eine Klassifizierung gehört, muss zudem das 
 	klassifizierende Modul abgelegt werden. Eine Klassifizierung selbst besteht aus zwei 
-	Werten: einem für die Klassifizierung und die Zuversichtlichkeit des Moduls, wie genau 
-	die Klassifizierung ist. 
+	Werten: einem für den errechneten Wert und einem für die Zuversichtlichkeit des Moduls,
+	wie genau die Klassifizierung ist. 
 \end{itemize}
 
 \subsection{Schnittstelle}

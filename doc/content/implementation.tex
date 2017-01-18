@@ -40,14 +40,14 @@ Newsboard eingesetzt zu werden. Basierend auf dem vom ERD beschriebenen Modell
 \end{figure}
 
 Das Modell wird in der Schnittstelle über acht Klassen abgebildet (Abb. \ref{uml_model}).
-Hier zeigen sich Abweichungen in der Abbildung der tatsächlichen Tabellen. So ist die
-Klasse Document eine Containerklasse, die die Metainformationen und die Sätze des
-Dokuments speichert. Um die Metainformationen eines Dokumentes zu struktieren, ist für
-sie eine eigene Klasse vorhanden: DocumentMetaData. Für Sätze steht die Klasse Sentences
-bereit, die zudem eine Liste mit allen Klassifikationen eines Satzes beinhaltet. Die 
-Klasse RawDocument dient rein zum Einlesen von Dokumenten, die von Crawlern bereitgestellt
-werden. Sie besteht aus den MetaDaten und dem Text eines Dokumentes. Nach dem Einlesen
-wird ein RawDocument in ein Document überführt.
+Hier zeigen sich Abweichungen zum physischen Modell. So ist die Klasse Document eine
+Containerklasse, die die Metainformationen und die Sätze des Dokuments speichert. Um die
+Metainformationen eines Dokumentes zu struktieren, ist für sie eine eigene Klasse vorhanden:
+DocumentMetaData. Für Sätze steht die Klasse Sentences bereit, die zudem eine Liste mit
+allen Klassifikationen eines Satzes beinhaltet. Die  Klasse RawDocument dient rein zum
+Einlesen von Dokumenten, welche von Crawlern bereitgestellt werden. Sie besteht aus den
+Metainformationen und dem Text eines Dokumentes. Nach dem Einlesen wird ein RawDocument in
+ein Document überführt.
 
 \begin{figure}[h]
 	\centering
@@ -56,7 +56,7 @@ wird ein RawDocument in ein Document überführt.
 	\caption{Diagramm der intern verwendeten Modellklassen}
 \end{figure}
 
-Für die Kommunikation zwischen der Schnittstelle und der Datenbank wurde auf das Data-
+Für die Kommunikation zwischen der Schnittstelle und der Datenbank wird auf das Data-
 Access-Object Design Muster gesetzt, um eine hohe Modularität und Flexibilität zu
 gewährleisten \cite{dao-pattern}. Beim DAO Muster werden verschiedene Interfaces
 verwendet, um den Zugriff auf Datenbankoperationen zu maskieren, während die eigentliche
@@ -68,21 +68,21 @@ weiter verwenden zu können.
 \subsection{Dokumentverarbeitung}
 Um die RawDocuments, die die Crawler über die REST-Schnittstelle bereitstellen,
 in Document-Objekte zu überführen, muss der Text in einzelne Sätze überführt werden.
-Zu diesem Zweck wurde die Klasse RawDocumentProcessor implementiert. Sie nutzt die
+Diesemn Zweck erfüllt die Klasse RawDocumentProcessor. Sie nutzt die
 Apache openNLP Bibliothek, um den Plaintext von RawDocuments in Sentences zu überführen.
 
-Apache openNLP ist eine Sammlung verschiedener Werkzeuge, um mit Java einfach verschiedene 
-NLP-Probleme zu lösen \cite{opennlp}. Es liefert neben verschiedenen 
-Machine-Learning-Algorithmen auch fertige Modelle zum Einlesen mit, unter anderem
+Apache openNLP ist eine Sammlung verschiedener Werkzeuge, um mit Java einfach diverse 
+NLP-Probleme zu lösen \cite{opennlp}. Es liefert neben unterschiedlichen 
+Machine-Learning-Algorithmen auch fertige Modelle zur Verwendung mit, unter anderem
 zum Finden von einzelnen Sätzen. Diese Modelle sind in verschiedenen Sprachen vorhanden,
-für das Newsboard wird eines zur Erkennung der deutschen Sprache verwendet.
+für das Newsboard wird eines zur Erkennung der deutschen Sprache genutzt.
 
 OpenNLP stellt zur Satzerkennung das Interface SentenceDetector und die davon ableitende
 Klasse SentenceDetectorME zur Verfügung. SentenceDetectorME nutzt ein Maximum-Entropy-Modell
 zur Klassifizierung von Satzzeichen, die einen Satz beenden. Sie wird auch im
 RawDocumentProcessor eingesetzt. Über einen einfachen Methodenaufruf kann so ein kompletter
-Text verarbeitet werden, die Kopplung zu openNLP bleibt trotzdem sehr gering, da nur hier
-auf die Bibliothek gesetzt wird.
+Text verarbeitet werden. Auch die Kopplung zu openNLP bleibt sehr gering, da die
+Bibliothek nur hier Verwendung findet.
 
 \subsection{Schnittstelle}
 Zur Implementierung der REST-Endpoints der Schnittstelle werden die in Spring enthaltenen

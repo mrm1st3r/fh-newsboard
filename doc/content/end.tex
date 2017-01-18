@@ -1,20 +1,23 @@
 \subsection{Zusammenfassung}
 Durch die Verwendung von Spring, Java und MySQL als Grundlage konnte eine modulare, flexible
 und performante Software entwickelt werden. Über die REST-Schnittstelle kann das System
-mit unterschiedlichsten Systemen interagieren. 
-
-Ein umfangreiches Testen hat sichergestellt, dass die Funktionen des Newsboards darüber hinaus
-robust und einsatzfähig sind.
+mit unterschiedlichsten Systemen interagieren. Ein umfangreiches Testen hat sichergestellt,
+dass die Funktionen des Newsboards darüber hinaus robust und einsatzfähig sind.
 
 Die zur Satzerkennung eingesetzte Bibliothek openNLP ist zwar einfach zu
 verwenden, die Präzision kann aber noch verbessert werden. Zum jetzigen Zeitpunkt gibt es 
-beispielsweise noch Probleme bei der Erkennung einzelner Punkte in einem Satz, beispielsweise
-bei einer Abkürzung.
+noch Probleme bei der Erkennung einzelner Punkte in einem Satz, beispielsweise bei einer
+Abkürzung.
 
-Leider konnte bis zum Projektabschluss keine Volltextsuche implementiert werden. Lediglich ein
-Prototyp, basierend auf Apache Lucene wurde implementiert. Für die Suche wurde ein Index
+Leider konnte bis zum Projektabschluss keine Volltextsuche implementiert werden. Lediglich
+ein Prototyp, basierend auf Apache Lucene wurde implementiert. Für die Suche wurde ein Index
 im RAM angelegt, welcher sich nicht für die Verwendung in Umgebungen mit großen Datenmengen
 eignet.
+
+Die Entwicklung einer Oberfläche als Showcase des Newsboards ist abgeschlossen worden, eine
+spätere Entwicklung einer umfangreicheren Webanwendung inklusive Administrationstools zu
+einem späteren Zeitpunkt ist jedoch problemlos möglich, dank der losen Kopplung durch die
+REST-Schnittstelle.
 
 \subsection{Ausblick} 
 Im jetzigen Stand bietet das Newsboard viele Ansatzpunkte zur Entwicklung neuer 
@@ -23,17 +26,17 @@ auch eine überarbeitete und umfangreichere Oberfläche denkbar, die in spätere
 Studentenprojekten entwickelt werden können.
 
 Auch eine Verwendung von weiteren Datenbanksystemen ist möglich. Mit den fortschreitenden
-Entwicklungen im Bereich der NoSQL-Datenbanken ist es womöglich sinnvoll , dass, in absehbarer
-Zeit, eine Alternative zum relationalen Modell eingesetzt wird. 
+Entwicklungen im Bereich der NoSQL-Datenbanken ist es womöglich sinnvoll , dass, in
+absehbarer Zeit, eine Alternative zum relationalen Modell eingesetzt wird. 
 
 Die Erkennung von Sätzen könnte ebenfalls in zukünftigen Projekten verbessert werden. Neben
-der Verbesserung des eingesetzten Modells könnte auch über eine komplette Eigenentwicklung
-nachgedacht werden.
+Optimierungen des eingesetzten Modells ist auch eine komplette Eigenentwicklung zur
+Satzextraktion denkbar.
 
-Darüber hinaus ist die Entwicklung einer Volltextsuche in späteren Projekten sinnvoll. Sollte
-das Newsboard tatsächlich über einen längeren Zeitraum am Stück eingesetzt werden, können
-die Datenmengen schnell ansteigen. Eine performante Volltextsuche in Kombination mit einer
-umfangreichen Oberfläche würde einen großen Mehrwert für die Verwendung des Newsboards
+Darüber hinaus ist die Entwicklung einer Volltextsuche in späteren Projekten sinnvoll. 
+Sollte das Newsboard tatsächlich über einen längeren Zeitraum eingesetzt werden, 
+können die Datenmengen schnell ansteigen. Eine performante Volltextsuche in Kombination mit 
+einer umfangreichen Oberfläche würde einen großen Mehrwert für die Verwendung des Newsboards
 bedeuten.
 
 Zurückblickend hat sich die Entwicklung des Newsboards dennoch als erfolgreich gezeigt.
