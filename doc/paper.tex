@@ -10,16 +10,19 @@
 \include{settings}
 
 \begin{document}
-
+\pagenumbering{Roman}
 \thispagestyle{empty}
 \input{title}
 
 % Sperrvermerk
 
-\setcounter{page}{2}
 
 \tableofcontents
 \pagebreak
+
+\setcounter{section}{0}
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \section{Einleitung}
 \input{content/intro}
