@@ -199,3 +199,31 @@ nur XML-Daten eingelesen werden, wie sie zum Einfügen neuer Dokumente
 oder Klassifizierungen benötigt werden.
 Geschrieben werden können nur Dokumentenausschnitte (intern Stub genannt),
 die nur Metadaten beinhalten, und vollständige Dokument-Strukturen ausgegeben werden.
+
+\subsection{Web-Oberfläche}
+Um das Newsboard über die REST-Schnittstelle hinaus auch für Benutzer verfügbar zu machen,
+beinhaltet es eine einfache Web-Oberfläche.
+Diese ist im jetzigen Zustand nur im Stande, eine Liste von klassifizierten Dokumenten,
+oder eine Detailseite zu einem einzelnen Dokument anzuzeigen.
+
+Auf der Übersichtsseite werden nur Titel, Inhalt und ein berechneter Durchschnittswert
+aller Klassifikationen zu einem Dokument angezeigt. Auf der Detailseite werden
+darüber hinaus noch weitere Metadaten, wie Quelle, Crawler, Einzesezeitpunkt
+und wenn verfügbar auch Autor und Veröffentlichungsdatum angezeigt.
+
+Die Durchschnittsberechnung ergibt sich, indem zu jedem Satz einzeln ein Durchschnitt berechnet wird und anschließend das arithmetische Mittel Aller Satzbewertungen
+gebildet wird. Die Satzbewertungen werden berechnet, indem ebenfalls das arithmetische Mittel aller vorliegenden Bewertungen gebildet wird. Falls vorhanden wird dabei allerdings
+auch der confidence-Wert mit einbezogen, indem er mit dem jeweiligen Klassifikationswert
+multipliziert wird.
+
+Bei der Oberfläche handelt es sich um eine klassische, serverseitig Generierte.
+Dabei wird die Thymeleaf-Templage-Engine verwendet, für die es eine einfach Integration in
+Spring gibt. Sie verfolgt den sogenannten "`Natural Templating"'-Ansatz,
+bei dem die HTML-Templates auch in ihrer Rohfassung korrekt von einem Browser
+dargestellt werden können. Dadurch ist allerdings das Ausgabeformat
+auf HTML-Dialekte beschränkt.
+
+Um die Oberfläche mit geringem zusätzlichen Aufwand optisch ansprechend zu gestalten,
+kommt das Bootstrap-Framework zum Einsatz. Es wird von Twitter entwickelt und
+beinhaltet viele Möglichkeiten, Layout zu gestalten und einfache Inhalte
+ansehnlich darzustellen\cite{bootstrap}.
