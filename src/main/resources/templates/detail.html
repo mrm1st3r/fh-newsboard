@@ -7,14 +7,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="column-md-12 page-header"><h1 th:text="${doc.title}"></h1></div>
+        <div class="column-md-12 page-header">
+            <h1 th:text="${doc.title}"></h1>
+            Bewertung: <span th:text="${#numbers.formatDecimal(doc.averageClassificationValue,1,2)}">-0.42</span>
+        </div>
     </div>
     <div class="row">
         <div class="column-md-12">
             <small><span th:text="${doc.author}">Wuppi Fluppi</span>
                 <span th:if="${doc.creationTime}" th:text="${#dates.format(doc.creationTime, 'dd.MM.yyyy')}">12.12.2016</span></small>
             <p>
-                <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text}"></span>
+                <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text} + ' '"></span>
             </p>
             <hr />
             <small>Eingelesen von <span th:text="${doc.module.id}"></span>, am <span th:text="${#dates.format(doc.crawlTime, 'dd.MM.yyyy')}"></span>
