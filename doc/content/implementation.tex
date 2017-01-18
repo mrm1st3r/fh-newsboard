@@ -1,9 +1,9 @@
 Nach dem Konzept wird nun dessen konkrete Umsetzung behandelt,
-um einen tieferen Einblick in die Funktionsweise des Newsboard zu geben.
+um einen tieferen Einblick in die Funktionsweise des Newsboards zu geben.
 
 \subsection{Technische Basis}
 Umgesetzt wird das Newsboard in Java, sowohl wegen persönlicher Präferenzen der Autoren,
-sowie der Tatsache, dass hauptsächlich Java als Programmiersprache
+als auch auf Grund der Tatsache, dass hauptsächlich Java als Programmiersprache
 an der FH Bielefeld gelehrt wird. So werden der Weiterentwicklung des Newsboards
 durch weitere Studenten keine vermeidbaren Hürden in den Weg gestellt.
 Darüber hinaus gibt es für Java eine große Zahl an ausgereiften
@@ -42,8 +42,8 @@ Newsboard eingesetzt zu werden. Basierend auf dem vom ERD beschriebenen Modell
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.8]{content/physical-model.png}
-	\label{fig:physical_model}
 	\caption{Physisches Modell des Newsboards}
+	\label{fig:physical_model}
 \end{figure}
 
 Das Modell wird in der Schnittstelle über acht Klassen abgebildet (Abb. 
@@ -59,24 +59,25 @@ in ein Document überführt.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.5]{content/uml-model.png}
-	\label{fig:uml_model}
 	\caption{Diagramm der intern verwendeten Modellklassen}
+	\label{fig:uml_model}
 \end{figure}
 
-Für die Kommunikation zwischen der Schnittstelle und der Datenbank wird auf das Data-
-Access-Object Design Muster gesetzt, um eine hohe Modularität und Flexibilität zu
+Für die Kommunikation zwischen der Schnittstelle und der Datenbank wird auf das
+Data-Access-Object Design Muster gesetzt, um eine hohe Modularität und Flexibilität zu
 gewährleisten \cite{dao-pattern}. Beim DAO Muster werden verschiedene Interfaces
 verwendet, um den Zugriff auf Datenbankoperationen zu maskieren, während die eigentliche
 Übertragungslogik pro Datenquelle eigens entwickelt werden kann. Das, und die
-Dependency-Injection-Funktion Springs ermöglicht es, im Falle eines Datenbankwechsels von
+Dependency-Injection Springs ermöglichen es, im Falle eines Datenbankwechsels von
 MySQL hin zu einem beliebigen anderem System, die Schnittstelle fast ohne Anpassungen
 weiter verwenden zu können.
 
 \subsection{Dokumentverarbeitung}
 Um die RawDocuments, die die Crawler über die REST-Schnittstelle bereitstellen,
-in Document-Objekte zu überführen, muss der Text in einzelne Sätze überführt werden.
-Diesemn Zweck erfüllt die Klasse RawDocumentProcessor. Sie nutzt die
-Apache openNLP Bibliothek, um den Plaintext von RawDocuments in Sentences zu überführen.
+in Document-Objekte zu überführen, muss der Text in einzelne Sätze aufgeteilt werden.
+Diesem Zweck erfüllt die Klasse RawDocumentProcessor. Sie nutzt die
+Apache openNLP Bibliothek, um den unverarbeiteten Text von RawDocuments in Sentences zu
+überführen.
 
 Apache openNLP ist eine Sammlung verschiedener Werkzeuge, um mit Java einfach diverse 
 NLP-Probleme zu lösen \cite{opennlp}. Es liefert neben unterschiedlichen 
@@ -229,7 +230,7 @@ beinhaltet viele Möglichkeiten, Layout zu gestalten und einfache Inhalte
 ansehnlich darzustellen\cite{bootstrap}.
 
 \subsection{Testing}
-Um eine korrekte Funktion des Newsboard zu gewährleisten und möglichst früh
+Um eine korrekte Funktion des Newsboards zu gewährleisten und möglichst früh
 Fehler zu erkennen, wurde zu großen Teilen testgetrieben entwickelt.
 Als Testing-Framework kam Spock zum Einsatz. Es bietet gegenüber JUnit einige Vorteile,
 wie das Strukturieren von Testfällen in given/when/then-Blöcke,
