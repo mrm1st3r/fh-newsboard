@@ -3,7 +3,7 @@ Der erste richtungweisende Punkt für des Konzepts ist die Architektur des Newsb
 Da eine Webseite zum Einsehen der bewerteten Nachrichten eine der Voraussetzungen ist,
 bietet sich eine klassische Client-Server-Architektur an.
 Dabei treten neben den Webbrowsern des Benutzer auch die Crawler-
-und Bewertungsmodule als Clients auf. \\
+und Bewertungsmodule als Clients auf.
 
 Um die Komplexität des Newsboads möglichst gering zu halten, sollte die Kommunikation
 mit den Modulen ebenfalls über HTTP stattfinden. Das bringt den Vorteil mit sich,
@@ -15,10 +15,10 @@ Bei der Analyse der zu persistierenden Daten wurde ebenfalls darauf geachtet, ei
 sowohl möglichst einfaches, aber auch flexibles Datenmodell zu entwickeln. Zu Projektbeginn wurden verschiedene klassisch-relationale Datenbanksysteme mit diversen 
 NoSQL-Techniken verglichen. So schien es durchaus plausibel, eine der verschiedenen
 NoSQL-Varianten einsetzen zu können um Daten eventuell schemafrei und somit sehr flexibel 
-ablegen zu können. Bei der Recherche dieser Technologien konnte jedoch keine NoSQL-
+ablegen zu können. Bei der Recherche dieser Systeme konnte jedoch keine NoSQL-
 Technologie überzeugend Mehrwert liefern. Deshalb setzt das Newsboard in der jetzigen Form 
 auf ein relationales Modell zur Persistenz, da diese Systeme deutlich 
-verbreitet, ausgereift und wohldokumentiert sind. \\
+verbreitet, ausgereift und wohldokumentiert sind.
 
 Das folgende Entity-Relationship-Diagramm gibt eine Übersicht über die im Newsboard
 vorhandenen Entitäten und ihre Attributen:
@@ -67,19 +67,19 @@ Wie aus dem ERD ersichtlich, enthält das Newsboard insgesamt sechs Tabellen, um
 \subsection{Schnittstelle}
 Die Hauptziele bei der Konzeption der Schnittstelle waren zum einen eine möglichst
 einfache Verwendung, sowie eine verlässliche Validierung der Übertragenen Daten.
-Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, REST zu verwenden. \\
+Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, REST zu verwenden.
 
 Als Datenformat für die Schnittstelle bieten sich sowohl JSON, als auch XML an.
 Da XML im Gegensatz zu JSON allerdings eine verlässliche Möglichkeit zur Validierung
 und Dokumentation durch ein Schema besitzt, ist es in diesem Fall die bessere Wahl.
 Der geringfügig höhere Speicherverbrauch, sowie die derzeit geringe Popularität
-von XML sollen hier keine Rolle spielen. \\
+von XML sollen hier keine Rolle spielen.
 
 Bei der Konzeption der verwendeten REST-Ressourcen, sowie deren akzeptierten Methoden
 bestehen ebenfalls zwei mögliche Szenarien. Das erste ist die Abbildung sämtlicher
 Datentypen des Datenmodells und das Erlauben aller CRUD-Operationen.
 Das zweite Szenario ist es, ausschließlich einige wenige Ressourcen zur Verfügung
-zu stellen, welche die geplanten Anwendungsfälle abbilden. \\
+zu stellen, welche die geplanten Anwendungsfälle abbilden.
 
 Letzteres verlangt komplexere Daten, die von der Schnittstelle verarbeitet werden müssen,
 andernfalls läge diese Komplexität jeweils in den einzelnen Clients und müsste
