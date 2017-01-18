@@ -1,8 +1,9 @@
 \subsection{Technische Basis}
 Umgesetzt wird das Newsboard in Java, sowohl wegen persönlicher Präferenzen der Autoren,
 sowie der Tatsache, dass hauptsächlich Java als Programmiersprache
-an der FH Bielefeld gelehrt wird und so die Weiterentwicklung des Newsboards
-positiv beeinflusst. Darüber hinaus gibt es für Java eine große Zahl an ausgereiften
+an der FH Bielefeld gelehrt wird. So werden der Weiterentwicklung des Newsboards
+durch weitere Studenten keine vermeidbaren Hürden in den Weg gestellt.
+Darüber hinaus gibt es für Java eine große Zahl an ausgereiften
 und gut dokumentierten Bibliotheken, sowie verlässliche Frameworks zum 
 Build-Management.
 
@@ -10,6 +11,19 @@ Als Basis für das Newsboard wird das Spring-Framework im Zusammenspiel mit Mave
 als Build-Management-Tool verwendet. Diese Kombination ist in der Praxis bewährt,
 ist flexibel für verschiedenste Anwendungsfälle, sowie ohne große Einarbeitungszeit
 gut zu benutzen.
+
+Spring bietet außerdem eine sehr ausgereifte Inversion-of-Control, wodurch eine
+lose Kopplung der einzelnen Komponenten untereinander gewährt wird\cite{fowler-ioc}.
+In der Umsetzung von Spring werden dabei die einzelnen Klassen nur mit
+Annotationen versehen und haben ansonsten keine zwingenden Abhängigkeiten
+zum Spring Framework.
+
+Darüber hinaus können neben konkreten Klassen auch Abhängigkeiten zu Interfaces
+aufgelöst werden, welche wiederum in ihrer Auflösung in konkrete Klassen
+durch die Konfiguration von Spring beeinflusst werden können.
+So kann zum Beispiel entweder eine Konfiguration für eine SQL-Datenbank,
+oder einen anderen Datenspeicher angelegt werden und in Abhängigkeit
+der aktivierten Konfiguration werden unterschiedliche Implementierungen injiziert.
 
 \subsection{Datenmodell}
 Das Datenmodell des Newsboards wird mit dem relationalen Datenbankmanagementsystem MySQL
@@ -94,6 +108,19 @@ public class RestApiController {
 	[...]
 }
 \end{java}
+
+\begin{itemize}
+	\item \textbf{GET /document}
+	Lesen einer Liste aller Dokumente
+	\item \textbf{GET /document/\{id\}}
+	Lesen eines spezifizierten Dokuments
+	\item \textbf{PUT /document}
+	Einfügen eines neuen Dokuments durch einen Crawler
+	\item \textbf{GET /unclassified}
+	Lesen aller Dokumente, die vom aktuellen Classifier noch nicht bewertet wurden
+	\item \textbf{PUT /classify}
+	Einfügen neuer Klassifizierungen durch einen Classifier
+\end{itemize}
 
 Über die REST-Endpoints hinaus ist bei der Schnittstelle noch die Verbeitung der XML-Daten,
 sowie das Schema zur Validierung interessant.
