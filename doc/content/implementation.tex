@@ -36,31 +36,31 @@ Interface injiziert.
 Das Datenmodell des Newsboards wird mit dem relationalen Datenbankmanagementsystem MySQL
 abgebildet. Als weitverbreitetes Open-Source Produkt eignet es sich optimal, um im
 Newsboard eingesetzt zu werden. Basierend auf dem vom ERD beschriebenen Modell
-(Abb. \ref{erd}) des Newsboards wurde ein physisches Modell für MySQL entwickelt
-(Abb. \ref{physical_model}).
+(Abb. \ref{fig:erd}) des Newsboards wurde ein physisches Modell für MySQL entwickelt
+(Abb. \ref{fig:physical_model}).
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.8]{content/physical-model.png}
+	\label{fig:physical_model}
 	\caption{Physisches Modell des Newsboards}
-	\label{physical_model}
 \end{figure}
 
-Das Modell wird in der Schnittstelle über acht Klassen abgebildet (Abb. \ref{uml_model}).
-Hier zeigen sich Abweichungen zum physischen Modell. So ist die Klasse Document eine
-Containerklasse, die die Metainformationen und die Sätze des Dokuments speichert. Um die
-Metainformationen eines Dokumentes zu struktieren, ist für sie eine eigene Klasse vorhanden:
-DocumentMetaData. Für Sätze steht die Klasse Sentences bereit, die zudem eine Liste mit
-allen Klassifikationen eines Satzes beinhaltet. Die  Klasse RawDocument dient rein zum
-Einlesen von Dokumenten, welche von Crawlern bereitgestellt werden. Sie besteht aus den
-Metainformationen und dem Text eines Dokumentes. Nach dem Einlesen wird ein RawDocument in
-ein Document überführt.
+Das Modell wird in der Schnittstelle über acht Klassen abgebildet (Abb. 
+\ref{fig:uml_model}). Hier zeigen sich Abweichungen zum physischen Modell. So ist die Klasse
+Document eine Containerklasse, die die Metainformationen und die Sätze des Dokuments
+speichert. Um die Metainformationen eines Dokumentes zu struktieren, ist für sie eine eigene
+Klasse vorhanden: DocumentMetaData. Für Sätze steht die Klasse Sentences bereit, die zudem
+eine Liste mit allen Klassifikationen eines Satzes beinhaltet. Die  Klasse RawDocument dient
+rein zum Einlesen von Dokumenten, welche von Crawlern bereitgestellt werden. Sie besteht aus
+den Metainformationen und dem Text eines Dokumentes. Nach dem Einlesen wird ein RawDocument
+in ein Document überführt.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.5]{content/uml-model.png}
+	\label{fig:uml_model}
 	\caption{Diagramm der intern verwendeten Modellklassen}
-	\label{uml_model}
 \end{figure}
 
 Für die Kommunikation zwischen der Schnittstelle und der Datenbank wird auf das Data-
