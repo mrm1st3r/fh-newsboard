@@ -7,7 +7,7 @@ als auch auf Grund der Tatsache, dass hauptsächlich Java als Programmiersprache
 an der FH Bielefeld gelehrt wird. So werden der Weiterentwicklung des Newsboards
 durch weitere Studenten keine vermeidbaren Hürden in den Weg gestellt.
 Darüber hinaus gibt es für Java eine große Zahl an ausgereiften
-und gut dokumentierten Bibliotheken, sowie verlässliche Frameworks zum 
+und gut dokumentierten Bibliotheken sowie verlässliche Frameworks zum 
 Build-Management. Verwendet wird das aktuelle Feature-Level von Java 8,
 da es keinerlei Altlasten gibt, auf die Rücksicht genommen werden müsste.
 
@@ -68,14 +68,14 @@ Data-Access-Object Design Muster gesetzt, um eine hohe Modularität und Flexibil
 gewährleisten \cite{dao-pattern}. Beim DAO Muster werden verschiedene Interfaces
 verwendet, um den Zugriff auf Datenbankoperationen zu maskieren, während die eigentliche
 Übertragungslogik pro Datenquelle eigens entwickelt werden kann. Das, und die
-Dependency-Injection Springs ermöglichen es, im Falle eines Datenbankwechsels von
+Dependency-Injection von Spring, ermöglichen es, im Falle eines Datenbankwechsels von
 MySQL hin zu einem beliebigen anderem System, die Schnittstelle fast ohne Anpassungen
 weiter verwenden zu können.
 
 \subsection{Dokumentverarbeitung}
-Um die RawDocuments, die die Crawler über die REST-Schnittstelle bereitstellen,
+Um die RawDocuments, welche von Crawlern über die REST-Schnittstelle eingefügt werden,
 in Document-Objekte zu überführen, muss der Text in einzelne Sätze aufgeteilt werden.
-Diesem Zweck erfüllt die Klasse RawDocumentProcessor. Sie nutzt die
+Diesen Zweck erfüllt die Klasse RawDocumentProcessor. Sie nutzt die
 Apache openNLP Bibliothek, um den unverarbeiteten Text von RawDocuments in Sentences zu
 überführen.
 
@@ -96,12 +96,12 @@ Bibliothek nur hier Verwendung findet.
 Zur Implementierung der REST-Endpoints der Schnittstelle werden die in Spring enthaltenen
 Controller-Features genutzt. Um damit einen Endpoint zu bedienen, reicht es aus,
 eine Methode innerhalb einer Controller-Klasse mit \texttt{RequestMapping} zu annotieren.
-Listing \ref{lst:restExample} zeigt Beispielhaft, wie ein solcher Endpoint unter Angabe der
+Listing \ref{lst:restExample} zeigt beispielhaft, wie ein solcher Endpoint unter Angabe der
 Annotations-Parameter implementiert werden kann.
 
 Der Rückgabewert der Methode wird so direkt als Antwort an den Client zurückgeliefert.
 Darüber hinaus können mit Hilfe der Dependency-Injection von Spring weitere Parameter
-definiert werden, die z.B. die HTTP-Anfrage, oder die Antwort wie im Beispiel.
+definiert werden, wie die HTTP-Anfrage oder eine Antwort wie der im Beispiel.
 \vspace{1em}
 
 \begin{java}{Implementierung eines REST-Endpoints mit Spring}{lst:restExample}
@@ -120,7 +120,7 @@ public class RestApiController {
 Auf diese Weise werden jeweils die im Konzept aufgezählten Aktionen implementiert.
 Es ergeben sich zur wesentlichen Vereinfachung der Benutzung der Schnittstelle,
 sowie um möglichst effektiv arbeiten zu können, mehrere Endpoints zum Lesen
-der Dokumente. Insgesamt ergibt sich somit die folgende Liste an vorhandenen
+der Dokumente. Somit bildet sich die folgende Liste an vorhandenen
 Kombinationen von Aktionen und Ressourcen:
 
 \begin{itemize}
@@ -143,12 +143,13 @@ sind die angegebenen Pfade relativ zum Verzeichnis \texttt{/rest}.
 
 Da nicht jeder beliebige Nutzer neue Dokumente oder Klassifizierungen einfügen
 können soll, muss eine Art von Authentifizierung vorhanden sein.
-Es bietet sich an, auch der Lesen von unklassifizierten Dokumenten nur authentifizierten
+Es bietet sich an, auch das Lesen von unklassifizierten Dokumenten nur authentifizierten
 Nutzern zugänglich zu machen, da dies immer spezifisch
 für einen bestimmten Classifier ist.
 Umgesetzt wird dies mit einer HTTP-Basic Authentifizierung, die sehr einfach umzusetzen
 ist, aber für die vorgesehenen Einsatzzwecke ausreicht.
-Als Benutzername dient immer die ID des Crawlers oder Classifiers, die in der Datenbank hinterlegt ist. Als Passwort dient ein in der Datenbank hinterlegtes AuthenticationToken.
+Als Benutzername dient immer die ID des Crawlers oder Classifiers, die in der Datenbank
+hinterlegt ist. Als Passwort dient ein in der Datenbank hinterlegtes AuthenticationToken.
 
 \subsection{XML-Format}
 Über die REST-Endpoints hinaus ist bei der Schnittstelle noch die Verarbeitung
@@ -160,8 +161,8 @@ gegen das Schema unbedingt notwendig, da nicht davon ausgegangen werden kann,
 dass die ankommenden Daten in jedem Fall valide sind.
 
 Aufgrund der Speicheranforderungen ist ein herkömmlicher DOM-Parser in diesem Projekt
-nicht geeignet. Gelesen werden die XML-Daten stattdessen mit einem SAX-Parser\cite{insel-xml}. Dieser ist weniger Speicher belastend als ein DOM-Parser
-und kann, anders als ein StAX-Parser eine Validierung des Dokuments während
+nicht geeignet. Gelesen werden die XML-Daten stattdessen mit einem SAX-Parser\cite{insel-xml}. Dieser ist weniger speicherbelastend als ein DOM-Parser
+und kann, anders als ein StAX-Parser, eine Validierung des Dokuments während
 des Einlesens durchführen. Verwendet wird die Standard Implementierung
 des JDK: \texttt{javax.xml.parsers.SAXParser}.
 
@@ -182,7 +183,7 @@ REST-Endpoints erfüllt werden.
 Das Schema ist so spezifiziert, dass jedes XML-Dokument eine Liste von Dokumenten
 im Sinne des Datenmodells enthalten kann.
 Dabei kann jedes Dokument Metadaten enthalten (z.B. Autor, Quelle), die beim Einlesen
-neuer Dokumente und beim Ausgeben vorhandener Dokumente vorhanden sein müssen.
+neuer Dokumente und beim Ausgeben vorhandener Dokumente angegeben sein müssen.
 Dazu kommt entweder ein Element mit Rohtext beim Einfügen der Dokumente,
 oder eine Liste von Sätzen und Klassifikationen.
 
@@ -197,9 +198,9 @@ beim Einlesen neuer Klassifikationen. Da z.B. bei frisch eingelesenen Dokumenten
 Um das Arbeiten mit diesen Dokumenten deutlich zu vereinfachen, können XML-Dokumente
 weder in beliebiger Ausprägung geschrieben noch gelesen werden. Stattdessen können
 nur XML-Daten eingelesen werden, wie sie zum Einfügen neuer Dokumente
-oder Klassifizierungen benötigt werden.
+oder Klassifizierungen notwendig sind.
 Geschrieben werden können nur Dokumentenausschnitte (intern Stub genannt),
-die nur Metadaten beinhalten, und vollständige Dokument-Strukturen ausgegeben werden.
+die nur Metadaten beinhalten, oder vollständige Dokument-Strukturen.
 
 \subsection{Web-Oberfläche}
 Um das Newsboard über die REST-Schnittstelle hinaus auch für Benutzer verfügbar zu machen,
@@ -209,16 +210,18 @@ oder eine Detailseite zu einem einzelnen Dokument anzuzeigen.
 
 Auf der Übersichtsseite werden nur Titel, Inhalt und ein berechneter Durchschnittswert
 aller Klassifikationen zu einem Dokument angezeigt. Auf der Detailseite werden
-darüber hinaus noch weitere Metadaten, wie Quelle, Crawler, Einzesezeitpunkt
-und wenn verfügbar auch Autor und Veröffentlichungsdatum angezeigt.
+darüber hinaus noch weitere Metadaten, wie Quelle, Crawler, Einlesezeitpunkt
+und, wenn verfügbar, auch Autor und Veröffentlichungsdatum angezeigt.
 
-Die Durchschnittsberechnung ergibt sich, indem zu jedem Satz einzeln ein Durchschnitt berechnet wird und anschließend das arithmetische Mittel Aller Satzbewertungen
-gebildet wird. Die Satzbewertungen werden berechnet, indem ebenfalls das arithmetische Mittel aller vorliegenden Bewertungen gebildet wird. Falls vorhanden wird dabei allerdings
-auch der confidence-Wert mit einbezogen, indem er mit dem jeweiligen Klassifikationswert
-multipliziert wird.
+Die Durchschnittsberechnung ergibt sich, indem zu jedem Satz einzeln ein Durchschnitt
+berechnet wird und anschließend das arithmetische Mittel aller Satzbewertungen
+gebildet wird. Die Satzbewertungen werden berechnet, indem ebenfalls das arithmetische
+Mittel aller vorliegenden Bewertungen gebildet wird. Falls vorhanden, wird dabei auch der
+Wert für die Zuversichtlichkeit mit einbezogen, indem er mit dem jeweiligen
+Klassifikationswert multipliziert wird.
 
-Bei der Oberfläche handelt es sich um eine klassische, serverseitig Generierte.
-Dabei wird die Thymeleaf-Templage-Engine verwendet, für die es eine einfach Integration in
+Bei der Oberfläche handelt es sich um eine klassische, serverseitig generierte.
+Dabei wird die Thymeleaf-Template-Engine verwendet, für die es eine einfach Integration in
 Spring gibt. Sie verfolgt den sogenannten "`Natural Templating"'-Ansatz,
 bei dem die HTML-Templates auch in ihrer Rohfassung korrekt von einem Browser
 dargestellt werden können. Dadurch ist allerdings das Ausgabeformat
@@ -226,7 +229,7 @@ auf HTML-Dialekte beschränkt.
 
 Um die Oberfläche mit geringem zusätzlichen Aufwand optisch ansprechend zu gestalten,
 kommt das Bootstrap-Framework zum Einsatz. Es wird von Twitter entwickelt und
-beinhaltet viele Möglichkeiten, Layout zu gestalten und einfache Inhalte
+beinhaltet viele Möglichkeiten, Layouts zu gestalten und einfache Inhalte
 ansehnlich darzustellen\cite{bootstrap}.
 
 \subsection{Testing}
@@ -237,7 +240,7 @@ wie das Strukturieren von Testfällen in given/when/then-Blöcke,
 oder das, durch die Programmierung in Groovy ermöglichte, Testen privater Methoden
 außerhalb der entsprechenden Klassen.
 
-Zusätzlich kam das Jacoco-Maven-Plugin zum Einsatz, um die Testabdeckung des Newsboards
+Zusätzlich kam das JaCoCo-Maven-Plugin zum Einsatz, um die Testabdeckung des Newsboards
 zu messen. In der finalen Fassung liegt die Zeilenabdeckung bei 92\%
 und die Entscheidungsabdeckung bei 76\% für das gesamte Projekt.
 Für die Model-Klassen besteht darüber hinaus vollständige Zeilenabdeckung,
