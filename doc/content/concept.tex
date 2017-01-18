@@ -3,7 +3,7 @@ Dazu gehören neben Architekturentscheidungen auch das Datenmodell und die Schni
 zur Kommunikation mit den externen Modulen.
 
 \subsection{Architektur}
-Der erste richtungweisende Punkt für des Konzepts ist die Architektur des Newsboards.
+Der erste richtungweisende Punkt des Konzepts ist die Architektur des Newsboards.
 Da eine Webseite zum Einsehen der bewerteten Nachrichten eine der Voraussetzungen ist,
 bietet sich eine klassische Client-Server-Architektur an.
 Dabei treten neben den Webbrowsern des Benutzer auch die Crawler-
@@ -70,11 +70,13 @@ Entitäten:
 \end{itemize}
 
 \subsection{Schnittstelle}
-Die Hauptziele bei der Konzeption der Schnittstelle waren zum einen eine möglichst
-einfache Verwendung, sowie eine verlässliche Validierung der Übertragenen Daten.
-Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, REST zu verwenden.
+Die Hauptziele bei der Konzeption der Schnittstelle sind zum einen eine möglichst
+einfache Verwendung, zum anderen eine verlässliche Validierung der Übertragenen Daten.
+Da die Schnittstelle auf HTTP aufbaut, bietet es sich an, mit einer REST-Schnittstelle
+die Möglichkeiten von HTTP zu nutzen und auf eine zusätzliche Zwischenschicht
+zu verzichten.
 
-Als Datenformat für die Schnittstelle bieten sich sowohl JSON, als auch XML an.
+Als Datenformat für REST-Schnittstellen sind sowohl JSON, als auch XML etabliert.
 Da XML im Gegensatz zu JSON allerdings eine verlässliche Möglichkeit zur Validierung
 und Dokumentation durch ein Schema besitzt, ist es in diesem Fall die bessere Wahl.
 Der geringfügig höhere Speicherverbrauch, sowie die derzeit geringe Popularität
