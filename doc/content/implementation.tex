@@ -227,3 +227,20 @@ Um die Oberfläche mit geringem zusätzlichen Aufwand optisch ansprechend zu ges
 kommt das Bootstrap-Framework zum Einsatz. Es wird von Twitter entwickelt und
 beinhaltet viele Möglichkeiten, Layout zu gestalten und einfache Inhalte
 ansehnlich darzustellen\cite{bootstrap}.
+
+\subsection{Testing}
+Um eine korrekte Funktion des Newsboard zu gewährleisten und möglichst früh
+Fehler zu erkennen, wurde zu großen Teilen testgetrieben entwickelt.
+Als Testing-Framework kam Spock zum Einsatz. Es bietet gegenüber JUnit einige Vorteile,
+wie das Strukturieren von Testfällen in given/when/then-Blöcke,
+oder das, durch die Programmierung in Groovy ermöglichte, Testen privater Methoden
+außerhalb der entsprechenden Klassen.
+
+Zusätzlich kam das Jacoco-Maven-Plugin zum Einsatz, um die Testabdeckung des Newsboards
+zu messen. In der finalen Fassung liegt die Zeilenabdeckung bei 92\%
+und die Entscheidungsabdeckung bei 76\% für das gesamte Projekt.
+Für die Model-Klassen besteht darüber hinaus vollständige Zeilenabdeckung,
+sowie 89\% Entscheidungsabdeckung. Dabei ist zu beachten, dass JaCoCo einige Pfade
+mit einberechnet, die sich gegenseitig ausschließen, und entsprechend
+nicht abgedeckt werden können. Ein Beispiel dafür ist die oder-verknüpfte Abfrage
+auf Null und eine Klassenzugehörigkeit, die mehrfach in \texttt{equals}-Methoden vorkommt.
