@@ -73,6 +73,19 @@ A whole request might look like:
 
 **Authentication** is done via `HTTP-Basic`
 
+## Contributing
+If you have anything to contribute to this project, feel free to do so:
+
+1. Fork it
+1. Create a feature branch
+1. Push your changes to that branch
+1. Submit a pull request
+
+## Credits
+**Original authors**: Felix Meyer, Lukas Taake
+
+**Current maintainer**: Lukas Taake
+
 ## License
 Licensed under the MIT License.
 
