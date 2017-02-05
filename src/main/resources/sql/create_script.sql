@@ -1,50 +1,50 @@
 CREATE TABLE IF NOT EXISTS extern_document (
-  id  INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(50),
-  html LONGTEXT,
+  id        INT         NOT NULL AUTO_INCREMENT,
+  title     VARCHAR(50) NOT NULL,
+  html      LONGTEXT    NOT NULL,
   module_id VARCHAR(50) NOT NULL,
   PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS extern_module (
-  id VARCHAR(50) NOT NULL,
-  name VARCHAR(50) NOT NULL,
-  author VARCHAR(50),
-  description TEXT,
+  id          VARCHAR(50) NOT NULL,
+  name        VARCHAR(50) NOT NULL,
+  author      VARCHAR(50) NOT NULL,
+  description TEXT        NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS authentication_token (
-  id INT NOT NULL AUTO_INCREMENT,
+  id        INT         NOT NULL AUTO_INCREMENT,
   module_id VARCHAR(50) NOT NULL,
-  token VARCHAR(30) NOT NULL,
+  token     VARCHAR(30) NOT NULL,
   PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS sentence (
-  id INT NOT NULL AUTO_INCREMENT,
-  number INT NOT NULL,
-  text TEXT,
-  document_id INT NOT NULL,
+  id          INT   NOT NULL AUTO_INCREMENT,
+  number      INT   NOT NULL,
+  text        TEXT  NOT NULL,
+  document_id INT   NOT NULL,
   PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS document (
-  id INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(50) NOT NULL,
-  author VARCHAR(50),
-  source TINYTEXT,
-  creation_time DATETIME,
-  crawl_time DATETIME,
-  module_id VARCHAR(50) NOT NULL,
+  id            INT         NOT NULL AUTO_INCREMENT,
+  title         VARCHAR(50) NOT NULL,
+  author        VARCHAR(50) NULL,
+  source        TINYTEXT    NOT NULL,
+  creation_time DATETIME    NULL,
+  crawl_time    DATETIME    NOT NULL,
+  module_id     VARCHAR(50) NOT NULL,
   PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS classification (
-  sent_id INT NOT NULL,
-  module_id VARCHAR(50) NOT NULL,
-  value DECIMAL(13, 10) NOT NULL,
-  confidence DECIMAL(13, 10),
+  sent_id     INT             NOT NULL,
+  module_id   VARCHAR(50)     NOT NULL,
+  value       DECIMAL(13, 10) NOT NULL,
+  confidence  DECIMAL(13, 10) NULL,
   PRIMARY KEY (sent_id, module_id)
 );
 
