@@ -16,7 +16,7 @@ class AuthenticationTokenDaoTest extends Specification {
     @Autowired
     AuthenticationTokenDao authenticationTokenDao
     @Autowired
-    ExternModuleDao externModuleDao
+    ExternalModuleDao externModuleDao
 
     List<String> moduleIds
     List<Integer> authTokenIds
@@ -34,10 +34,10 @@ class AuthenticationTokenDaoTest extends Specification {
         insertToken(token)
         token.setToken("ghi")
         token.setModuleId("extern_module_testing_2")
-        authenticationTokenDao.updateAuthenticationToken(token)
+        authenticationTokenDao.update(token)
 
         then:
-        AuthenticationToken testingToken = authenticationTokenDao.getTokenWithId(token.getId())
+        AuthenticationToken testingToken = authenticationTokenDao.get(token.getId())
         testingToken.getToken() == token.getToken()
         testingToken.getId() == token.getId()
         testingToken.getModuleId() == token.getModuleId()
@@ -51,7 +51,7 @@ class AuthenticationTokenDaoTest extends Specification {
         insertToken(token)
 
         then:
-        AuthenticationToken testingToken = authenticationTokenDao.getTokenWithId(token.getId())
+        AuthenticationToken testingToken = authenticationTokenDao.get(token.getId())
 
         testingToken.getModuleId() == token.getModuleId()
         testingToken.getToken() == token.getToken()
@@ -71,7 +71,7 @@ class AuthenticationTokenDaoTest extends Specification {
         insertToken(token)
 
         then:
-        List<AuthenticationToken> allTokens = authenticationTokenDao.getAllTokenForModule(module)
+        List<AuthenticationToken> allTokens = authenticationTokenDao.findForModule(module)
 
         allTokens.size() == 5
         for (AuthenticationToken t : allTokens) {
@@ -89,7 +89,7 @@ class AuthenticationTokenDaoTest extends Specification {
         insertToken(tokenToInsert)
 
         then:
-        AuthenticationToken token = authenticationTokenDao.getTokenWithId(tokenToInsert.getId())
+        AuthenticationToken token = authenticationTokenDao.get(tokenToInsert.getId())
 
         token.getModuleId() == tokenToInsert.getModuleId()
         token.getToken() == tokenToInsert.getToken()
@@ -114,12 +114,12 @@ class AuthenticationTokenDaoTest extends Specification {
     }
 
     def insertToken(AuthenticationToken token) {
-        authenticationTokenDao.insertAuthenticationToken(token)
+        authenticationTokenDao.create(token)
         authTokenIds.add(token.getId())
     }
 
     def insertExternModule(ExternalModule module) {
-        externModuleDao.insertExternModule(module)
+        externModuleDao.create(module)
         moduleIds.add(module.getId())
     }
 

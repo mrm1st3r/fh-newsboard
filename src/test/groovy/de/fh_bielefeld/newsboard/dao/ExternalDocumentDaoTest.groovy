@@ -14,9 +14,9 @@ class ExternalDocumentDaoTest extends Specification {
     @Autowired
     JdbcTemplate jdbcTemplate
     @Autowired
-    ExternDocumentDao externDocumentDao
+    ExternalDocumentDao externDocumentDao
     @Autowired
-    ExternModuleDao externModuleDao
+    ExternalModuleDao externModuleDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -31,10 +31,10 @@ class ExternalDocumentDaoTest extends Specification {
         document.setTitle("Test extern document")
 
         then:
-        externDocumentDao.insertExternDocument(document);
+        externDocumentDao.create(document);
         documentIds.add(document.getId())
 
-        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.get(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
@@ -52,15 +52,15 @@ class ExternalDocumentDaoTest extends Specification {
         document.setHtml("<body><h1>Testing html</h1></body>")
         document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
-        externDocumentDao.insertExternDocument(document);
+        externDocumentDao.create(document);
         documentIds.add(document.getId())
         document.setHtml("<body><h2>html Testing</h2></body>")
         document.setTitle("Test extern document again")
 
         then:
-        externDocumentDao.updateExternDocument(document)
+        externDocumentDao.update(document)
 
-        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.get(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
@@ -78,11 +78,11 @@ class ExternalDocumentDaoTest extends Specification {
         document.setHtml("<body><h1>Testing html</h1></body>")
         document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
-        externDocumentDao.insertExternDocument(document);
+        externDocumentDao.create(document);
         documentIds.add(document.getId())
 
         then:
-        ExternalDocument testDocument = externDocumentDao.getExternDocumentWithId(document.getId())
+        ExternalDocument testDocument = externDocumentDao.get(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getHtml() == document.getHtml()
         testDocument.getTitle() == document.getTitle()
@@ -113,7 +113,7 @@ class ExternalDocumentDaoTest extends Specification {
     }
 
     def insertExternModule(ExternalModule module) {
-        externModuleDao.insertExternModule(module)
+        externModuleDao.create(module)
         moduleIds.add(module.getId())
     }
 

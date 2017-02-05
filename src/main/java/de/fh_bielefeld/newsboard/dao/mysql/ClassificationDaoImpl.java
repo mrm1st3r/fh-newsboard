@@ -1,7 +1,7 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
-import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
+import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
@@ -31,16 +31,16 @@ public class ClassificationDaoImpl implements ClassificationDao {
             "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND module_id = ?";
 
     private JdbcTemplate jdbcTemplate;
-    private ExternModuleDao externModuleDao;
+    private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public ClassificationDaoImpl(JdbcTemplate jdbcTemplate, ExternModuleDao externModuleDao) {
+    public ClassificationDaoImpl(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.externModuleDao = externModuleDao;
+        this.externalModuleDao = externalModuleDao;
     }
 
     @Override
-    public Classification getClassification(Sentence sentence, ExternalModule module) {
+    public Classification get(Sentence sentence, ExternalModule module) {
         Classification classification = jdbcTemplate.query(GET_CLASSIFICATION,
                 new RowMapperResultSetExtractor<>(rowMapper), sentence.getId(), module.getId());
         if (classification == null) {
@@ -52,22 +52,22 @@ public class ClassificationDaoImpl implements ClassificationDao {
     }
 
     @Override
-    public List<Classification> getAllClassificationsForSentence(Sentence sentence) {
+    public List<Classification> findForSentence(Sentence sentence) {
         return getListOfClassifications(sentence.getId(), GET_CLASSIFICATIONS_FOR_SENTENCE, null);
     }
 
     @Override
-    public List<Classification> getAllClassificationsFromModule(ExternalModule module) {
+    public List<Classification> findForModule(ExternalModule module) {
         return getListOfClassifications(module.getId(), GET_CLASSIFICATIONS_FROM_MODULE, module);
     }
 
     @Override
-    public int updateClassification(Classification classification) {
+    public int update(Classification classification) {
         return jdbcTemplate.update(UPDATE_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
     }
 
     @Override
-    public int insertClassification(Classification classification) {
+    public int create(Classification classification) {
         return jdbcTemplate.update(INSERT_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
     }
 
@@ -90,7 +90,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
         for (Classification classification : classifications) {
             if (externalModule == null && classification.getExternalModule() != null) {
-                ExternalModule m = externModuleDao.getExternModuleWithId(classification.getExternalModule().getId());
+                ExternalModule m = externalModuleDao.get(classification.getExternalModule().getId());
                 classification.setExternalModule(m);
             } else {
                 classification.setExternalModule(externalModule);

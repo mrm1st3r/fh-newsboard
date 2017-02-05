@@ -6,11 +6,15 @@ import de.fh_bielefeld.newsboard.model.Sentence;
 import java.util.List;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Data access interface for sentences.
  */
 public interface SentenceDao {
-    public Sentence getSentenceWithId(int id);
-    public List<Sentence> getAllSentencesInDocument(Document document);
-    public int updateSentenceWithoutDocument(Sentence sentence);
-    public int insertSentence(Sentence sentence, Document document);
+
+    Sentence get(int id);
+
+    int update(Sentence sentence);
+
+    int create(Sentence sentence, Document document);
+
+    List<Sentence> findForDocument(Document document);
 }

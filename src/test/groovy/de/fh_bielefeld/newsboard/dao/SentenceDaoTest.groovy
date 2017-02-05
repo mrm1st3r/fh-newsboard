@@ -19,7 +19,7 @@ class SentenceDaoTest extends Specification {
     @Autowired
     SentenceDao sentenceDao
     @Autowired
-    ExternModuleDao externModuleDao
+    ExternalModuleDao externModuleDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -35,10 +35,10 @@ class SentenceDaoTest extends Specification {
         sentence.setText("Text for testing purposes")
 
         then:
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
 
-        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
+        Sentence testSentence = sentenceDao.get(sentence.getId())
         testSentence.getId() == sentence.getId()
         testSentence.getNumber() == sentence.getNumber()
         testSentence.getText() == sentence.getText()
@@ -51,15 +51,15 @@ class SentenceDaoTest extends Specification {
         Sentence sentence = new Sentence()
         sentence.setNumber(1)
         sentence.setText("Text for testing purposes")
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
         sentence.setText("Another text for testing purposes")
         sentence.setNumber(2132)
 
         then:
-        sentenceDao.updateSentenceWithoutDocument(sentence)
+        sentenceDao.update(sentence)
 
-        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
+        Sentence testSentence = sentenceDao.get(sentence.getId())
         testSentence.getId() == sentence.getId()
         testSentence.getNumber() == sentence.getNumber()
         testSentence.getText() == sentence.getText()
@@ -72,11 +72,11 @@ class SentenceDaoTest extends Specification {
         Sentence sentence = new Sentence()
         sentence.setNumber(1)
         sentence.setText("Text for testing purposes")
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
 
         then:
-        Sentence testSentence = sentenceDao.getSentenceWithId(sentence.getId())
+        Sentence testSentence = sentenceDao.get(sentence.getId())
 
         testSentence.getId() == sentence.getId()
         testSentence.getNumber() == sentence.getNumber()
@@ -90,16 +90,16 @@ class SentenceDaoTest extends Specification {
         Sentence sentence = new Sentence()
         sentence.setNumber(1)
         sentence.setText("Text for testing purposes")
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
-        sentenceDao.insertSentence(sentence, dummyDocument)
+        sentenceDao.create(sentence, dummyDocument)
         sentenceIds.add(sentence.getId())
 
 
         then:
-        List<Sentence> testSentences = sentenceDao.getAllSentencesInDocument(dummyDocument)
+        List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument)
 
         testSentences.size() == 3
         for (Sentence testSentence : testSentences) {
@@ -139,12 +139,12 @@ class SentenceDaoTest extends Specification {
     }
 
     def insertExternModule(ExternalModule module) {
-        externModuleDao.insertExternModule(module)
+        externModuleDao.create(module)
         moduleIds.add(module.getId())
     }
 
     def insertDocument(Document document) {
-        documentDao.insertDocument(document)
+        documentDao.create(document)
         documentIds.add(document.getId())
     }
 

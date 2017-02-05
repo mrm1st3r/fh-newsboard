@@ -34,22 +34,22 @@ public class SentenceDaoImpl implements SentenceDao {
     }
 
     @Override
-    public Sentence getSentenceWithId(int id) {
+    public Sentence get(int id) {
         return jdbcTemplate.query(GET_SENTENCE_WITH_ID, new RowMapperResultSetExtractor<>(sentenceRowMapper), id);
     }
 
     @Override
-    public List<Sentence> getAllSentencesInDocument(Document document) {
+    public List<Sentence> findForDocument(Document document) {
         return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, document.getId());
     }
 
     @Override
-    public int updateSentenceWithoutDocument(Sentence sentence) {
+    public int update(Sentence sentence) {
         return jdbcTemplate.update(UPDATE_SENTENCE, sentence.getNumber(), sentence.getText(), sentence.getId());
     }
 
     @Override
-    public int insertSentence(Sentence sentence, Document document) {
+    public int create(Sentence sentence, Document document) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_SENTENCE, new String[]{"id"});
@@ -67,7 +67,7 @@ public class SentenceDaoImpl implements SentenceDao {
         sentence.setId(resultSet.getInt("id"));
         sentence.setNumber(resultSet.getInt("number"));
         sentence.setText(resultSet.getString("text"));
-        sentence.setClassifications( classificationDao.getAllClassificationsForSentence(sentence));
+        sentence.setClassifications( classificationDao.findForSentence(sentence));
         return sentence;
     };
 }

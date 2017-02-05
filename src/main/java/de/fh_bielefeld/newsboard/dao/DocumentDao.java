@@ -8,10 +8,14 @@ import java.util.List;
  * Data access interface for classifiable documents.
  */
 public interface DocumentDao {
-    Document getDocumentWithId(int id);
-    List<Document> getAllDocumentsOnlyWithMetaData();
-    List<Document> getUnclassifiedDocumentStubs(String externalModuleId);
-    int updateDocument(Document document);
-    int insertDocument(Document document);
-    int insertDocumentWithSentences(Document document);
+
+    Document get(int id);
+
+    int update(Document document);
+
+    int create(Document document);
+
+    List<Document> findAllStubs();
+
+    List<Document> findUnclassifiedForModule(String externalModuleId);
 }

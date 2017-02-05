@@ -30,9 +30,9 @@ public class FrontendController {
      */
     @RequestMapping("/")
     public String index(Model model) {
-        List<Document> documentStubs = documentDao.getAllDocumentsOnlyWithMetaData();
+        List<Document> documentStubs = documentDao.findAllStubs();
         List<Document> documents = documentStubs.stream().limit(DOCUMENTS_PER_PAGE).map(
-                document -> documentDao.getDocumentWithId(document.getId())).collect(Collectors.toList());
+                document -> documentDao.get(document.getId())).collect(Collectors.toList());
         model.addAttribute("documents", documents);
         return "index";
     }
@@ -42,7 +42,7 @@ public class FrontendController {
      */
     @RequestMapping(value = "/document/{id}")
     public String details(Model model, @PathVariable String id) {
-        Document doc = documentDao.getDocumentWithId(Integer.parseInt(id));
+        Document doc = documentDao.get(Integer.parseInt(id));
         model.addAttribute("doc", doc);
         return "detail";
     }

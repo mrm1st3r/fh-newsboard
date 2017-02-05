@@ -36,12 +36,12 @@ public class RestApiController {
     private DocumentDao documentDao;
     private ClassificationDao classificationDao;
     private AuthenticationTokenDao tokenDao;
-    private ExternModuleDao moduleDao;
+    private ExternalModuleDao moduleDao;
 
     @Autowired
     public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
                              DocumentDao documentDao, ClassificationDao classificationDao, AuthenticationTokenDao tokenDao,
-                             ExternModuleDao moduleDao) {
+                             ExternalModuleDao moduleDao) {
         this.xmlReader = xmlReader;
         this.xmlWriter = xmlWriter;
         this.documentProcessor = documentProcessor;
@@ -57,7 +57,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/document", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String listDocuments(HttpServletResponse response) {
-        List<Document> documents = documentDao.getAllDocumentsOnlyWithMetaData();
+        List<Document> documents = documentDao.findAllStubs();
         try {
             return xmlWriter.writeStubList(documents);
         } catch (XMLStreamException e) {
@@ -86,7 +86,7 @@ public class RestApiController {
         for (RawDocument rawDoc : documents) {
             rawDoc.getMetaData().setModule(crawler);
             Document document = documentProcessor.processDocument(rawDoc);
-            documentDao.insertDocumentWithSentences(document);
+            documentDao.create(document);
         }
         return "OK";
     }
@@ -98,7 +98,7 @@ public class RestApiController {
     @RequestMapping(value = "/document/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getDocument(HttpServletResponse response, @PathVariable String id) {
         int docId = Integer.valueOf(id);
-        Document doc = documentDao.getDocumentWithId(docId);
+        Document doc = documentDao.get(docId);
         try {
             return xmlWriter.writeDocument(doc);
         } catch (XMLStreamException e) {
@@ -112,7 +112,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/unclassified/{moduleid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getUnclassified(HttpServletResponse response, @PathVariable String moduleid) {
-        List<Document> documents = documentDao.getUnclassifiedDocumentStubs(moduleid);
+        List<Document> documents = documentDao.findUnclassifiedForModule(moduleid);
         try {
             return xmlWriter.writeDocumentList(documents);
         } catch (XMLStreamException e) {
@@ -143,7 +143,7 @@ public class RestApiController {
             if (!c.getExternalModule().equals(classifier)) {
                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
             }
-            classificationDao.insertClassification(c);
+            classificationDao.create(c);
         }
         return "OK";
     }
@@ -154,9 +154,9 @@ public class RestApiController {
             String base64Credentials = authorization.substring("Basic".length()).trim();
             String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
             String[] values = credentials.split(":", 2);
-            Optional<AuthenticationToken> token = tokenDao.findToken(values[1]);
+            Optional<AuthenticationToken> token = tokenDao.find(values[1]);
             if (token.isPresent() && token.get().getModuleId().equals(values[0])) {
-                return moduleDao.getExternModuleWithId(values[0]);
+                return moduleDao.get(values[0]);
             }
         }
         throw new SecurityException("Authentication failed!");

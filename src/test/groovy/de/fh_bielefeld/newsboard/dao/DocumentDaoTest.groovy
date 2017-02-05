@@ -19,7 +19,7 @@ class DocumentDaoTest extends Specification {
     @Autowired
     SentenceDao sentenceDao
     @Autowired
-    ExternModuleDao externModuleDao
+    ExternalModuleDao externModuleDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -31,11 +31,11 @@ class DocumentDaoTest extends Specification {
     def "test insertion"() {
         when:
         Document document = getNewDocument(getNewExternModule())
-        documentDao.insertDocument(document)
+        documentDao.create(document)
         documentIds.add(document.getId())
 
         then:
-        Document testDocument = documentDao.getDocumentWithId(document.getId())
+        Document testDocument = documentDao.get(document.getId())
         testDocument.getId() == document.getId()
         testDocument.getAuthor() == document.getAuthor()
         testDocument.getCrawlTime().getTimeInMillis() == document.getCrawlTime().getTimeInMillis()
@@ -55,7 +55,7 @@ class DocumentDaoTest extends Specification {
         insertDocument(dummyDocument)
 
         then:
-        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
+        Document testDocument = documentDao.get(dummyDocument.getId())
         testDocument.getId() == dummyDocument.getId()
         testDocument.getAuthor() == dummyDocument.getAuthor()
         testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
@@ -89,9 +89,9 @@ class DocumentDaoTest extends Specification {
         dummyDocument.setMetaData(metaData)
 
         then:
-        documentDao.updateDocument(dummyDocument)
+        documentDao.update(dummyDocument)
 
-        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
+        Document testDocument = documentDao.get(dummyDocument.getId())
         testDocument.getId() == dummyDocument.getId()
         testDocument.getAuthor() == dummyDocument.getAuthor()
         testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
@@ -111,7 +111,7 @@ class DocumentDaoTest extends Specification {
         insertDocument(dummyDocument)
 
         then:
-        Document testDocument = documentDao.getDocumentWithId(dummyDocument.getId())
+        Document testDocument = documentDao.get(dummyDocument.getId())
 
         testDocument.getId() == dummyDocument.getId()
         testDocument.getAuthor() == dummyDocument.getAuthor()
@@ -134,7 +134,7 @@ class DocumentDaoTest extends Specification {
         insertDocument(dummyDocument)
 
         then:
-        List<Document> allDocuments = documentDao.getAllDocumentsOnlyWithMetaData()
+        List<Document> allDocuments = documentDao.findAllStubs()
 
         for (Document testDocument : allDocuments) {
             testDocument.getId() == dummyDocument.getId()
@@ -180,12 +180,12 @@ class DocumentDaoTest extends Specification {
     }
 
     def insertExternModule(ExternalModule module) {
-        externModuleDao.insertExternModule(module)
+        externModuleDao.create(module)
         moduleIds.add(module.getId())
     }
 
     def insertDocument(Document document) {
-        documentDao.insertDocumentWithSentences(document)
+        documentDao.create(document)
         documentIds.add(document.getId())
         for (Sentence s : document.getSentences()) {
             sentenceIds.add(s.getId())

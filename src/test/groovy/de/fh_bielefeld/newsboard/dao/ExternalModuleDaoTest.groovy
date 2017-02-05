@@ -13,15 +13,15 @@ class ExternalModuleDaoTest extends Specification {
     @Autowired
     JdbcTemplate jdbcTemplate
     @Autowired
-    ExternModuleDao externModuleDao
+    ExternalModuleDao externModuleDao
 
     def "test insertion"() {
         when:
         ExternalModule module = getNewExternModule()
 
         then:
-        externModuleDao.insertExternModule(module)
-        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        externModuleDao.create(module)
+        ExternalModule testingModule = externModuleDao.get(module.getId())
 
         testingModule != null
         testingModule.getAuthor() == module.getAuthor()
@@ -35,15 +35,15 @@ class ExternalModuleDaoTest extends Specification {
     def "test updating"() {
         when:
         ExternalModule module = getNewExternModule()
-        externModuleDao.insertExternModule(module)
+        externModuleDao.create(module)
 
         module.setDescription("New Description")
         module.setAuthor("New Author")
         module.setName("New Name")
 
         then:
-        externModuleDao.updateExternModule(module)
-        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        externModuleDao.update(module)
+        ExternalModule testingModule = externModuleDao.get(module.getId())
 
         testingModule != null
         testingModule.getDescription() == module.getDescription()
@@ -58,8 +58,8 @@ class ExternalModuleDaoTest extends Specification {
         ExternalModule module = getNewExternModule()
 
         then:
-        externModuleDao.insertExternModule(module)
-        ExternalModule testingModule = externModuleDao.getExternModuleWithId(module.getId())
+        externModuleDao.create(module)
+        ExternalModule testingModule = externModuleDao.get(module.getId())
 
         testingModule != null
         testingModule.getDescription() == module.getDescription()

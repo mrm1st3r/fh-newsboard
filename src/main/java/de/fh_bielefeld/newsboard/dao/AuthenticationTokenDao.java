@@ -10,9 +10,14 @@ import java.util.Optional;
  * Data access interface for authentication tokens used by external modules.
  */
 public interface AuthenticationTokenDao {
-    AuthenticationToken getTokenWithId(int id);
-    List<AuthenticationToken> getAllTokenForModule(ExternalModule externalModule);
-    Optional<AuthenticationToken> findToken(String token);
-    int updateAuthenticationToken(AuthenticationToken authToken);
-    int insertAuthenticationToken(AuthenticationToken authToken);
+
+    AuthenticationToken get(int id);
+
+    int update(AuthenticationToken authToken);
+
+    int create(AuthenticationToken authToken);
+
+    List<AuthenticationToken> findForModule(ExternalModule externalModule);
+
+    Optional<AuthenticationToken> find(String token);
 }

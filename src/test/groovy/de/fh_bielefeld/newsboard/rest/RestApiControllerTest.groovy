@@ -6,7 +6,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.datasource.init.ScriptUtils
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import spock.lang.Shared
@@ -61,7 +60,7 @@ class RestApiControllerTest extends Specification {
 
     def "can read specific document"() {
         when:
-        def docs = documentDao.allDocumentsOnlyWithMetaData;
+        def docs = documentDao.findAllStubs()
         int id = docs[0].getId()
 
         then:
@@ -85,7 +84,7 @@ class RestApiControllerTest extends Specification {
     }
 
     private ResultActions putRequest(String url, String resourceFile, String creds) {
-        def credentials = "Basic " + Base64.getEncoder().encodeToString((creds).getBytes());
+        def credentials = "Basic " + Base64.getEncoder().encodeToString((creds).getBytes())
         def requestBody = ++(new Scanner(getClass().getResourceAsStream(resourceFile)).useDelimiter("\\A"))
         return mvc.perform(put(url).content(requestBody).contentType("application/xml")
                 .accept("application/xml").header("Authorization", credentials))

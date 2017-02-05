@@ -1,6 +1,6 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
-import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
+import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * MySQL implementation for ExternalModule DAO.
  */
 @Component
-public class ExternModuleDaoImpl implements ExternModuleDao {
+public class ExternalModuleDaoImpl implements ExternalModuleDao {
 
     private static final String GET_MODULE_WITH_ID =
             "SELECT id, name, author, description FROM extern_module WHERE id = ?";
@@ -23,22 +23,22 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ExternModuleDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ExternalModuleDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public ExternalModule getExternModuleWithId(String id) {
+    public ExternalModule get(String id) {
         return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
-    public int updateExternModule(ExternalModule externalModule) {
+    public int update(ExternalModule externalModule) {
         return jdbcTemplate.update(UPDATE_MODULE, makeAttributes(externalModule));
     }
 
     @Override
-    public int insertExternModule(ExternalModule externalModule) {
+    public int create(ExternalModule externalModule) {
         return jdbcTemplate.update(INSERT_MODULE, makeAttributes(externalModule));
     }
 

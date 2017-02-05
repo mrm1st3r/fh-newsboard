@@ -7,12 +7,17 @@ import de.fh_bielefeld.newsboard.model.Sentence;
 import java.util.List;
 
 /**
- * Created by felixmeyer on 11.12.16.
+ * Data access interface for classifications.
  */
 public interface ClassificationDao {
-    public Classification getClassification(Sentence sentence, ExternalModule module);
-    public List<Classification> getAllClassificationsForSentence(Sentence sentence);
-    public List<Classification> getAllClassificationsFromModule(ExternalModule module);
-    public int updateClassification(Classification classficiation);
-    public int insertClassification(Classification classification);
+
+    Classification get(Sentence sentence, ExternalModule module);
+
+    int update(Classification classification);
+
+    int create(Classification classification);
+
+    List<Classification> findForSentence(Sentence sentence);
+
+    List<Classification> findForModule(ExternalModule module);
 }

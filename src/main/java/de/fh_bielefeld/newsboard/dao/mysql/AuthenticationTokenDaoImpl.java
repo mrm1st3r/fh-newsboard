@@ -39,22 +39,22 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     }
 
     @Override
-    public AuthenticationToken getTokenWithId(int id) {
+    public AuthenticationToken get(int id) {
         return jdbcTemplate.query(GET_TOKEN_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
-    public List<AuthenticationToken> getAllTokenForModule(ExternalModule externalModule) {
+    public List<AuthenticationToken> findForModule(ExternalModule externalModule) {
         return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, rowMapper, externalModule.getId());
     }
 
     @Override
-    public int updateAuthenticationToken(AuthenticationToken authToken) {
+    public int update(AuthenticationToken authToken) {
         return jdbcTemplate.update(UPDATE_TOKEN, authToken.getToken(), authToken.getModuleId(), authToken.getId());
     }
 
     @Override
-    public int insertAuthenticationToken(AuthenticationToken authToken) {
+    public int create(AuthenticationToken authToken) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_TOKEN, new String[]{"id"});
@@ -67,7 +67,7 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     }
 
     @Override
-    public Optional<AuthenticationToken> findToken(String token) {
+    public Optional<AuthenticationToken> find(String token) {
         AuthenticationToken tok = jdbcTemplate.query(FIND_TOKEN, new RowMapperResultSetExtractor<>(rowMapper), token);
         if (tok == null) {
             return Optional.empty();

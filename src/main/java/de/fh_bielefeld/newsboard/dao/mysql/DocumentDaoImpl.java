@@ -1,7 +1,7 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
-import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
+import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.DocumentMetaData;
 import de.fh_bielefeld.newsboard.model.Sentence;
@@ -36,34 +36,34 @@ public class DocumentDaoImpl implements DocumentDao {
 
     private JdbcTemplate jdbcTemplate;
     private SentenceDaoImpl sentenceDao;
-    private ExternModuleDao externModuleDao;
+    private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public DocumentDaoImpl(JdbcTemplate jdbcTemplate, SentenceDaoImpl sentenceDao, ExternModuleDao externModuleDao) {
+    public DocumentDaoImpl(JdbcTemplate jdbcTemplate, SentenceDaoImpl sentenceDao, ExternalModuleDao externalModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
-        this.externModuleDao = externModuleDao;
+        this.externalModuleDao = externalModuleDao;
     }
 
     @Override
-    public Document getDocumentWithId(int id) {
+    public Document get(int id) {
         return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id);
     }
 
     @Override
-    public List<Document> getAllDocumentsOnlyWithMetaData() {
+    public List<Document> findAllStubs() {
         return jdbcTemplate.query(GET_DOCUMENTS_ONLY_METADATA, stubMapper);
     }
 
     @Override
-    public int updateDocument(Document document) {
+    public int update(Document document) {
         notNull(document.getModule());
         return jdbcTemplate.update(UPDATE_DOCUMENT, document.getTitle(), document.getAuthor(), document.getSource(),
                 document.getCreationTime(), document.getCrawlTime(), document.getModule().getId(), document.getId());
     }
 
     @Override
-    public int insertDocument(Document document) {
+    public int create(Document document) {
         notNull(document.getModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
@@ -76,22 +76,15 @@ public class DocumentDaoImpl implements DocumentDao {
             pst.setString(6, document.getModule().getId());
             return pst;
         }, keyHolder);
-
         document.setId(keyHolder.getKey().intValue());
+        for (Sentence s : document.getSentences()) {
+            numRows += sentenceDao.create(s, document);
+        }
         return numRows;
     }
 
     @Override
-    public int insertDocumentWithSentences(Document document) {
-        int rows = insertDocument(document);
-        for (Sentence s : document.getSentences()) {
-            rows += sentenceDao.insertSentence(s, document);
-        }
-        return rows;
-    }
-
-    @Override
-    public List<Document> getUnclassifiedDocumentStubs(String externalModuleId) {
+    public List<Document> findUnclassifiedForModule(String externalModuleId) {
         return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, externalModuleId);
     }
 
@@ -112,7 +105,7 @@ public class DocumentDaoImpl implements DocumentDao {
         meta.setAuthor(resultSet.getString("author"));
         meta.setTitle(resultSet.getString("title"));
         meta.setSource(resultSet.getString("source"));
-        meta.setModule(externModuleDao.getExternModuleWithId(resultSet.getString("module_id")));
+        meta.setModule(externalModuleDao.get(resultSet.getString("module_id")));
         meta.setCrawlTime(getCalendarFromTime(resultSet.getDate("crawl_time")));
         meta.setCreationTime(getCalendarFromTime(resultSet.getDate("creation_time")));
 
@@ -122,7 +115,7 @@ public class DocumentDaoImpl implements DocumentDao {
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {
         Document doc = stubMapper.mapRow(resultSet, i);
-        doc.setSentences(sentenceDao.getAllSentencesInDocument(doc));
+        doc.setSentences(sentenceDao.findForDocument(doc));
         return doc;
     };
 }
