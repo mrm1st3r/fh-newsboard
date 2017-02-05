@@ -11,8 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +19,7 @@ import java.util.Optional;
  */
 @Component
 public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
+
     private static final String GET_TOKEN_WITH_ID =
             "SELECT id, module_id, token FROM authentication_token WHERE id = ?";
     private static final String FIND_TOKEN =
@@ -41,26 +40,24 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
 
     @Override
     public AuthenticationToken getTokenWithId(int id) {
-        return jdbcTemplate.queryForObject(GET_TOKEN_WITH_ID, new AuthenticationTokenRowMapper(), id);
+        return jdbcTemplate.query(GET_TOKEN_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
     public List<AuthenticationToken> getAllTokenForModule(ExternalModule externalModule) {
-        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, new AuthenticationTokenRowMapper(), externalModule.getId());
+        return jdbcTemplate.query(GET_ALL_TOKEN_FOR_MODULE, rowMapper, externalModule.getId());
     }
 
     @Override
     public int updateAuthenticationToken(AuthenticationToken authToken) {
-        Object[] values = {authToken.getToken(), authToken.getModuleId(), authToken.getId()};
-        return jdbcTemplate.update(UPDATE_TOKEN, values);
+        return jdbcTemplate.update(UPDATE_TOKEN, authToken.getToken(), authToken.getModuleId(), authToken.getId());
     }
 
     @Override
     public int insertAuthenticationToken(AuthenticationToken authToken) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
-            PreparedStatement pst =
-                    connection.prepareStatement(INSERT_TOKEN, new String[]{"id"});
+            PreparedStatement pst = connection.prepareStatement(INSERT_TOKEN, new String[]{"id"});
             pst.setString(1, authToken.getToken());
             pst.setString(2, authToken.getModuleId());
             return pst;
@@ -71,21 +68,15 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
 
     @Override
     public Optional<AuthenticationToken> findToken(String token) {
-        List<AuthenticationToken> tokens = jdbcTemplate.query(FIND_TOKEN, new AuthenticationTokenRowMapper(), token);
-        if (tokens.size() == 0) {
+        AuthenticationToken tok = jdbcTemplate.query(FIND_TOKEN, new RowMapperResultSetExtractor<>(rowMapper), token);
+        if (tok == null) {
             return Optional.empty();
-        } else {
-            return Optional.of(tokens.get(0));
         }
+        return Optional.of(tok);
     }
 
-    private class AuthenticationTokenRowMapper implements RowMapper<AuthenticationToken> {
-        @Override
-        public AuthenticationToken mapRow(ResultSet resultSet, int i) throws SQLException {
-            return new AuthenticationToken(
-                    resultSet.getInt("id"),
-                    resultSet.getString("module_id"),
-                    resultSet.getString("token"));
-        }
-    }
+    private final RowMapper<AuthenticationToken> rowMapper = (resultSet, i) -> new AuthenticationToken(
+            resultSet.getInt("id"),
+            resultSet.getString("module_id"),
+            resultSet.getString("token"));
 }

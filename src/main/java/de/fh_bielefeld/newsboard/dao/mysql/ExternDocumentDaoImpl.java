@@ -5,32 +5,33 @@ import de.fh_bielefeld.newsboard.dao.ExternModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternalDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.springframework.util.Assert.notNull;
+
 /**
- * Created by felixmeyer on 17.12.16.
+ * MySQL Implementation for ExternalDocument DAO.
  */
 @Component
 public class ExternDocumentDaoImpl implements ExternDocumentDao {
-    public String GET_EXTERN_DOCUMENT_WITH_ID =
+
+    private static final String GET_EXTERN_DOCUMENT_WITH_ID =
             "SELECT * FROM extern_document WHERE id = ?";
-    public String UPDATE_EXTERN_DOCUMENT =
+
+    private static final String UPDATE_EXTERN_DOCUMENT =
             "UPDATE extern_document SET title = ?, html = ?, module_id = ? WHERE id = ?";
-    public String INSERT_EXTERN_DOCUMENT =
+
+    private static final String INSERT_EXTERN_DOCUMENT =
             "INSERT INTO extern_document(title, html, module_id) VALUES (?, ?, ?)";
 
-    @Autowired
     private ExternModuleDao externModuleDao;
-
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -41,108 +42,41 @@ public class ExternDocumentDaoImpl implements ExternDocumentDao {
 
     @Override
     public ExternalDocument getExternDocumentWithId(int id) {
-        ExternDocumentDatabaseObject rawExternDocument = jdbcTemplate.queryForObject(
-                GET_EXTERN_DOCUMENT_WITH_ID,
-                new ExternDocumentDatabaseObjectRowMapper(),
-                id);
-
-        ExternalDocument externalDocument = new ExternalDocument();
-        externalDocument.setId(rawExternDocument.getId());
-        externalDocument.setTitle(rawExternDocument.getTitle());
-        externalDocument.setHtml(rawExternDocument.getHtml());
-        String externModuleId = rawExternDocument.getModuleId();
-        if (externModuleId == null) {
-            externalDocument.setExternalModule(null);
-        } else {
-            externalDocument.setExternalModule(externModuleDao.getExternModuleWithId(externModuleId));
-        }
-
-        return externalDocument;
+        return jdbcTemplate.query(GET_EXTERN_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
     public int updateExternDocument(ExternalDocument externalDocument) {
-        String moduleId = externalDocument.getExternalModule() == null ? null : externalDocument.getExternalModule().getId();
-        Object[] attributes = {
-                externalDocument.getTitle(),
-                externalDocument.getHtml(),
-                moduleId,
-                externalDocument.getId()
-        };
-
-        return jdbcTemplate.update(UPDATE_EXTERN_DOCUMENT, attributes);
+        notNull(externalDocument.getExternalModule());
+        return jdbcTemplate.update(UPDATE_EXTERN_DOCUMENT, externalDocument.getTitle(), externalDocument.getHtml(),
+                externalDocument.getExternalModule().getId(), externalDocument.getId());
     }
 
     @Override
     public int insertExternDocument(ExternalDocument externalDocument) {
-        final String moduleId = externalDocument.getExternalModule() == null ? null : externalDocument.getExternalModule().getId();
+        notNull(externalDocument.getExternalModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int numRows = jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement pst =
-                        connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"id"});
-                pst.setString(1, externalDocument.getTitle());
-                pst.setString(2, externalDocument.getHtml());
-                pst.setString(3, moduleId);
-                return pst;
-            }
+        int numRows = jdbcTemplate.update(connection -> {
+            PreparedStatement pst = connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"id"});
+            pst.setString(1, externalDocument.getTitle());
+            pst.setString(2, externalDocument.getHtml());
+            pst.setString(3, externalDocument.getExternalModule().getId());
+            return pst;
         }, keyHolder);
         externalDocument.setId(keyHolder.getKey().intValue());
         return numRows;
     }
 
-    protected class ExternDocumentDatabaseObjectRowMapper implements RowMapper<ExternDocumentDatabaseObject> {
+    private RowMapper<ExternalDocument> rowMapper = new RowMapper<ExternalDocument>() {
         @Override
-        public ExternDocumentDatabaseObject mapRow(ResultSet resultSet, int i) throws SQLException {
-            ExternDocumentDatabaseObject externDocument = new ExternDocumentDatabaseObject();
-
-            externDocument.setId(resultSet.getInt("id"));
-            externDocument.setTitle(resultSet.getString("title"));
-            externDocument.setHtml(resultSet.getString("html"));
-            externDocument.setModuleId(resultSet.getString("module_id"));
-
-            return externDocument;
+        public ExternalDocument mapRow(ResultSet resultSet, int i) throws SQLException {
+            ExternalDocument document = new ExternalDocument();
+            String externalModuleId = resultSet.getString("module_id");
+            document.setId(resultSet.getInt("id"));
+            document.setTitle(resultSet.getString("title"));
+            document.setHtml(resultSet.getString("html"));
+            document.setExternalModule(externModuleDao.getExternModuleWithId(externalModuleId));
+            return document;
         }
-    }
-
-    protected class ExternDocumentDatabaseObject {
-        private Integer id;
-        private String title;
-        private String html;
-        private String moduleId;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getHtml() {
-            return html;
-        }
-
-        public void setHtml(String html) {
-            this.html = html;
-        }
-
-        public String getModuleId() {
-            return moduleId;
-        }
-
-        public void setModuleId(String moduleId) {
-            this.moduleId = moduleId;
-        }
-    }
-
+    };
 }

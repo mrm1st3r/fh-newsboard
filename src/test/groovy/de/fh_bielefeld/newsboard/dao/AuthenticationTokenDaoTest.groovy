@@ -34,10 +34,9 @@ class AuthenticationTokenDaoTest extends Specification {
         insertToken(token)
         token.setToken("ghi")
         token.setModuleId("extern_module_testing_2")
-
-        then:
         authenticationTokenDao.updateAuthenticationToken(token)
 
+        then:
         AuthenticationToken testingToken = authenticationTokenDao.getTokenWithId(token.getId())
         testingToken.getToken() == token.getToken()
         testingToken.getId() == token.getId()

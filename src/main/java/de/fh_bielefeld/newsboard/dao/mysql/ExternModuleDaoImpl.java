@@ -7,20 +7,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
- * Created by felixmeyer on 17.12.16.
+ * MySQL implementation for ExternalModule DAO.
  */
 @Component
 public class ExternModuleDaoImpl implements ExternModuleDao {
+
     private static final String GET_MODULE_WITH_ID =
             "SELECT id, name, author, description FROM extern_module WHERE id = ?";
     private static final String UPDATE_MODULE =
             "UPDATE extern_module SET name = ?, author = ?, description = ? WHERE id = ?";
     private static final String INSERT_MODULE =
-            "INSERT INTO extern_module(id, name, author, description) VALUES (?, ?, ?, ?)";
+            "INSERT INTO extern_module(name, author, description, id) VALUES (?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -31,42 +29,27 @@ public class ExternModuleDaoImpl implements ExternModuleDao {
 
     @Override
     public ExternalModule getExternModuleWithId(String id) {
-        return jdbcTemplate.queryForObject(GET_MODULE_WITH_ID, new ExternModuleRowMapper(), id);
+        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
     public int updateExternModule(ExternalModule externalModule) {
-        Object[] attributes = {
-                externalModule.getName(),
-                externalModule.getAuthor(),
-                externalModule.getDescription(),
-                externalModule.getId()
-        };
-        return jdbcTemplate.update(UPDATE_MODULE, attributes);
+        return jdbcTemplate.update(UPDATE_MODULE, makeAttributes(externalModule));
     }
 
     @Override
     public int insertExternModule(ExternalModule externalModule) {
-        Object[] attributes = {
-                externalModule.getId(),
-                externalModule.getName(),
-                externalModule.getAuthor(),
-                externalModule.getDescription()
-        };
-        return jdbcTemplate.update(INSERT_MODULE, attributes);
+        return jdbcTemplate.update(INSERT_MODULE, makeAttributes(externalModule));
     }
 
-    protected class ExternModuleRowMapper implements RowMapper<ExternalModule> {
-        @Override
-        public ExternalModule mapRow(ResultSet resultSet, int i) throws SQLException {
-            ExternalModule externalModule = new ExternalModule(
-                    resultSet.getString("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("author"),
-                    resultSet.getString("description")
-            );
-
-            return externalModule;
-        }
+    private Object[] makeAttributes(ExternalModule module) {
+        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getId()};
     }
+
+    private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
+            resultSet.getString("id"),
+            resultSet.getString("name"),
+            resultSet.getString("author"),
+            resultSet.getString("description")
+    );
 }

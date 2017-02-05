@@ -43,6 +43,10 @@ public class Sentence {
         this.text = text;
     }
 
+    public void setClassifications(List<Classification> classifications) {
+        this.classifications = classifications;
+    }
+
     public void addClassification(Classification classification) {
         classifications.add(classification);
     }

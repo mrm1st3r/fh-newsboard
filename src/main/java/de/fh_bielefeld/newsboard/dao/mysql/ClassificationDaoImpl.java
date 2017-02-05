@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.OptionalDouble;
 
@@ -20,6 +18,7 @@ import java.util.OptionalDouble;
  */
 @Component
 public class ClassificationDaoImpl implements ClassificationDao {
+
     private static final String GET_CLASSIFICATION =
             "SELECT * FROM classification WHERE sent_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
@@ -42,23 +41,14 @@ public class ClassificationDaoImpl implements ClassificationDao {
 
     @Override
     public Classification getClassification(Sentence sentence, ExternalModule module) {
-        Object[] attributes = {
-                sentence.getId(),
-                module.getId(),
-        };
-
-        Classification classification = jdbcTemplate.queryForObject(
-                GET_CLASSIFICATION,
-                new ClassificationRowMapper(),
-                attributes);
-
+        Classification classification = jdbcTemplate.query(GET_CLASSIFICATION,
+                new RowMapperResultSetExtractor<>(rowMapper), sentence.getId(), module.getId());
         if (classification == null) {
             return null;
-        } else {
-            classification.setExternalModule(module);
-            classification.setSentenceId(sentence.getId());
-            return classification;
         }
+        classification.setExternalModule(module);
+        classification.setSentenceId(sentence.getId());
+        return classification;
     }
 
     @Override
@@ -95,64 +85,30 @@ public class ClassificationDaoImpl implements ClassificationDao {
         };
     }
 
-    /**
-     * Fetches a list containing all relevant Classifications from the Database.
-     * @param attribute the attribute which will be used to select the rows in the database
-     * @param query the executed query
-     * @param externalModule when giving an explicit ExternalModule, no try to fetch one from database will be executed
-     * @return List containing the classifications
-     */
     private List<Classification> getListOfClassifications(Object attribute, String query, ExternalModule externalModule) {
-        Object[] attributes = {
-                attribute
-        };
-
-        List<Classification> classifications = jdbcTemplate.query(
-                query,
-                new ClassificationRowMapper(),
-                attributes);
+        List<Classification> classifications = jdbcTemplate.query(query, rowMapper, attribute);
 
         for (Classification classification : classifications) {
             if (externalModule == null && classification.getExternalModule() != null) {
-                ExternalModule m = getExternModuleForClassification(classification.getExternalModule().getId());
+                ExternalModule m = externModuleDao.getExternModuleWithId(classification.getExternalModule().getId());
                 classification.setExternalModule(m);
             } else {
                 classification.setExternalModule(externalModule);
             }
         }
-
         return classifications;
     }
 
-    /**
-     * Fetches an ExternalModule per Dao from the database.
-     * @param moduleId the ExternModules id
-     * @return the ExternalModule
-     */
-    private ExternalModule getExternModuleForClassification(String moduleId) {
-        ExternalModule externalModule;
-        if (moduleId == null) {
-            externalModule = null;
-        } else {
-            externalModule = externModuleDao.getExternModuleWithId(moduleId);
+    private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
+        Classification classification = new Classification();
+
+        classification.setSentenceId(resultSet.getInt("sent_id"));
+        classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
+        classification.setValue(resultSet.getDouble("value"));
+        double confidence = resultSet.getDouble("confidence");
+        if (!resultSet.wasNull()) {
+            classification.setConfidence(confidence);
         }
-        return externalModule;
-    }
-
-    private class ClassificationRowMapper implements RowMapper<Classification> {
-
-        @Override
-        public Classification mapRow(ResultSet resultSet, int i) throws SQLException {
-            Classification classification = new Classification();
-
-            classification.setSentenceId(resultSet.getInt("sent_id"));
-            classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
-            classification.setValue(resultSet.getDouble("value"));
-            double confidence = resultSet.getDouble("confidence");
-            if (!resultSet.wasNull()) {
-                classification.setConfidence(confidence);
-            }
-            return classification;
-        }
-    }
+        return classification;
+    };
 }
