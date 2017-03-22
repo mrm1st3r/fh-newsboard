@@ -61,7 +61,9 @@ class DocumentSaxHandler extends DefaultHandler {
 
     @Override
     public void error(SAXParseException e) throws SAXException {
-        throw e;
+        if (e != null) {
+            throw e;
+        }
     }
 
     @Override
