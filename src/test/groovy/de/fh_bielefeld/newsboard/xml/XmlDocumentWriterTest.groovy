@@ -18,7 +18,7 @@ class XmlDocumentWriterTest extends Specification {
 
     def "should write valid document stub list"() {
         given:
-        List<Document> documents = new ArrayList<>();
+        List<Document> documents = new ArrayList<>()
         Document doc = createSampleDocument()
         documents.add(doc)
 
@@ -77,11 +77,11 @@ class XmlDocumentWriterTest extends Specification {
         c1.setSentenceId(1)
         c1.setValue(1)
         s1.addClassification(c1)
-        def c2 = new Classification();
+        def c2 = new Classification()
         c2.setSentenceId(24)
         c2.setConfidence(0.95)
         c2.setValue(0.9)
         s2.addClassification(c2)
-        return new Document(42, meta, [s1, s2]);
+        return new Document(42, meta, [s1, s2])
     }
 }

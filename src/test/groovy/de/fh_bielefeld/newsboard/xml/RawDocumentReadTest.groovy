@@ -9,7 +9,7 @@ import static de.fh_bielefeld.newsboard.TestUtils.sampleXml
 class RawDocumentReadTest extends Specification {
 
     @Shared
-    def XmlDocumentReader reader
+    XmlDocumentReader reader
 
     def setupSpec() {
         reader = new XmlDocumentReader()

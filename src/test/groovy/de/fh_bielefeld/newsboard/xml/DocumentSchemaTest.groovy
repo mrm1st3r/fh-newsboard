@@ -19,7 +19,7 @@ class DocumentSchemaTest extends Specification {
     @Shared
     private Validator validator
 
-    private void setupSpec() {
+    def setupSpec() {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
         URL schemaFile = getClass().getResource("/document.xsd")
         Schema schema = factory.newSchema(schemaFile)
@@ -27,7 +27,7 @@ class DocumentSchemaTest extends Specification {
     }
 
     @Unroll
-    def "should validate #filename"() {
+    "should validate #filename"() {
         given:
         def testDocument = new StreamSource(getClass().getResourceAsStream(filename))
 
@@ -43,7 +43,7 @@ class DocumentSchemaTest extends Specification {
     }
 
     @Unroll
-    def "should not validate #filename"() {
+    "should not validate #filename"() {
         given:
         def testDocument = new StreamSource(getClass().getResourceAsStream(filename))
 

@@ -27,7 +27,7 @@ class AuthenticationTokenDaoTest extends Specification {
         additionalExternModule.setId("extern_module_testing_2")
         additionalExternModule.setAuthor("test_author_2")
         additionalExternModule.setName("Additional extern module for testing purpose")
-        insertExternModule(additionalExternModule);
+        insertExternModule(additionalExternModule)
 
         when:
         AuthenticationToken token = getNewAuthenticationToken()

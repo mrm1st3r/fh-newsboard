@@ -16,9 +16,9 @@ class RawDocumentProcessorTest extends Specification {
 
         then:
         sentences.size() == 3
-        sentences[0] == "Ich fahre schnell zum Knäckebrot-Laden!";
-        sentences[1] == "Der Sprit ist aber auch schon wieder sehr teuer.";
-        sentences[2] == "Findest du nicht auch?";
+        sentences[0] == "Ich fahre schnell zum Knäckebrot-Laden!"
+        sentences[1] == "Der Sprit ist aber auch schon wieder sehr teuer."
+        sentences[2] == "Findest du nicht auch?"
 
         noExceptionThrown()
     }

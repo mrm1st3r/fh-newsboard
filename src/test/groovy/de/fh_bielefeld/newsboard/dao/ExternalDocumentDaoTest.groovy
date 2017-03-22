@@ -31,7 +31,7 @@ class ExternalDocumentDaoTest extends Specification {
         document.setTitle("Test extern document")
 
         then:
-        externDocumentDao.create(document);
+        externDocumentDao.create(document)
         documentIds.add(document.getId())
 
         ExternalDocument testDocument = externDocumentDao.get(document.getId())
@@ -52,7 +52,7 @@ class ExternalDocumentDaoTest extends Specification {
         document.setHtml("<body><h1>Testing html</h1></body>")
         document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
-        externDocumentDao.create(document);
+        externDocumentDao.create(document)
         documentIds.add(document.getId())
         document.setHtml("<body><h2>html Testing</h2></body>")
         document.setTitle("Test extern document again")
@@ -78,7 +78,7 @@ class ExternalDocumentDaoTest extends Specification {
         document.setHtml("<body><h1>Testing html</h1></body>")
         document.setExternalModule(dummyModule)
         document.setTitle("Test extern document")
-        externDocumentDao.create(document);
+        externDocumentDao.create(document)
         documentIds.add(document.getId())
 
         then:
