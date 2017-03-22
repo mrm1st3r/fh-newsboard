@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * MySQL implementation for ExternalModule DAO.
  */
 @Component
-public class ExternalModuleDaoImpl implements ExternalModuleDao {
+public class ExternalModuleDaoMysql implements ExternalModuleDao {
 
     private static final String GET_MODULE_WITH_ID =
             "SELECT id, name, author, description FROM extern_module WHERE id = ?";
@@ -23,7 +23,7 @@ public class ExternalModuleDaoImpl implements ExternalModuleDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ExternalModuleDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ExternalModuleDaoMysql(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

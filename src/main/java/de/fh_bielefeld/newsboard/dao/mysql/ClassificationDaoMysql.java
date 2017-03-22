@@ -17,7 +17,7 @@ import java.util.OptionalDouble;
  * Mysql implementation for Classification DAO.
  */
 @Component
-public class ClassificationDaoImpl implements ClassificationDao {
+public class ClassificationDaoMysql implements ClassificationDao {
 
     private static final String GET_CLASSIFICATION =
             "SELECT * FROM classification WHERE sent_id = ? AND module_id = ?";
@@ -34,7 +34,7 @@ public class ClassificationDaoImpl implements ClassificationDao {
     private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public ClassificationDaoImpl(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
+    public ClassificationDaoMysql(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.externalModuleDao = externalModuleDao;
     }

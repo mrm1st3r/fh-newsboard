@@ -18,7 +18,7 @@ import java.util.Optional;
  * MySQL implementation for authentication token DAO.
  */
 @Component
-public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
+public class AuthenticationTokenDaoMysql implements AuthenticationTokenDao {
 
     private static final String GET_TOKEN_WITH_ID =
             "SELECT id, module_id, token FROM authentication_token WHERE id = ?";
@@ -34,7 +34,7 @@ public class AuthenticationTokenDaoImpl implements AuthenticationTokenDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AuthenticationTokenDaoImpl (JdbcTemplate jdbcTemplate) {
+    public AuthenticationTokenDaoMysql(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

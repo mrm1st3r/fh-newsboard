@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
+import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.DocumentMetaData;
 import de.fh_bielefeld.newsboard.model.Sentence;
@@ -24,7 +25,7 @@ import static org.springframework.util.Assert.notNull;
  * MySQL implementation for document DAO.
  */
 @Component
-public class DocumentDaoImpl implements DocumentDao {
+public class DocumentDaoMysql implements DocumentDao {
     private static final String GET_DOCUMENT_WITH_ID = "SELECT * FROM document WHERE id = ?";
     private static final String GET_DOCUMENTS_ONLY_METADATA = "SELECT * FROM document";
     private static final String UPDATE_DOCUMENT =
@@ -35,11 +36,11 @@ public class DocumentDaoImpl implements DocumentDao {
                     "(SELECT sent_id FROM classification WHERE module_id = ?))";
 
     private JdbcTemplate jdbcTemplate;
-    private SentenceDaoImpl sentenceDao;
+    private SentenceDao sentenceDao;
     private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public DocumentDaoImpl(JdbcTemplate jdbcTemplate, SentenceDaoImpl sentenceDao, ExternalModuleDao externalModuleDao) {
+    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ExternalModuleDao externalModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
         this.externalModuleDao = externalModuleDao;

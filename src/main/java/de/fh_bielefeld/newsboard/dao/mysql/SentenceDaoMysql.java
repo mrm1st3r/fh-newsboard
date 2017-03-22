@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
+import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.Sentence;
@@ -17,7 +18,7 @@ import java.util.List;
  * MySQL implementation for Sentence DAO.
  */
 @Component
-public class SentenceDaoImpl implements SentenceDao {
+public class SentenceDaoMysql implements SentenceDao {
 
     private static final String GET_SENTENCE_WITH_ID = "SELECT * FROM sentence WHERE id = ?";
     private static final String GET_ALL_SENTENCES_IN_DOCUMENT = "SELECT * FROM sentence WHERE document_id = ?";
@@ -25,10 +26,10 @@ public class SentenceDaoImpl implements SentenceDao {
     private static final String INSERT_SENTENCE = "INSERT INTO sentence(number, text, document_id) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
-    private ClassificationDaoImpl classificationDao;
+    private ClassificationDao classificationDao;
 
     @Autowired
-    public SentenceDaoImpl(JdbcTemplate jdbcTemplate, ClassificationDaoImpl classificationDao) {
+    public SentenceDaoMysql(JdbcTemplate jdbcTemplate, ClassificationDao classificationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.classificationDao = classificationDao;
     }

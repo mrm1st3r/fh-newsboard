@@ -20,7 +20,7 @@ import static org.springframework.util.Assert.notNull;
  * MySQL Implementation for ExternalDocument DAO.
  */
 @Component
-public class ExternalDocumentDaoImpl implements ExternalDocumentDao {
+public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
 
     private static final String GET_EXTERN_DOCUMENT_WITH_ID =
             "SELECT * FROM extern_document WHERE id = ?";
@@ -35,7 +35,7 @@ public class ExternalDocumentDaoImpl implements ExternalDocumentDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ExternalDocumentDaoImpl(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
+    public ExternalDocumentDaoMysql(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.externalModuleDao = externalModuleDao;
     }
