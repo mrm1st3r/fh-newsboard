@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS external_document (
 CREATE TABLE IF NOT EXISTS module (
   module_id   VARCHAR(50) NOT NULL,
   access_id   VARCHAR(30) NOT NULL,
-  name        VARCHAR(50) NOT NULL,
+  title       VARCHAR(50) NOT NULL,
   author      VARCHAR(50) NOT NULL,
   description TEXT        NULL,
   PRIMARY KEY (module_id)
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS access_role (
 );
 
 CREATE TABLE IF NOT EXISTS sentence (
-  sentence_id INT   NOT NULL AUTO_INCREMENT,
-  number      INT   NOT NULL,
-  text        TEXT  NOT NULL,
-  document_id INT   NOT NULL,
+  sentence_id   INT   NOT NULL AUTO_INCREMENT,
+  document_seq  INT   NOT NULL,
+  content       TEXT  NOT NULL,
+  document_id   INT   NOT NULL,
   PRIMARY KEY(sentence_id)
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS document (
   document_id   INT         NOT NULL AUTO_INCREMENT,
   title         VARCHAR(50) NOT NULL,
   author        VARCHAR(50) NULL,
-  source        TINYTEXT    NOT NULL,
+  source_url    TINYTEXT    NOT NULL,
   creation_time DATETIME    NULL,
   crawl_time    DATETIME    NOT NULL,
   module_id     VARCHAR(50) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS document (
 CREATE TABLE IF NOT EXISTS classification (
   sentence_id INT             NOT NULL,
   module_id   VARCHAR(50)     NOT NULL,
-  value       DECIMAL(13, 10) NOT NULL,
+  result      DECIMAL(13, 10) NOT NULL,
   confidence  DECIMAL(13, 10) NULL,
   PRIMARY KEY (sentence_id, module_id)
 );
