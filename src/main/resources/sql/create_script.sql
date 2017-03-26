@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS external_document (
   title           VARCHAR(50) NOT NULL,
   html            LONGTEXT    NOT NULL,
   module_id       VARCHAR(50) NOT NULL,
-  PRIMARY KEY(ext_document_id)
+  PRIMARY KEY (ext_document_id)
 );
 
 CREATE TABLE IF NOT EXISTS module (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS access (
   passphrase  VARCHAR(255)  NOT NULL,
   hash_type   VARCHAR(10)   NOT NULL,
   enabled     BOOLEAN       NOT NULL,
-  PRIMARY KEY(access_id)
+  PRIMARY KEY (access_id)
 );
 
 CREATE TABLE IF NOT EXISTS access_role (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS sentence (
   document_seq  INT   NOT NULL,
   content       TEXT  NOT NULL,
   document_id   INT   NOT NULL,
-  PRIMARY KEY(sentence_id)
+  PRIMARY KEY (sentence_id)
 );
 
 CREATE TABLE IF NOT EXISTS document (
@@ -49,14 +49,14 @@ CREATE TABLE IF NOT EXISTS document (
   creation_time DATETIME    NULL,
   crawl_time    DATETIME    NOT NULL,
   module_id     VARCHAR(50) NOT NULL,
-  PRIMARY KEY(document_id)
+  PRIMARY KEY (document_id)
 );
 
 CREATE TABLE IF NOT EXISTS classification (
   sentence_id INT             NOT NULL,
   module_id   VARCHAR(50)     NOT NULL,
-  result      DECIMAL(13, 10) NOT NULL,
-  confidence  DECIMAL(13, 10) NULL,
+  result      DECIMAL(5, 4)   NOT NULL,
+  confidence  DECIMAL(5, 4)   NULL,
   PRIMARY KEY (sentence_id, module_id)
 );
 
