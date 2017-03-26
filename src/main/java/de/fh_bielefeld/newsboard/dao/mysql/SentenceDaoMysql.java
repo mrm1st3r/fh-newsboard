@@ -20,10 +20,10 @@ import java.util.List;
 @Component
 public class SentenceDaoMysql implements SentenceDao {
 
-    private static final String GET_SENTENCE_WITH_ID = "SELECT * FROM sentence WHERE id = ?";
+    private static final String GET_SENTENCE_WITH_ID = "SELECT * FROM sentence WHERE sentence_id = ?";
     private static final String GET_ALL_SENTENCES_IN_DOCUMENT = "SELECT * FROM sentence WHERE document_id = ?";
-    private static final String UPDATE_SENTENCE = "UPDATE sentence SET number = ?, text = ? WHERE id = ?";
-    private static final String INSERT_SENTENCE = "INSERT INTO sentence(number, text, document_id) VALUES (?, ?, ?)";
+    private static final String UPDATE_SENTENCE = "UPDATE sentence SET document_seq = ?, content = ? WHERE sentence_id = ?";
+    private static final String INSERT_SENTENCE = "INSERT INTO sentence(document_seq, content, document_id) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private ClassificationDao classificationDao;
@@ -53,7 +53,7 @@ public class SentenceDaoMysql implements SentenceDao {
     public int create(Sentence sentence, Document document) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
-            PreparedStatement pst = connection.prepareStatement(INSERT_SENTENCE, new String[]{"id"});
+            PreparedStatement pst = connection.prepareStatement(INSERT_SENTENCE, new String[]{"sentence_id"});
             pst.setInt(1, sentence.getNumber());
             pst.setString(2, sentence.getText());
             pst.setInt(3, document.getId());
@@ -65,9 +65,9 @@ public class SentenceDaoMysql implements SentenceDao {
 
     private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> {
         Sentence sentence = new Sentence();
-        sentence.setId(resultSet.getInt("id"));
-        sentence.setNumber(resultSet.getInt("number"));
-        sentence.setText(resultSet.getString("text"));
+        sentence.setId(resultSet.getInt("sentence_id"));
+        sentence.setNumber(resultSet.getInt("document_seq"));
+        sentence.setText(resultSet.getString("content"));
         sentence.setClassifications( classificationDao.findForSentence(sentence));
         return sentence;
     };

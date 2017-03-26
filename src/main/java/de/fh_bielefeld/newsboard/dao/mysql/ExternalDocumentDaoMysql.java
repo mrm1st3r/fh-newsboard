@@ -23,13 +23,13 @@ import static org.springframework.util.Assert.notNull;
 public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
 
     private static final String GET_EXTERN_DOCUMENT_WITH_ID =
-            "SELECT * FROM extern_document WHERE id = ?";
+            "SELECT * FROM external_document WHERE ext_document_id = ?";
 
     private static final String UPDATE_EXTERN_DOCUMENT =
-            "UPDATE extern_document SET title = ?, html = ?, module_id = ? WHERE id = ?";
+            "UPDATE external_document SET title = ?, html = ?, module_id = ? WHERE ext_document_id = ?";
 
     private static final String INSERT_EXTERN_DOCUMENT =
-            "INSERT INTO extern_document(title, html, module_id) VALUES (?, ?, ?)";
+            "INSERT INTO external_document(title, html, module_id) VALUES (?, ?, ?)";
 
     private ExternalModuleDao externalModuleDao;
     private JdbcTemplate jdbcTemplate;
@@ -57,7 +57,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
         notNull(externalDocument.getExternalModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
-            PreparedStatement pst = connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"id"});
+            PreparedStatement pst = connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"ext_document_id"});
             pst.setString(1, externalDocument.getTitle());
             pst.setString(2, externalDocument.getHtml());
             pst.setString(3, externalDocument.getExternalModule().getId());
@@ -72,7 +72,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
         public ExternalDocument mapRow(ResultSet resultSet, int i) throws SQLException {
             ExternalDocument document = new ExternalDocument();
             String externalModuleId = resultSet.getString("module_id");
-            document.setId(resultSet.getInt("id"));
+            document.setId(resultSet.getInt("ext_document_id"));
             document.setTitle(resultSet.getString("title"));
             document.setHtml(resultSet.getString("html"));
             document.setExternalModule(externalModuleDao.get(externalModuleId));

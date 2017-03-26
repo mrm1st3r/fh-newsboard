@@ -20,15 +20,15 @@ import java.util.OptionalDouble;
 public class ClassificationDaoMysql implements ClassificationDao {
 
     private static final String GET_CLASSIFICATION =
-            "SELECT * FROM classification WHERE sent_id = ? AND module_id = ?";
+            "SELECT * FROM classification WHERE sentence_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
-            "SELECT * FROM classification WHERE sent_id = ?";
+            "SELECT * FROM classification WHERE sentence_id = ?";
     private static final String GET_CLASSIFICATIONS_FROM_MODULE =
             "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification (confidence, value, sent_id, module_id) VALUES (?, ?, ?, ?)";
+            "INSERT INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CLASSIFICATION =
-            "UPDATE classification SET confidence = ?, value = ? WHERE sent_id = ? AND module_id = ?";
+            "UPDATE classification SET confidence = ?, result = ? WHERE sentence_id = ? AND module_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private ExternalModuleDao externalModuleDao;
@@ -102,9 +102,9 @@ public class ClassificationDaoMysql implements ClassificationDao {
     private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
         Classification classification = new Classification();
 
-        classification.setSentenceId(resultSet.getInt("sent_id"));
+        classification.setSentenceId(resultSet.getInt("sentence_id"));
         classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
-        classification.setValue(resultSet.getDouble("value"));
+        classification.setValue(resultSet.getDouble("result"));
         double confidence = resultSet.getDouble("confidence");
         if (!resultSet.wasNull()) {
             classification.setConfidence(confidence);
