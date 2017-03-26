@@ -96,7 +96,7 @@ ALTER TABLE document
 
 ALTER TABLE classification
   ADD CONSTRAINT fk_classification_sentence
-  FOREIGN KEY (sent_id)
+  FOREIGN KEY (sentence_id)
   REFERENCES sentence (sentence_id)
   ON DELETE CASCADE;
 
