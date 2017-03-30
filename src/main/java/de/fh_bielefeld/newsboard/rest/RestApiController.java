@@ -30,13 +30,13 @@ import java.util.Optional;
 @RequestMapping("/rest")
 public class RestApiController {
 
-    private XmlDocumentReader xmlReader;
-    private XmlDocumentWriter xmlWriter;
-    private RawDocumentProcessor documentProcessor;
-    private DocumentDao documentDao;
-    private ClassificationDao classificationDao;
-    private AuthenticationTokenDao tokenDao;
-    private ExternalModuleDao moduleDao;
+    private final XmlDocumentReader xmlReader;
+    private final XmlDocumentWriter xmlWriter;
+    private final RawDocumentProcessor documentProcessor;
+    private final DocumentDao documentDao;
+    private final ClassificationDao classificationDao;
+    private final AuthenticationTokenDao tokenDao;
+    private final ExternalModuleDao moduleDao;
 
     @Autowired
     public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
@@ -110,9 +110,9 @@ public class RestApiController {
      * Print out a list of all documents that aren't classified by a specified external module.
      * Intended for: external classifiers modules
      */
-    @RequestMapping(path = "/unclassified/{moduleid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public String getUnclassified(HttpServletResponse response, @PathVariable String moduleid) {
-        List<Document> documents = documentDao.findUnclassifiedForModule(moduleid);
+    @RequestMapping(path = "/unclassified/{moduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+    public String getUnclassified(HttpServletResponse response, @PathVariable String moduleId) {
+        List<Document> documents = documentDao.findUnclassifiedForModule(moduleId);
         try {
             return xmlWriter.writeDocumentList(documents);
         } catch (XMLStreamException e) {

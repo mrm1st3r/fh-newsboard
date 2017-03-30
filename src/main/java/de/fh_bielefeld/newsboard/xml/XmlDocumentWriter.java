@@ -18,7 +18,7 @@ public class XmlDocumentWriter {
 
     private static final String NAMESPACE = "http://fh-bielefeld.de/newsboard";
 
-    private XMLOutputFactory xmlOutputFactory;
+    private final XMLOutputFactory xmlOutputFactory;
 
     public XmlDocumentWriter() {
         xmlOutputFactory = XMLOutputFactory.newInstance();

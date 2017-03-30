@@ -18,7 +18,12 @@ import java.util.stream.Collectors;
 public class FrontendController {
 
     private static final long DOCUMENTS_PER_PAGE = 10;
-    private DocumentDao documentDao;
+
+    private static final String INDEX_TEMPLATE = "index";
+    private static final String DETAIL_TEMPLATE = "detail";
+    private static final String ABOUT_TEMPLATE = "about";
+
+    private final DocumentDao documentDao;
 
     @Autowired
     public FrontendController(DocumentDao documentDao) {
@@ -34,7 +39,7 @@ public class FrontendController {
         List<Document> documents = documentStubs.stream().limit(DOCUMENTS_PER_PAGE).map(
                 document -> documentDao.get(document.getId())).collect(Collectors.toList());
         model.addAttribute("documents", documents);
-        return "index";
+        return INDEX_TEMPLATE;
     }
 
     /**
@@ -44,7 +49,7 @@ public class FrontendController {
     public String details(Model model, @PathVariable String id) {
         Document doc = documentDao.get(Integer.parseInt(id));
         model.addAttribute("doc", doc);
-        return "detail";
+        return DETAIL_TEMPLATE;
     }
 
     /**
@@ -52,6 +57,6 @@ public class FrontendController {
      */
     @RequestMapping("/about")
     public String about() {
-        return "about";
+        return ABOUT_TEMPLATE;
     }
 }
