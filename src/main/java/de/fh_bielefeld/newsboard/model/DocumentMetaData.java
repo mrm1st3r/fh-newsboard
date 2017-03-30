@@ -7,58 +7,44 @@ import java.util.Calendar;
  */
 public class DocumentMetaData {
 
-    private String title;
-    private String author;
-    private String source;
-    private Calendar creationTime;
-    private Calendar crawlTime;
-    private ExternalModule module;
+    private final String title;
+    private final String author;
+    private final String source;
+    private final Calendar creationTime;
+    private final Calendar crawlTime;
+    private final ExternalModule module;
+
+    public DocumentMetaData(String title, String author, String source,
+                            Calendar creationTime, Calendar crawlTime, ExternalModule crawler) {
+        this.title = title;
+        this.author = author;
+        this.source = source;
+        this.creationTime = creationTime;
+        this.crawlTime = crawlTime;
+        module = crawler;
+    }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getSource() {
         return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public Calendar getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(Calendar creationTime) {
-        this.creationTime = creationTime;
-    }
-
     public Calendar getCrawlTime() {
         return crawlTime;
     }
 
-    public void setCrawlTime(Calendar crawlTime) {
-        this.crawlTime = crawlTime;
-    }
-
     public ExternalModule getModule() {
         return module;
-    }
-
-    public void setModule(ExternalModule module) {
-        this.module = module;
     }
 }

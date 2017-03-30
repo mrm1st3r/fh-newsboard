@@ -20,7 +20,7 @@ class RawDocumentReadTest extends Specification {
         def xml = sampleXml("invalid_raw_document")
 
         when:
-        reader.readDocument(xml)
+        reader.readDocument(xml, null)
 
         then:
         def e = thrown(SAXParseException)
@@ -32,7 +32,7 @@ class RawDocumentReadTest extends Specification {
         def xml = sampleXml("valid_raw_document")
 
         when:
-        def documents = reader.readDocument(xml)
+        def documents = reader.readDocument(xml, null)
 
         then:
         documents.size() == 1

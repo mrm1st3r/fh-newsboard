@@ -79,12 +79,11 @@ public class RestApiController {
         }
         List<RawDocument> documents;
         try {
-            documents = xmlReader.readDocument(new StringReader(body));
+            documents = xmlReader.readDocument(new StringReader(body), crawler);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return handleClientError(response, e);
         }
         for (RawDocument rawDoc : documents) {
-            rawDoc.getMetaData().setModule(crawler);
             Document document = documentProcessor.processDocument(rawDoc);
             documentDao.create(document);
         }

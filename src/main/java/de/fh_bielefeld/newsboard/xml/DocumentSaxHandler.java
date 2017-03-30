@@ -1,12 +1,14 @@
 package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.DocumentMetaData;
+import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.RawDocument;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static javax.xml.bind.DatatypeConverter.parseDateTime;
@@ -16,18 +18,25 @@ import static javax.xml.bind.DatatypeConverter.parseDateTime;
  */
 class DocumentSaxHandler extends DefaultHandler {
 
+    private final List<RawDocument> documentList;
+    private final ExternalModule crawler;
+
+    private String rawText;
+    private String title;
+    private String author;
+    private String source;
+    private Calendar crawlTime;
+    private Calendar creationTime;
+
     private enum State {
         UNDEFINED, DOCUMENT, TITLE, AUTHOR, SOURCE, CREATION_TIME, CRAWL_TIME, RAW_TEXT
     }
 
     private State currentState = State.UNDEFINED;
 
-    private List<RawDocument> documentList;
-    private RawDocument document;
-    private DocumentMetaData meta;
-
-    DocumentSaxHandler(List<RawDocument> documentList) {
+    DocumentSaxHandler(List<RawDocument> documentList, ExternalModule crawler) {
         this.documentList = documentList;
+        this.crawler = crawler;
     }
 
     @Override
@@ -35,9 +44,6 @@ class DocumentSaxHandler extends DefaultHandler {
         switch (qName) {
             case "document":
                 currentState = State.DOCUMENT;
-                document = new RawDocument();
-                meta = new DocumentMetaData();
-                document.setMetaData(meta);
                 break;
             case "title":
                 currentState = State.TITLE;
@@ -71,22 +77,22 @@ class DocumentSaxHandler extends DefaultHandler {
         String text = new String(ch, start, length).trim();
         switch (currentState) {
             case TITLE:
-                meta.setTitle(text);
+                title = text;
                 break;
             case AUTHOR:
-                meta.setAuthor(text);
+                author = text;
                 break;
             case SOURCE:
-                meta.setSource(text);
+                source = text;
                 break;
             case CRAWL_TIME:
-                meta.setCrawlTime(parseDateTime(text));
+                crawlTime = parseDateTime(text);
                 break;
             case CREATION_TIME:
-                meta.setCreationTime(parseDateTime(text));
+                creationTime = parseDateTime(text);
                 break;
             case RAW_TEXT:
-                document.setRawText(text);
+                rawText = text;
                 break;
         }
         currentState = State.UNDEFINED;
@@ -96,8 +102,9 @@ class DocumentSaxHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case "document":
-                documentList.add(document);
-                document = null;
+                documentList.add(new RawDocument(
+                        new DocumentMetaData(title, author, source, creationTime, crawlTime, crawler),
+                        rawText));
                 break;
         }
     }

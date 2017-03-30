@@ -5,22 +5,19 @@ package de.fh_bielefeld.newsboard.model;
  */
 public class RawDocument {
 
-    private DocumentMetaData metaData;
-    private String rawText;
+    private final DocumentMetaData metaData;
+    private final String rawText;
+
+    public RawDocument(DocumentMetaData metaData, String rawText) {
+        this.metaData = metaData;
+        this.rawText = rawText;
+    }
 
     public DocumentMetaData getMetaData() {
         return metaData;
     }
 
-    public void setMetaData(DocumentMetaData metaData) {
-        this.metaData = metaData;
-    }
-
     public String getRawText() {
         return rawText;
-    }
-
-    public void setRawText(String rawText) {
-        this.rawText = rawText;
     }
 }

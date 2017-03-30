@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
+import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.Document
 import de.fh_bielefeld.newsboard.model.DocumentMetaData
 import de.fh_bielefeld.newsboard.model.ExternalModule
@@ -76,16 +77,11 @@ class DocumentDaoTest extends Specification {
     def "test updating"() {
         when:
         insertDocument(dummyDocument)
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setTitle("Test document again")
-        metaData.setSource("Test source again")
-        metaData.setAuthor("Test author again")
-        metaData.setCrawlTime(dummyDocument.getCreationTime())
-        metaData.setCreationTime(dummyDocument.getCrawlTime())
-        ExternalModule externModule =  getNewExternModule()
-        externModule.setId("test_module_again")
-        insertExternModule(externModule)
-        metaData.setModule(externModule)
+        ExternalModule module = getNewExternModule()
+        module.setId("test_module_again")
+        insertExternModule(module)
+        DocumentMetaData metaData = new DocumentMetaData("Test document again", "Test author again", "Test source again",
+        dummyDocument.getCreationTime(), dummyDocument.getCrawlTime(), module)
         dummyDocument.setMetaData(metaData)
 
         then:
@@ -168,15 +164,7 @@ class DocumentDaoTest extends Specification {
     }
 
     def cleanup() {
-        for (Integer id : sentenceIds) {
-            jdbcTemplate.update("DELETE FROM sentence WHERE id = " + id)
-        }
-        for (Integer id : documentIds) {
-            jdbcTemplate.update("DELETE FROM document WHERE id = " + id)
-        }
-        for(String id : moduleIds) {
-            jdbcTemplate.update("DELETE FROM extern_module WHERE id = '" + id + "'")
-        }
+        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
     def insertExternModule(ExternalModule module) {
@@ -194,14 +182,8 @@ class DocumentDaoTest extends Specification {
 
     def getNewDocument(ExternalModule module) {
         Document document = new Document()
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setAuthor("Test author")
-        metaData.setCrawlTime(new GregorianCalendar(2010, 2, 1))
-        metaData.setCreationTime(new GregorianCalendar(2017, 6, 4))
-        metaData.setModule(module)
-        metaData.setSource("Test source")
-        metaData.setTitle("Test document")
-        metaData.setModule(module)
+        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
+                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1),  module)
         document.setMetaData(metaData)
         for (int i = 0; i < 3; i++) {
             document.addSentence(getNewSentence())

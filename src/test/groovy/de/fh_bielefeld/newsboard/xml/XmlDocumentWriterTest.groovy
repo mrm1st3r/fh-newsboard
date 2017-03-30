@@ -59,12 +59,9 @@ class XmlDocumentWriterTest extends Specification {
     }
 
     private static Document createSampleDocument() {
-        DocumentMetaData meta = new DocumentMetaData()
-        meta.setAuthor("Hans Wurst")
-        meta.setSource("http://example.com")
-        meta.setTitle("Wuppi Fluppi")
-        meta.setCrawlTime(new GregorianCalendar(2016, Calendar.DECEMBER, 01))
-        meta.setCreationTime(new GregorianCalendar(2016, Calendar.NOVEMBER, 30))
+        DocumentMetaData meta = new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
+                new GregorianCalendar(2016, Calendar.DECEMBER, 01), new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
+        null)
         def s1 = new Sentence()
         s1.setId(1)
         s1.setNumber(1)

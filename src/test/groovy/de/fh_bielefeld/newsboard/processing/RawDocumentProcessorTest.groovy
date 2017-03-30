@@ -5,9 +5,11 @@ import de.fh_bielefeld.newsboard.model.RawDocument
 import spock.lang.Specification
 
 class RawDocumentProcessorTest extends Specification {
+
     String exampleText = "Ich fahre schnell zum Knäckebrot-Laden! " +
             "Der Sprit ist aber auch schon wieder sehr teuer. Fi" +
             "ndest du nicht auch?"
+
     private RawDocumentProcessor tokenizer = new RawDocumentProcessor()
 
     def "should split up sentences"() {
@@ -25,12 +27,9 @@ class RawDocumentProcessorTest extends Specification {
 
     def "should create document from raw"() {
         given:
-        def raw = new RawDocument()
-        raw.setRawText(exampleText)
-        def meta = new DocumentMetaData()
-        meta.setAuthor("Hans Wurst")
-        meta.setTitle("Die Entdeckung des Nichts")
-        raw.setMetaData(meta)
+        def meta = new DocumentMetaData("Die Entdeckung des Nichts", "Hans Wurst",
+                null, null, null, null)
+        def raw = new RawDocument(meta, exampleText)
 
         when:
         def doc = tokenizer.processDocument(raw)

@@ -98,17 +98,14 @@ public class DocumentDaoMysql implements DocumentDao {
         return cal;
     }
 
-    private final RowMapper<Document> stubMapper = (resultSet, i) -> {
+    private final RowMapper<Document> stubMapper = (r, i) -> {
         Document doc = new Document();
-        doc.setId(resultSet.getInt("document_id"));
+        doc.setId(r.getInt("document_id"));
 
-        DocumentMetaData meta = new DocumentMetaData();
-        meta.setAuthor(resultSet.getString("author"));
-        meta.setTitle(resultSet.getString("title"));
-        meta.setSource(resultSet.getString("source_url"));
-        meta.setModule(externalModuleDao.get(resultSet.getString("module_id")));
-        meta.setCrawlTime(getCalendarFromTime(resultSet.getDate("crawl_time")));
-        meta.setCreationTime(getCalendarFromTime(resultSet.getDate("creation_time")));
+        DocumentMetaData meta = new DocumentMetaData(r.getString("title"),
+                r.getString("author"), r.getString("source_url"),
+                getCalendarFromTime(r.getDate("crawl_time")), getCalendarFromTime(r.getDate("creation_time")),
+                externalModuleDao.get(r.getString("module_id")));
 
         doc.setMetaData(meta);
         return doc;

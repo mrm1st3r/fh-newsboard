@@ -6,8 +6,10 @@ import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import spock.lang.Ignore
 import spock.lang.Specification
 
+@Ignore
 @SpringBootTest(classes = NewsboardApplication.class)
 class AuthenticationTokenDaoTest extends Specification {
 

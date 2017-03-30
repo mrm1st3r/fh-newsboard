@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
+import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -175,15 +176,7 @@ class ClassificationDaoTest extends Specification {
     }
 
     def cleanup() {
-        for (Integer id : sentenceIds) {
-            jdbcTemplate.update("DELETE FROM sentence WHERE id = " + id)
-        }
-        for (Integer id : documentIds) {
-            jdbcTemplate.update("DELETE FROM document WHERE id = " + id)
-        }
-        for(String id : moduleIds) {
-            jdbcTemplate.update("DELETE FROM extern_module WHERE id = '" + id + "'")
-        }
+        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
     def insertExternModule(ExternalModule module) {
@@ -201,14 +194,8 @@ class ClassificationDaoTest extends Specification {
 
     def getNewDocument(ExternalModule module) {
         Document document = new Document()
-        DocumentMetaData metaData = new DocumentMetaData()
-        metaData.setAuthor("Test author")
-        metaData.setCrawlTime(Calendar.getInstance())
-        metaData.setCreationTime(Calendar.getInstance())
-        metaData.setModule(module)
-        metaData.setSource("Test source")
-        metaData.setTitle("Test document")
-        metaData.setModule(module)
+        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
+                Calendar.getInstance(), Calendar.getInstance(), module)
         document.setMetaData(metaData)
         for (int i = 0; i < 3; i++) {
             document.addSentence(getNewSentence())
