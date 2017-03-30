@@ -13,6 +13,21 @@ public class Classification {
     private double value;
     private OptionalDouble confidence = OptionalDouble.empty();
 
+    public Classification() {}
+
+    public Classification(int sentenceId, ExternalModule module, double value) {
+        this.sentenceId = sentenceId;
+        externalModule = module;
+        this.value = value;
+    }
+
+    public Classification(int sentenceId, ExternalModule module, double value, double confidence) {
+        this.sentenceId = sentenceId;
+        externalModule = module;
+        this.value = value;
+        this.confidence = OptionalDouble.of(confidence);
+    }
+
     public int getSentenceId() {
         return sentenceId;
     }

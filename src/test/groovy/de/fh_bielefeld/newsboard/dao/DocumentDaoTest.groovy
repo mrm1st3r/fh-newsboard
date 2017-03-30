@@ -29,26 +29,27 @@ class DocumentDaoTest extends Specification {
     Document dummyDocument
     ExternalModule dummyModule
 
+    def setup() {
+        moduleIds = new ArrayList<String>()
+        documentIds = new ArrayList<Integer>()
+        sentenceIds = new ArrayList<Integer>()
+
+        dummyModule = TestUtils.sampleModule()
+        dummyDocument = getNewDocument(dummyModule)
+        externModuleDao.create(dummyModule)
+        moduleIds.add(dummyModule.getId())
+        insertDocument(dummyDocument)
+    }
+
     def "test insertion"() {
         when:
-        Document document = getNewDocument(getNewExternModule())
+        Document document = getNewDocument(dummyModule)
         documentDao.create(document)
         documentIds.add(document.getId())
 
         then:
         Document testDocument = documentDao.get(document.getId())
-        testDocument.getId() == document.getId()
-        testDocument.getAuthor() == document.getAuthor()
-        testDocument.getCrawlTime().getTimeInMillis() == document.getCrawlTime().getTimeInMillis()
-        testDocument.getCreationTime().getTimeInMillis() == document.getCreationTime().getTimeInMillis()
-        testDocument.getSource() == document.getSource()
-        testDocument.getTitle() == document.getTitle()
-        testDocument.getModule().getId() == document.getModule().getId()
-        testDocument.getModule().getAuthor() == document.getModule().getAuthor()
-        testDocument.getModule().getDescription() == document.getModule().getDescription()
-        testDocument.getModule().getName() == document.getModule().getName()
-
-        noExceptionThrown()
+        compareDocuments(testDocument, document)
     }
 
     def "test insertion with sentences"() {
@@ -57,13 +58,7 @@ class DocumentDaoTest extends Specification {
 
         then:
         Document testDocument = documentDao.get(dummyDocument.getId())
-        testDocument.getId() == dummyDocument.getId()
-        testDocument.getAuthor() == dummyDocument.getAuthor()
-        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
-        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
-        testDocument.getSource() == dummyDocument.getSource()
-        testDocument.getTitle() == dummyDocument.getTitle()
-
+        compareDocuments(testDocument, dummyDocument)
         testDocument.getSentences().size() == dummyDocument.getSentences().size()
         for (int i = 0; i < testDocument.getSentences().size(); i++) {
             testDocument.getSentences().get(i).getId() == dummyDocument.getSentences().get(i).getId()
@@ -76,30 +71,14 @@ class DocumentDaoTest extends Specification {
 
     def "test updating"() {
         when:
-        insertDocument(dummyDocument)
-        ExternalModule module = getNewExternModule()
-        module.setId("test_module_again")
-        insertExternModule(module)
         DocumentMetaData metaData = new DocumentMetaData("Test document again", "Test author again", "Test source again",
-        dummyDocument.getCreationTime(), dummyDocument.getCrawlTime(), module)
+                dummyDocument.getCreationTime(), dummyDocument.getCrawlTime(), dummyModule)
         dummyDocument.setMetaData(metaData)
-
-        then:
         documentDao.update(dummyDocument)
 
+        then:
         Document testDocument = documentDao.get(dummyDocument.getId())
-        testDocument.getId() == dummyDocument.getId()
-        testDocument.getAuthor() == dummyDocument.getAuthor()
-        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
-        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
-        testDocument.getSource() == dummyDocument.getSource()
-        testDocument.getTitle() == dummyDocument.getTitle()
-        testDocument.getModule().getId() == dummyDocument.getModule().getId()
-        testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
-        testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
-        testDocument.getModule().getName() == dummyDocument.getModule().getName()
-
-        noExceptionThrown()
+        compareDocuments(dummyDocument, testDocument)
     }
 
     def "test selection with id"() {
@@ -108,19 +87,7 @@ class DocumentDaoTest extends Specification {
 
         then:
         Document testDocument = documentDao.get(dummyDocument.getId())
-
-        testDocument.getId() == dummyDocument.getId()
-        testDocument.getAuthor() == dummyDocument.getAuthor()
-        testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
-        testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
-        testDocument.getSource() == dummyDocument.getSource()
-        testDocument.getTitle() == dummyDocument.getTitle()
-        testDocument.getModule().getId() == dummyDocument.getModule().getId()
-        testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
-        testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
-        testDocument.getModule().getName() == dummyDocument.getModule().getName()
-
-        noExceptionThrown()
+        compareDocuments(testDocument, dummyDocument)
     }
 
     def "test selection only with metadata"() {
@@ -133,43 +100,28 @@ class DocumentDaoTest extends Specification {
         List<Document> allDocuments = documentDao.findAllStubs()
 
         for (Document testDocument : allDocuments) {
-            testDocument.getId() == dummyDocument.getId()
-            testDocument.getAuthor() == dummyDocument.getAuthor()
-            testDocument.getCrawlTime().getTimeInMillis() == dummyDocument.getCrawlTime().getTimeInMillis()
-            testDocument.getCreationTime().getTimeInMillis() == dummyDocument.getCreationTime().getTimeInMillis()
-            testDocument.getSource() == dummyDocument.getSource()
-            testDocument.getTitle() == dummyDocument.getTitle()
-            testDocument.getModule().getId() == dummyDocument.getModule().getId()
-            testDocument.getModule().getAuthor() == dummyDocument.getModule().getAuthor()
-            testDocument.getModule().getDescription() == dummyDocument.getModule().getDescription()
-            testDocument.getModule().getName() == dummyDocument.getModule().getName()
+            compareDocuments(testDocument, dummyDocument)
             testDocument.getSentences().size() == 0
         }
 
         noExceptionThrown()
     }
 
-    def setup() {
-        moduleIds = new ArrayList<String>()
-        documentIds = new ArrayList<Integer>()
-        sentenceIds = new ArrayList<Integer>()
-
-        ExternalModule module = getNewExternModule()
-        Document document = getNewDocument(module)
-        insertExternModule(module)
-        insertDocument(document)
-
-        dummyModule = module
-        dummyDocument = document
-    }
-
     def cleanup() {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    def insertExternModule(ExternalModule module) {
-        externModuleDao.create(module)
-        moduleIds.add(module.getId())
+    def compareDocuments(Document thisDocument, Document thatDocument) {
+        thisDocument.getId() == thatDocument.getId() &&
+        thisDocument.getAuthor() == thatDocument.getAuthor() &&
+        thisDocument.getCrawlTime().getTimeInMillis() == thatDocument.getCrawlTime().getTimeInMillis() &&
+        thisDocument.getCreationTime().getTimeInMillis() == thatDocument.getCreationTime().getTimeInMillis() &&
+        thisDocument.getSource() == thatDocument.getSource() &&
+        thisDocument.getTitle() == thatDocument.getTitle() &&
+        thisDocument.getModule().getId() == thatDocument.getModule().getId() &&
+        thisDocument.getModule().getAuthor() == thatDocument.getModule().getAuthor() &&
+        thisDocument.getModule().getDescription() == thatDocument.getModule().getDescription() &&
+        thisDocument.getModule().getName() == thatDocument.getModule().getName()
     }
 
     def insertDocument(Document document) {
@@ -186,24 +138,8 @@ class DocumentDaoTest extends Specification {
                 new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1),  module)
         document.setMetaData(metaData)
         for (int i = 0; i < 3; i++) {
-            document.addSentence(getNewSentence())
+            document.addSentence(TestUtils.sampleSentence())
         }
         return document
-    }
-
-    def getNewExternModule() {
-        ExternalModule module = new ExternalModule()
-        module.setId("test_module")
-        module.setAuthor("Tester")
-        module.setDescription("Module for testing purpose")
-        module.setName("Test module")
-        return module
-    }
-
-    def getNewSentence() {
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Example text of a sentence object for testing purposes.")
-        return sentence
     }
 }

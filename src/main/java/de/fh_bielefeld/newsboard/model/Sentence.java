@@ -19,6 +19,13 @@ public class Sentence {
         classifications = new ArrayList<>();
     }
 
+    public Sentence(int id, int number, String text, List<Classification> classifications) {
+        this.id = id;
+        this.number = number;
+        this.text = text;
+        this.classifications = classifications;
+    }
+
     public int getId() {
         return id;
     }

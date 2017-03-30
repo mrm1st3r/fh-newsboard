@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
+import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.ExternalDocument
 import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,115 +15,61 @@ class ExternalDocumentDaoTest extends Specification {
     @Autowired
     JdbcTemplate jdbcTemplate
     @Autowired
-    ExternalDocumentDao externDocumentDao
+    ExternalDocumentDao externalDocumentDao
     @Autowired
-    ExternalModuleDao externModuleDao
+    ExternalModuleDao externalModuleDao
 
     List<String> moduleIds
     List<Integer> documentIds
 
     ExternalModule dummyModule
 
-    def "test insertion"() {
-        when:
-        ExternalDocument document = new ExternalDocument()
-        document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternalModule(dummyModule)
-        document.setTitle("Test extern document")
-
-        then:
-        externDocumentDao.create(document)
-        documentIds.add(document.getId())
-
-        ExternalDocument testDocument = externDocumentDao.get(document.getId())
-        testDocument.getId() == document.getId()
-        testDocument.getHtml() == document.getHtml()
-        testDocument.getTitle() == document.getTitle()
-        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
-        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
-        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
-        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
-
-        noExceptionThrown()
-    }
-
-    def "test updating"() {
-        when:
-        ExternalDocument document = new ExternalDocument()
-        document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternalModule(dummyModule)
-        document.setTitle("Test extern document")
-        externDocumentDao.create(document)
-        documentIds.add(document.getId())
-        document.setHtml("<body><h2>html Testing</h2></body>")
-        document.setTitle("Test extern document again")
-
-        then:
-        externDocumentDao.update(document)
-
-        ExternalDocument testDocument = externDocumentDao.get(document.getId())
-        testDocument.getId() == document.getId()
-        testDocument.getHtml() == document.getHtml()
-        testDocument.getTitle() == document.getTitle()
-        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
-        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
-        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
-        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
-
-        noExceptionThrown()
-    }
-
-    def "test selection with id"() {
-        when:
-        ExternalDocument document = new ExternalDocument()
-        document.setHtml("<body><h1>Testing html</h1></body>")
-        document.setExternalModule(dummyModule)
-        document.setTitle("Test extern document")
-        externDocumentDao.create(document)
-        documentIds.add(document.getId())
-
-        then:
-        ExternalDocument testDocument = externDocumentDao.get(document.getId())
-        testDocument.getId() == document.getId()
-        testDocument.getHtml() == document.getHtml()
-        testDocument.getTitle() == document.getTitle()
-        testDocument.getExternalModule().getId() == document.getExternalModule().getId()
-        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor()
-        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription()
-        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
-
-        noExceptionThrown()
-    }
-
     def setup() {
         documentIds = new ArrayList<>()
         moduleIds = new ArrayList<>()
 
-        ExternalModule module = getNewExternModule()
-        insertExternModule(module)
+        ExternalModule module = TestUtils.sampleModule()
+        externalModuleDao.create(module)
+        moduleIds.add(module.getId())
         dummyModule = module
     }
 
+    def "should insert and select"() {
+        when:
+        ExternalDocument document = TestUtils.sampleExternalDocument(dummyModule)
+        externalDocumentDao.create(document)
+        documentIds.add(document.getId())
+
+        then:
+        compareDocuments(externalDocumentDao.get(document.getId()), document)
+    }
+
+    def "test updating"() {
+        given:
+        ExternalDocument document = TestUtils.sampleExternalDocument(dummyModule)
+
+        when:
+        externalDocumentDao.create(document)
+        documentIds.add(document.getId())
+        document.setHtml("<body><h2>html Testing</h2></body>")
+        document.setTitle("Test external document again")
+        externalDocumentDao.update(document)
+
+        then:
+        compareDocuments(externalDocumentDao.get(document.getId()), document)
+    }
+
+    def compareDocuments(ExternalDocument testDocument, ExternalDocument document) {
+        testDocument.getId() == document.getId() &&
+        testDocument.getHtml() == document.getHtml() &&
+        testDocument.getTitle() == document.getTitle() &&
+        testDocument.getExternalModule().getId() == document.getExternalModule().getId() &&
+        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor() &&
+        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription() &&
+        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
+    }
+
     def cleanup() {
-        for (Integer id : documentIds) {
-            jdbcTemplate.update("DELETE FROM extern_document WHERE id = " + id)
-        }
-        for (String id : moduleIds) {
-            jdbcTemplate.update("DELETE FROM extern_module WHERE id = '" + id + "'")
-        }
-    }
-
-    def insertExternModule(ExternalModule module) {
-        externModuleDao.create(module)
-        moduleIds.add(module.getId())
-    }
-
-    def getNewExternModule() {
-        ExternalModule module = new ExternalModule()
-        module.setId("test_module")
-        module.setAuthor("Tester")
-        module.setDescription("Module for testing purpose")
-        module.setName("Test module")
-        return module
+        TestUtils.cleanupDatabase(jdbcTemplate, null, null, moduleIds, documentIds)
     }
 }

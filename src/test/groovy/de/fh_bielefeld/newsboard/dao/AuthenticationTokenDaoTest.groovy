@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.dao
 
 import de.fh_bielefeld.newsboard.NewsboardApplication
+import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.AuthenticationToken
 import de.fh_bielefeld.newsboard.model.ExternalModule
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,12 +25,11 @@ class AuthenticationTokenDaoTest extends Specification {
     List<Integer> authTokenIds
 
     def "test updating"() {
-        setup:
-        ExternalModule additionalExternModule = getNewExternModule()
-        additionalExternModule.setId("extern_module_testing_2")
-        additionalExternModule.setAuthor("test_author_2")
-        additionalExternModule.setName("Additional extern module for testing purpose")
-        insertExternModule(additionalExternModule)
+        given:
+        ExternalModule additionalExternModule = new ExternalModule(
+        "extern_module_testing_2", "tester", "test_author_2", null)
+        externModuleDao.create(additionalExternModule)
+        moduleIds.add(additionalExternModule.getId())
 
         when:
         AuthenticationToken token = getNewAuthenticationToken()
@@ -65,7 +65,7 @@ class AuthenticationTokenDaoTest extends Specification {
     def "test selection with extern module"() {
         when:
         AuthenticationToken token = getNewAuthenticationToken()
-        ExternalModule module = getNewExternModule()
+        ExternalModule module = TestUtils.sampleModule()
         insertToken(token)
         insertToken(token)
         insertToken(token)
@@ -103,7 +103,9 @@ class AuthenticationTokenDaoTest extends Specification {
         moduleIds = new ArrayList<String>()
         authTokenIds = new ArrayList<Integer>()
 
-        insertExternModule(getNewExternModule())
+        ExternalModule module = TestUtils.sampleModule()
+        externModuleDao.create(module)
+        moduleIds.add(module.getId())
     }
 
     def cleanup() {
@@ -120,20 +122,7 @@ class AuthenticationTokenDaoTest extends Specification {
         authTokenIds.add(token.getId())
     }
 
-    def insertExternModule(ExternalModule module) {
-        externModuleDao.create(module)
-        moduleIds.add(module.getId())
-    }
-
     def getNewAuthenticationToken() {
         return new AuthenticationToken(-1, "extern_module_test", "abc")
-    }
-
-    def getNewExternModule() {
-        ExternalModule externModule = new ExternalModule()
-        externModule.setId("extern_module_test")
-        externModule.setAuthor("test_author")
-        externModule.setName("Extern_Module for testing purpose")
-        return externModule
     }
 }

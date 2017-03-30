@@ -29,111 +29,76 @@ class SentenceDaoTest extends Specification {
     Document dummyDocument
     ExternalModule dummyModule
 
-    def "test insertion"() {
-        when:
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Text for testing purposes")
-
-        then:
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
-        Sentence testSentence = sentenceDao.get(sentence.getId())
-        testSentence.getId() == sentence.getId()
-        testSentence.getNumber() == sentence.getNumber()
-        testSentence.getText() == sentence.getText()
-
-        noExceptionThrown()
-    }
-
-    def "test updating"() {
-        when:
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Text for testing purposes")
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-        sentence.setText("Another text for testing purposes")
-        sentence.setNumber(2132)
-
-        then:
-        sentenceDao.update(sentence)
-
-        Sentence testSentence = sentenceDao.get(sentence.getId())
-        testSentence.getId() == sentence.getId()
-        testSentence.getNumber() == sentence.getNumber()
-        testSentence.getText() == sentence.getText()
-
-        noExceptionThrown()
-    }
-
-    def "test selection with id"() {
-        when:
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Text for testing purposes")
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
-        then:
-        Sentence testSentence = sentenceDao.get(sentence.getId())
-
-        testSentence.getId() == sentence.getId()
-        testSentence.getNumber() == sentence.getNumber()
-        testSentence.getText() == sentence.getText()
-
-        noExceptionThrown()
-    }
-
-    def "test selection with document"() {
-        when:
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Text for testing purposes")
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
-
-        then:
-        List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument)
-
-        testSentences.size() == 3
-        for (Sentence testSentence : testSentences) {
-            testSentence.getId() == sentence.getId()
-            testSentence.getNumber() == sentence.getNumber()
-            testSentence.getText() == sentence.getText()
-        }
-
-        noExceptionThrown()
-
-    }
-
     def setup() {
         moduleIds = new ArrayList<String>()
         documentIds = new ArrayList<Integer>()
         sentenceIds = new ArrayList<Integer>()
 
-        ExternalModule module = getNewExternModule()
+        ExternalModule module = TestUtils.sampleModule()
         Document document = getNewDocument(module)
-        insertExternModule(module)
+        externModuleDao.create(module)
+        moduleIds.add(module.getId())
         insertDocument(document)
 
         dummyModule = module
         dummyDocument = document
     }
 
+    def "should insert and select"() {
+        given:
+        Sentence sentence = TestUtils.sampleSentence()
+
+        when:
+        sentenceDao.create(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+
+        then:
+        compareSentences(sentenceDao.get(sentence.getId()), sentence)
+    }
+
+    def "test updating"() {
+        given:
+        Sentence sentence = TestUtils.sampleSentence()
+        sentenceDao.create(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+
+        when:
+        sentence.setText("Another text for testing purposes")
+        sentence.setNumber(2132)
+        sentenceDao.update(sentence)
+
+        then:
+        compareSentences(sentenceDao.get(sentence.getId()), sentence)
+    }
+
+    def "test selection with document"() {
+        given:
+        Sentence sentence = TestUtils.sampleSentence()
+        sentenceDao.create(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+        sentenceDao.create(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+        sentenceDao.create(sentence, dummyDocument)
+        sentenceIds.add(sentence.getId())
+
+        when:
+        List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument)
+
+        then:
+        testSentences.size() == 3
+        for (Sentence testSentence : testSentences) {
+            compareSentences(testSentence, sentence)
+        }
+    }
+
     def cleanup() {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    def insertExternModule(ExternalModule module) {
-        externModuleDao.create(module)
-        moduleIds.add(module.getId())
+    def compareSentences(Sentence testSentence, Sentence sentence) {
+        testSentence.getId() == sentence.getId() &&
+        testSentence.getNumber() == sentence.getNumber() &&
+        testSentence.getText() == sentence.getText()
     }
 
     def insertDocument(Document document) {
@@ -148,14 +113,5 @@ class SentenceDaoTest extends Specification {
                 module)
         document.setMetaData(metaData)
         return document
-    }
-
-    def getNewExternModule() {
-        ExternalModule module = new ExternalModule()
-        module.setId("test_module")
-        module.setAuthor("Tester")
-        module.setDescription("Module for testing purpose")
-        module.setName("Test module")
-        return module
     }
 }

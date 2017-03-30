@@ -11,6 +11,15 @@ public class ExternalDocument {
     private String html;
     private ExternalModule externalModule;
 
+    public ExternalDocument() {}
+
+    public ExternalDocument(int id, String title, String html, ExternalModule module) {
+        this.id = id;
+        this.title = title;
+        this.html = html;
+        externalModule = module;
+    }
+
     public int getId() {
         return id;
     }

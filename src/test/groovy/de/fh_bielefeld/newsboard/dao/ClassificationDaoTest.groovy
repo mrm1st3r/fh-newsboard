@@ -17,9 +17,7 @@ class ClassificationDaoTest extends Specification {
     @Autowired
     DocumentDao documentDao
     @Autowired
-    SentenceDao sentenceDao
-    @Autowired
-    ExternalModuleDao externModuleDao
+    ExternalModuleDao externalModuleDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -28,93 +26,68 @@ class ClassificationDaoTest extends Specification {
     Document dummyDocument
     ExternalModule dummyModule
 
-    def "test insertion"() {
+    def setup() {
+        moduleIds = new ArrayList<String>()
+        documentIds = new ArrayList<Integer>()
+        sentenceIds = new ArrayList<Integer>()
+
+        ExternalModule module = TestUtils.sampleModule()
+        Document document = getNewDocument(module)
+        externalModuleDao.create(module)
+        moduleIds.add(module.getId())
+        insertDocument(document)
+
+        dummyModule = module
+        dummyDocument = document
+    }
+
+    def "should insert and select"() {
+        given:
+        Sentence dummySentence = dummyDocument.getSentences().get(0)
+        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
+
         when:
-        Classification classification = new Classification()
-        classification.setConfidence(1.0123456789)
-        classification.setValue(2.0123456789)
-        classification.setExternalModule(dummyModule)
-        List<Sentence> dummySentences = dummyDocument.getSentences()
-        classification.setSentenceId(dummySentences.get(0).getId())
+        classificationDao.create(classification)
+        Classification testClassification = classificationDao.get(dummySentence, dummyModule)
 
         then:
-        classificationDao.create(classification)
-
-        Classification testClassification = classificationDao.get(dummySentences.get(0), dummyModule)
-        testClassification.getConfidence() == classification.getConfidence()
-        testClassification.getValue() == classification.getValue()
-        testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternalModule() == classification.getExternalModule()
-
-        noExceptionThrown()
+        compareClassifications(testClassification, classification)
     }
 
     def "test updating"() {
-        when:
-        Classification classification = new Classification()
-        classification.setConfidence(1.0123456789)
-        classification.setValue(2.0123456789)
-        classification.setExternalModule(dummyModule)
-        List<Sentence> dummySentences = dummyDocument.getSentences()
-        classification.setSentenceId(dummySentences.get(0).getId())
+        given:
+        Sentence dummySentence = dummyDocument.getSentences().get(0)
+        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
         classificationDao.create(classification)
 
-        classification.setConfidence(2.0123456789)
-        classification.setValue(1.0123456789)
-
-        then:
+        when:
+        classification.setConfidence(0.5)
+        classification.setValue(-1)
         classificationDao.update(classification)
-
-        Classification testClassification = classificationDao.get(dummySentences.get(0), dummyModule)
-        testClassification.getConfidence() == classification.getConfidence()
-        testClassification.getValue() == classification.getValue()
-        testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternalModule() == classification.getExternalModule()
-
-        noExceptionThrown()
-    }
-
-    def "test selection with sentence and module"() {
-        when:
-        Classification classification = new Classification()
-        classification.setConfidence(1.0123456789)
-        classification.setValue(2.0123456789)
-        classification.setExternalModule(dummyModule)
-        List<Sentence> dummySentences = dummyDocument.getSentences()
-        classification.setSentenceId(dummySentences.get(0).getId())
-        classificationDao.create(classification)
+        Classification testClassification = classificationDao.get(dummySentence, dummyModule)
 
         then:
-        Classification testClassification = classificationDao.get(dummySentences.get(0), dummyModule)
-
-        testClassification.getConfidence() == classification.getConfidence()
-        testClassification.getValue() == classification.getValue()
-        testClassification.getSentenceId() == classification.getSentenceId()
-        testClassification.getExternalModule() == classification.getExternalModule()
-
-        noExceptionThrown()
+        compareClassifications(testClassification, classification)
     }
 
     def "test selection with sentence only"() {
-        when:
-        Classification classification = new Classification()
-        classification.setConfidence(1.0123456789)
-        classification.setValue(2.0123456789)
-        classification.setExternalModule(dummyModule)
-        List<Sentence> dummySentences = dummyDocument.getSentences()
-        classification.setSentenceId(dummySentences.get(0).getId())
+        given:
+        Sentence dummySentence = dummyDocument.getSentences().get(0)
+        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
         classificationDao.create(classification)
 
-        ExternalModule additionalModule = getNewExternModule()
+        when:
+        ExternalModule additionalModule = TestUtils.sampleModule()
         additionalModule.setId("additional_testing_module")
-        insertExternModule(additionalModule)
+        externalModuleDao.create(additionalModule)
+        moduleIds.add(additionalModule.getId())
 
         classification.setExternalModule(additionalModule)
         classificationDao.create(classification)
 
 
         then:
-        List<Classification> testClassifications = classificationDao.findForSentence(dummySentences.get(0))
+        List<Classification> testClassifications = classificationDao.findForSentence(dummySentence)
 
         for (Classification c : testClassifications) {
             c.getConfidence() == classification.getConfidence()
@@ -128,18 +101,16 @@ class ClassificationDaoTest extends Specification {
     }
 
     def "test selection with module only"() {
-        when:
-        Classification classification = new Classification()
-        classification.setConfidence(1.0123456789)
-        classification.setValue(2.0123456789)
-        classification.setExternalModule(dummyModule)
+        given:
         List<Sentence> dummySentences = dummyDocument.getSentences()
-        classification.setSentenceId(dummySentences.get(0).getId())
+        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentences.get(0).getId())
         classificationDao.create(classification)
 
-        ExternalModule additionalModule = getNewExternModule()
+        when:
+        ExternalModule additionalModule = TestUtils.sampleModule()
         additionalModule.setId("additional_testing_module")
-        insertExternModule(additionalModule)
+        externalModuleDao.create(additionalModule)
+        moduleIds.add(additionalModule.getId())
 
         classification.setExternalModule(additionalModule)
         classification.setSentenceId(dummySentences.get(1).getId())
@@ -161,27 +132,15 @@ class ClassificationDaoTest extends Specification {
         noExceptionThrown()
     }
 
-    def setup() {
-        moduleIds = new ArrayList<String>()
-        documentIds = new ArrayList<Integer>()
-        sentenceIds = new ArrayList<Integer>()
-
-        ExternalModule module = getNewExternModule()
-        Document document = getNewDocument(module)
-        insertExternModule(module)
-        insertDocument(document)
-
-        dummyModule = module
-        dummyDocument = document
-    }
-
     def cleanup() {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    def insertExternModule(ExternalModule module) {
-        externModuleDao.create(module)
-        moduleIds.add(module.getId())
+    def compareClassifications(Classification thisClassification, Classification thatClassification) {
+        thisClassification.getConfidence() == thatClassification.getConfidence() &&
+        thisClassification.getValue() == thatClassification.getValue() &&
+        thisClassification.getSentenceId() == thatClassification.getSentenceId() &&
+        thisClassification.getExternalModule() == thatClassification.getExternalModule()
     }
 
     def insertDocument(Document document) {
@@ -198,24 +157,8 @@ class ClassificationDaoTest extends Specification {
                 Calendar.getInstance(), Calendar.getInstance(), module)
         document.setMetaData(metaData)
         for (int i = 0; i < 3; i++) {
-            document.addSentence(getNewSentence())
+            document.addSentence(TestUtils.sampleSentence())
         }
         return document
-    }
-
-    def getNewExternModule() {
-        ExternalModule module = new ExternalModule()
-        module.setId("test_module")
-        module.setAuthor("Tester")
-        module.setDescription("Module for testing purpose")
-        module.setName("Test module")
-        return module
-    }
-
-    def getNewSentence() {
-        Sentence sentence = new Sentence()
-        sentence.setNumber(1)
-        sentence.setText("Example text of a sentence object for testing purposes.")
-        return sentence
     }
 }
