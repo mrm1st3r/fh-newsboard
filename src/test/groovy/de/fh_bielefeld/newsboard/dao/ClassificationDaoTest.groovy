@@ -10,6 +10,7 @@ import spock.lang.Specification
 
 @SpringBootTest(classes = NewsboardApplication)
 class ClassificationDaoTest extends Specification {
+
     @Autowired
     JdbcTemplate jdbcTemplate
     @Autowired
@@ -18,6 +19,8 @@ class ClassificationDaoTest extends Specification {
     DocumentDao documentDao
     @Autowired
     ExternalModuleDao externalModuleDao
+    @Autowired
+    AccessDao accessDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -33,6 +36,7 @@ class ClassificationDaoTest extends Specification {
 
         ExternalModule module = TestUtils.sampleModule()
         Document document = getNewDocument(module)
+        accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
         moduleIds.add(module.getId())
         insertDocument(document)
@@ -58,16 +62,15 @@ class ClassificationDaoTest extends Specification {
         given:
         Sentence dummySentence = dummyDocument.getSentences().get(0)
         Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
-        classificationDao.create(classification)
 
         when:
+        classificationDao.create(classification)
         classification.setConfidence(0.5)
         classification.setValue(-1)
         classificationDao.update(classification)
-        Classification testClassification = classificationDao.get(dummySentence, dummyModule)
 
         then:
-        compareClassifications(testClassification, classification)
+        compareClassifications(classificationDao.get(dummySentence, dummyModule), classification)
     }
 
     def "test selection with sentence only"() {
@@ -140,7 +143,7 @@ class ClassificationDaoTest extends Specification {
         thisClassification.getConfidence() == thatClassification.getConfidence() &&
         thisClassification.getValue() == thatClassification.getValue() &&
         thisClassification.getSentenceId() == thatClassification.getSentenceId() &&
-        thisClassification.getExternalModule() == thatClassification.getExternalModule()
+        thisClassification.getExternalModule().getId() == thatClassification.getExternalModule().getId()
     }
 
     def insertDocument(Document document) {

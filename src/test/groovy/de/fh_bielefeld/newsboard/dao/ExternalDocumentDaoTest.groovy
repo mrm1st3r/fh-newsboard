@@ -18,6 +18,8 @@ class ExternalDocumentDaoTest extends Specification {
     ExternalDocumentDao externalDocumentDao
     @Autowired
     ExternalModuleDao externalModuleDao
+    @Autowired
+    AccessDao accessDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -29,6 +31,7 @@ class ExternalDocumentDaoTest extends Specification {
         moduleIds = new ArrayList<>()
 
         ExternalModule module = TestUtils.sampleModule()
+        accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
         moduleIds.add(module.getId())
         dummyModule = module

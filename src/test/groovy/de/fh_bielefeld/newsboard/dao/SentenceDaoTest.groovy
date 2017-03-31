@@ -21,6 +21,8 @@ class SentenceDaoTest extends Specification {
     SentenceDao sentenceDao
     @Autowired
     ExternalModuleDao externModuleDao
+    @Autowired
+    AccessDao accessDao
 
     List<String> moduleIds
     List<Integer> documentIds
@@ -36,6 +38,7 @@ class SentenceDaoTest extends Specification {
 
         ExternalModule module = TestUtils.sampleModule()
         Document document = getNewDocument(module)
+        accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(module)
         moduleIds.add(module.getId())
         insertDocument(document)

@@ -104,7 +104,7 @@ public class DocumentDaoMysql implements DocumentDao {
 
         DocumentMetaData meta = new DocumentMetaData(r.getString("title"),
                 r.getString("author"), r.getString("source_url"),
-                getCalendarFromTime(r.getDate("crawl_time")), getCalendarFromTime(r.getDate("creation_time")),
+                getCalendarFromTime(r.getDate("creation_time")), getCalendarFromTime(r.getDate("crawl_time")),
                 externalModuleDao.get(r.getString("module_id")));
 
         doc.setMetaData(meta);

@@ -16,9 +16,9 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     private static final String GET_MODULE_WITH_ID =
             "SELECT module_id, title, author, description, access_id FROM module WHERE module_id = ?";
     private static final String UPDATE_MODULE =
-            "UPDATE module SET title = ?, author = ?, description = ? WHERE module_id = ?";
+            "UPDATE module SET title = ?, author = ?, description = ?, access_id = ? WHERE module_id = ?";
     private static final String INSERT_MODULE =
-            "INSERT INTO module(title, author, description, module_id, access_id) VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO module(title, author, description, access_id, module_id) VALUES (?, ?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -43,7 +43,7 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     private Object[] makeAttributes(ExternalModule module) {
-        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getId(), module.getAccessId()};
+        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessId(), module.getId()};
     }
 
     private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(

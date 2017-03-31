@@ -60,8 +60,8 @@ class XmlDocumentWriterTest extends Specification {
 
     private static Document createSampleDocument() {
         DocumentMetaData meta = new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
-                new GregorianCalendar(2016, Calendar.DECEMBER, 01), new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
-        null)
+                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                null)
         def s1 = new Sentence()
         s1.setId(1)
         s1.setNumber(1)

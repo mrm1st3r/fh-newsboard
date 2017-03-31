@@ -21,11 +21,13 @@ class DocumentDaoTest extends Specification {
     SentenceDao sentenceDao
     @Autowired
     ExternalModuleDao externModuleDao
+    @Autowired
+    AccessDao accessDao
 
     List<String> moduleIds
     List<Integer> documentIds
-    List<Integer> sentenceIds
 
+    List<Integer> sentenceIds
     Document dummyDocument
     ExternalModule dummyModule
 
@@ -36,6 +38,7 @@ class DocumentDaoTest extends Specification {
 
         dummyModule = TestUtils.sampleModule()
         dummyDocument = getNewDocument(dummyModule)
+        accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(dummyModule)
         moduleIds.add(dummyModule.getId())
         insertDocument(dummyDocument)
@@ -95,15 +98,13 @@ class DocumentDaoTest extends Specification {
         insertDocument(dummyDocument)
         insertDocument(dummyDocument)
         insertDocument(dummyDocument)
-
-        then:
         List<Document> allDocuments = documentDao.findAllStubs()
 
+        then:
+        allDocuments.size() >= 3
         for (Document testDocument : allDocuments) {
-            compareDocuments(testDocument, dummyDocument)
             testDocument.getSentences().size() == 0
         }
-
         noExceptionThrown()
     }
 
@@ -111,17 +112,16 @@ class DocumentDaoTest extends Specification {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    def compareDocuments(Document thisDocument, Document thatDocument) {
-        thisDocument.getId() == thatDocument.getId() &&
-        thisDocument.getAuthor() == thatDocument.getAuthor() &&
-        thisDocument.getCrawlTime().getTimeInMillis() == thatDocument.getCrawlTime().getTimeInMillis() &&
-        thisDocument.getCreationTime().getTimeInMillis() == thatDocument.getCreationTime().getTimeInMillis() &&
-        thisDocument.getSource() == thatDocument.getSource() &&
-        thisDocument.getTitle() == thatDocument.getTitle() &&
-        thisDocument.getModule().getId() == thatDocument.getModule().getId() &&
-        thisDocument.getModule().getAuthor() == thatDocument.getModule().getAuthor() &&
-        thisDocument.getModule().getDescription() == thatDocument.getModule().getDescription() &&
-        thisDocument.getModule().getName() == thatDocument.getModule().getName()
+    void compareDocuments(Document thisDocument, Document thatDocument) {
+        assert thisDocument.getAuthor() == thatDocument.getAuthor()
+        assert thisDocument.getCrawlTime() == thatDocument.getCrawlTime()
+        assert thisDocument.getCreationTime() == thatDocument.getCreationTime()
+        assert thisDocument.getSource() == thatDocument.getSource()
+        assert thisDocument.getTitle() == thatDocument.getTitle()
+        assert thisDocument.getModule().getId() == thatDocument.getModule().getId()
+        assert thisDocument.getModule().getAuthor() == thatDocument.getModule().getAuthor()
+        assert thisDocument.getModule().getDescription() == thatDocument.getModule().getDescription()
+        assert thisDocument.getModule().getName() == thatDocument.getModule().getName()
     }
 
     def insertDocument(Document document) {

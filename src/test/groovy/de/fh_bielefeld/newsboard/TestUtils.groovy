@@ -26,11 +26,11 @@ final class TestUtils {
         for (Integer id : documentIds) {
             jdbcTemplate.update("DELETE FROM document WHERE document_id = " + id)
         }
-        for(String id : moduleIds) {
-            jdbcTemplate.update("DELETE FROM module WHERE module_id = '" + id + "'")
-        }
         for (Integer id : externalDocumentIds) {
             jdbcTemplate.update("DELETE FROM external_document WHERE ext_document_id = " + id)
+        }
+        for(String id : moduleIds) {
+            jdbcTemplate.update("DELETE FROM module WHERE module_id = '" + id + "'")
         }
         jdbcTemplate.update("DELETE FROM access WHERE access_id = 'test-access'")
     }
@@ -40,7 +40,7 @@ final class TestUtils {
     }
 
     static sampleSentence() {
-        new Sentence(1, -1, "Example text of a sentence object for testing purposes.", Collections.emptyList())
+        new Sentence(42, 1, "Example text of a sentence object for testing purposes.", Collections.emptyList())
     }
 
     static sampleExternalDocument(ExternalModule module) {
@@ -48,7 +48,7 @@ final class TestUtils {
     }
 
     static sampleClassification(ExternalModule module, int sentenceId) {
-        new Classification(sentenceId, module, 2.0123456789, 1.0123456)
+        new Classification(sentenceId, module, 2.0123, 1.0123)
     }
 
     static sampleAccess() {

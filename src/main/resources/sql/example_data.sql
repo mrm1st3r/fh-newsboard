@@ -1,9 +1,10 @@
 -- Clean up
+DELETE FROM external_document;
 DELETE FROM classification;
 DELETE FROM sentence;
 DELETE FROM document;
-DELETE FROM access;
 DELETE FROM module;
+DELETE FROM access;
 
 -- Access for modules
 INSERT INTO access(access_id, role_id, passphrase, hash_type, enabled) VALUES

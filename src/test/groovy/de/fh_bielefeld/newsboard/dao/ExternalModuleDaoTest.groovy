@@ -15,6 +15,12 @@ class ExternalModuleDaoTest extends Specification {
     JdbcTemplate jdbcTemplate
     @Autowired
     ExternalModuleDao externalModuleDao
+    @Autowired
+    AccessDao accessDao
+
+    def setup() {
+        accessDao.create(TestUtils.sampleAccess())
+    }
 
     def "should insert and select"() {
         given:
