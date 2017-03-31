@@ -1,5 +1,7 @@
 package de.fh_bielefeld.newsboard
 
+import de.fh_bielefeld.newsboard.model.Access
+import de.fh_bielefeld.newsboard.model.AccessRole
 import de.fh_bielefeld.newsboard.model.Classification
 import de.fh_bielefeld.newsboard.model.ExternalDocument
 import de.fh_bielefeld.newsboard.model.ExternalModule
@@ -30,10 +32,11 @@ final class TestUtils {
         for (Integer id : externalDocumentIds) {
             jdbcTemplate.update("DELETE FROM external_document WHERE ext_document_id = " + id)
         }
+        jdbcTemplate.update("DELETE FROM access WHERE access_id = 'test-access'")
     }
 
     static sampleModule() {
-        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose")
+        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", "test-access")
     }
 
     static sampleSentence() {
@@ -46,5 +49,9 @@ final class TestUtils {
 
     static sampleClassification(ExternalModule module, int sentenceId) {
         new Classification(sentenceId, module, 2.0123456789, 1.0123456)
+    }
+
+    static sampleAccess() {
+        return new Access("test-access", new AccessRole("crawler"), "passphrase", "plain", true)
     }
 }

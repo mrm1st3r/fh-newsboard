@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 public class ExternalModuleDaoMysql implements ExternalModuleDao {
 
     private static final String GET_MODULE_WITH_ID =
-            "SELECT module_id, title, author, description FROM module WHERE module_id = ?";
+            "SELECT module_id, title, author, description, access_id FROM module WHERE module_id = ?";
     private static final String UPDATE_MODULE =
-            "UPDATE module SET title= ?, author = ?, description = ? WHERE module_id = ?";
+            "UPDATE module SET title = ?, author = ?, description = ? WHERE module_id = ?";
     private static final String INSERT_MODULE =
-            "INSERT INTO module(title, author, description, module_id) VALUES (?, ?, ?, ?)";
+            "INSERT INTO module(title, author, description, module_id, access_id) VALUES (?, ?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -43,13 +43,13 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     private Object[] makeAttributes(ExternalModule module) {
-        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getId()};
+        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getId(), module.getAccessId()};
     }
 
     private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
             resultSet.getString("module_id"),
             resultSet.getString("title"),
             resultSet.getString("author"),
-            resultSet.getString("description")
-    );
+            resultSet.getString("description"),
+            resultSet.getString("access_id"));
 }

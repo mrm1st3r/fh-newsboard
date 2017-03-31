@@ -19,7 +19,6 @@ import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller for REST-Api.
@@ -35,19 +34,19 @@ public class RestApiController {
     private final RawDocumentProcessor documentProcessor;
     private final DocumentDao documentDao;
     private final ClassificationDao classificationDao;
-    private final AuthenticationTokenDao tokenDao;
+    private final AccessDao accessDao;
     private final ExternalModuleDao moduleDao;
 
     @Autowired
     public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
-                             DocumentDao documentDao, ClassificationDao classificationDao, AuthenticationTokenDao tokenDao,
+                             DocumentDao documentDao, ClassificationDao classificationDao, AccessDao accessDao,
                              ExternalModuleDao moduleDao) {
         this.xmlReader = xmlReader;
         this.xmlWriter = xmlWriter;
         this.documentProcessor = documentProcessor;
         this.documentDao = documentDao;
         this.classificationDao = classificationDao;
-        this.tokenDao = tokenDao;
+        this.accessDao = accessDao;
         this.moduleDao = moduleDao;
     }
 
@@ -153,9 +152,12 @@ public class RestApiController {
             String base64Credentials = authorization.substring("Basic".length()).trim();
             String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
             String[] values = credentials.split(":", 2);
-            Optional<AuthenticationToken> token = tokenDao.find(values[1]);
-            if (token.isPresent() && token.get().getModuleId().equals(values[0])) {
-                return moduleDao.get(values[0]);
+            ExternalModule module = moduleDao.get(values[0]);
+            if (module != null) {
+                Access access = accessDao.get(module.getAccessId());
+                if (access.isEnabled() && access.getPassphrase().equals(values[1])) {
+                    return module;
+                }
             }
         }
         throw new SecurityException("Authentication failed!");

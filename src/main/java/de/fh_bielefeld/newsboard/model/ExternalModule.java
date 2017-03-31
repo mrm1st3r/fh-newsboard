@@ -10,14 +10,16 @@ public class ExternalModule {
     private String name;
     private String author;
     private String description;
+    private String accessId;
 
     public ExternalModule() {}
 
-    public ExternalModule(String id, String name, String author, String description) {
+    public ExternalModule(String id, String name, String author, String description, String accessId) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.description = description;
+        this.accessId = accessId;
     }
 
     /**
@@ -66,5 +68,9 @@ public class ExternalModule {
         }
         ExternalModule that = (ExternalModule) obj;
         return this.id.equals(that.id);
+    }
+
+    public String getAccessId() {
+        return accessId;
     }
 }
