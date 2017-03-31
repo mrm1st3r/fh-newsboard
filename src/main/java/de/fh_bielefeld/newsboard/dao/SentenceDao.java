@@ -10,10 +10,6 @@ import java.util.List;
  */
 public interface SentenceDao {
 
-    Sentence get(int id);
-
-    int update(Sentence sentence);
-
     int create(Sentence sentence, Document document);
 
     List<Sentence> findForDocument(Document document);

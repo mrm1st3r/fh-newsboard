@@ -20,9 +20,7 @@ import java.util.List;
 @Component
 public class SentenceDaoMysql implements SentenceDao {
 
-    private static final String GET_SENTENCE_WITH_ID = "SELECT * FROM sentence WHERE sentence_id = ?";
     private static final String GET_ALL_SENTENCES_IN_DOCUMENT = "SELECT * FROM sentence WHERE document_id = ?";
-    private static final String UPDATE_SENTENCE = "UPDATE sentence SET document_seq = ?, content = ? WHERE sentence_id = ?";
     private static final String INSERT_SENTENCE = "INSERT INTO sentence(document_seq, content, document_id) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
@@ -35,18 +33,8 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     @Override
-    public Sentence get(int id) {
-        return jdbcTemplate.query(GET_SENTENCE_WITH_ID, new RowMapperResultSetExtractor<>(sentenceRowMapper), id);
-    }
-
-    @Override
     public List<Sentence> findForDocument(Document document) {
         return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, document.getId());
-    }
-
-    @Override
-    public int update(Sentence sentence) {
-        return jdbcTemplate.update(UPDATE_SENTENCE, sentence.getNumber(), sentence.getText(), sentence.getId());
     }
 
     @Override

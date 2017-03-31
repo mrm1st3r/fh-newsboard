@@ -24,54 +24,22 @@ class SentenceDaoTest extends Specification {
     @Autowired
     AccessDao accessDao
 
-    List<String> moduleIds
-    List<Integer> documentIds
     List<Integer> sentenceIds
 
     Document dummyDocument
     ExternalModule dummyModule
 
     def setup() {
-        moduleIds = new ArrayList<String>()
-        documentIds = new ArrayList<Integer>()
         sentenceIds = new ArrayList<Integer>()
 
         ExternalModule module = TestUtils.sampleModule()
         Document document = getNewDocument(module)
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(module)
-        moduleIds.add(module.getId())
-        insertDocument(document)
+        documentDao.create(document)
 
         dummyModule = module
         dummyDocument = document
-    }
-
-    def "should insert and select"() {
-        given:
-        Sentence sentence = TestUtils.sampleSentence()
-
-        when:
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
-        then:
-        compareSentences(sentenceDao.get(sentence.getId()), sentence)
-    }
-
-    def "test updating"() {
-        given:
-        Sentence sentence = TestUtils.sampleSentence()
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
-        when:
-        sentence.setText("Another text for testing purposes")
-        sentence.setNumber(2132)
-        sentenceDao.update(sentence)
-
-        then:
-        compareSentences(sentenceDao.get(sentence.getId()), sentence)
     }
 
     def "test selection with document"() {
@@ -90,23 +58,14 @@ class SentenceDaoTest extends Specification {
         then:
         testSentences.size() == 3
         for (Sentence testSentence : testSentences) {
-            compareSentences(testSentence, sentence)
+            testSentence.getId() == sentence.getId()
+            testSentence.getNumber() == sentence.getNumber()
+            testSentence.getText() == sentence.getText()
         }
     }
 
     def cleanup() {
-        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
-    }
-
-    def compareSentences(Sentence testSentence, Sentence sentence) {
-        testSentence.getId() == sentence.getId() &&
-        testSentence.getNumber() == sentence.getNumber() &&
-        testSentence.getText() == sentence.getText()
-    }
-
-    def insertDocument(Document document) {
-        documentDao.create(document)
-        documentIds.add(document.getId())
+        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, [dummyDocument.getId()], [dummyModule.getId()])
     }
 
     def getNewDocument(ExternalModule module) {

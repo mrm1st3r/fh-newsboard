@@ -19,16 +19,10 @@ import java.util.OptionalDouble;
 @Component
 public class ClassificationDaoMysql implements ClassificationDao {
 
-    private static final String GET_CLASSIFICATION =
-            "SELECT * FROM classification WHERE sentence_id = ? AND module_id = ?";
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
             "SELECT * FROM classification WHERE sentence_id = ?";
-    private static final String GET_CLASSIFICATIONS_FROM_MODULE =
-            "SELECT * FROM classification WHERE module_id = ?";
     private static final String INSERT_CLASSIFICATION =
             "INSERT INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
-    private static final String UPDATE_CLASSIFICATION =
-            "UPDATE classification SET confidence = ?, result = ? WHERE sentence_id = ? AND module_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private ExternalModuleDao externalModuleDao;
@@ -40,63 +34,31 @@ public class ClassificationDaoMysql implements ClassificationDao {
     }
 
     @Override
-    public Classification get(Sentence sentence, ExternalModule module) {
-        Classification classification = jdbcTemplate.query(GET_CLASSIFICATION,
-                new RowMapperResultSetExtractor<>(rowMapper), sentence.getId(), module.getId());
-        if (classification == null) {
-            return null;
-        }
-        classification.setExternalModule(module);
-        classification.setSentenceId(sentence.getId());
-        return classification;
-    }
-
-    @Override
     public List<Classification> findForSentence(Sentence sentence) {
-        return getListOfClassifications(sentence.getId(), GET_CLASSIFICATIONS_FOR_SENTENCE, null);
-    }
+        List<Classification> classifications = jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, rowMapper, (Object) sentence.getId());
 
-    @Override
-    public List<Classification> findForModule(ExternalModule module) {
-        return getListOfClassifications(module.getId(), GET_CLASSIFICATIONS_FROM_MODULE, module);
-    }
-
-    @Override
-    public int update(Classification classification) {
-        return jdbcTemplate.update(UPDATE_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
+        for (Classification classification : classifications) {
+            if (classification.getExternalModule() != null) {
+                ExternalModule m = externalModuleDao.get(classification.getExternalModule().getId());
+                classification.setExternalModule(m);
+            } else {
+                classification.setExternalModule(null);
+            }
+        }
+        return classifications;
     }
 
     @Override
     public int create(Classification classification) {
-        return jdbcTemplate.update(INSERT_CLASSIFICATION, getAttributesForInsertOrUpdate(classification));
-    }
-
-    private Object[] getAttributesForInsertOrUpdate(Classification classification) {
         Double confidence = null;
         OptionalDouble optionalConfidence = classification.getConfidence();
         if (optionalConfidence.isPresent()) {
             confidence = optionalConfidence.getAsDouble();
         }
-        return new Object[] {
-                confidence,
+        return jdbcTemplate.update(INSERT_CLASSIFICATION, confidence,
                 classification.getValue(),
                 classification.getSentenceId(),
-                classification.getExternalModule().getId()
-        };
-    }
-
-    private List<Classification> getListOfClassifications(Object attribute, String query, ExternalModule externalModule) {
-        List<Classification> classifications = jdbcTemplate.query(query, rowMapper, attribute);
-
-        for (Classification classification : classifications) {
-            if (externalModule == null && classification.getExternalModule() != null) {
-                ExternalModule m = externalModuleDao.get(classification.getExternalModule().getId());
-                classification.setExternalModule(m);
-            } else {
-                classification.setExternalModule(externalModule);
-            }
-        }
-        return classifications;
+                classification.getExternalModule().getId());
     }
 
     private final RowMapper<Classification> rowMapper = (resultSet, i) -> {

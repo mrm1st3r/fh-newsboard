@@ -45,34 +45,6 @@ class ClassificationDaoTest extends Specification {
         dummyDocument = document
     }
 
-    def "should insert and select"() {
-        given:
-        Sentence dummySentence = dummyDocument.getSentences().get(0)
-        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
-
-        when:
-        classificationDao.create(classification)
-        Classification testClassification = classificationDao.get(dummySentence, dummyModule)
-
-        then:
-        compareClassifications(testClassification, classification)
-    }
-
-    def "test updating"() {
-        given:
-        Sentence dummySentence = dummyDocument.getSentences().get(0)
-        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
-
-        when:
-        classificationDao.create(classification)
-        classification.setConfidence(0.5)
-        classification.setValue(-1)
-        classificationDao.update(classification)
-
-        then:
-        compareClassifications(classificationDao.get(dummySentence, dummyModule), classification)
-    }
-
     def "test selection with sentence only"() {
         given:
         Sentence dummySentence = dummyDocument.getSentences().get(0)
@@ -99,38 +71,6 @@ class ClassificationDaoTest extends Specification {
         }
         testClassifications.get(0).getExternalModule().getId() == "additional_testing_module"
         testClassifications.get(1).getExternalModule().getId() == "test_module"
-
-        noExceptionThrown()
-    }
-
-    def "test selection with module only"() {
-        given:
-        List<Sentence> dummySentences = dummyDocument.getSentences()
-        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentences.get(0).getId())
-        classificationDao.create(classification)
-
-        when:
-        ExternalModule additionalModule = TestUtils.sampleModule()
-        additionalModule.setId("additional_testing_module")
-        externalModuleDao.create(additionalModule)
-        moduleIds.add(additionalModule.getId())
-
-        classification.setExternalModule(additionalModule)
-        classification.setSentenceId(dummySentences.get(1).getId())
-        classificationDao.create(classification)
-        classification.setSentenceId(dummySentences.get(2).getId())
-        classificationDao.create(classification)
-
-
-        then:
-        List<Classification> testClassifications = classificationDao.findForModule(additionalModule)
-
-        testClassifications.size() == 2
-        for (Classification c : testClassifications) {
-            c.getConfidence() == classification.getConfidence()
-            c.getValue() == classification.getValue()
-            c.getSentenceId() == classification.getSentenceId()
-        }
 
         noExceptionThrown()
     }
