@@ -9,7 +9,7 @@ class ExternalModuleTest extends Specification {
         def m1 = new ExternalModule()
         def m2 = new ExternalModule()
         def m3 = new ExternalModule()
-        def d = new ExternalDocument()
+        def d = new ExternalDocument(42, "Test", "Foo", null)
         m1.setId("test-crawler")
         m2.setId("test-classifier")
         m3.setId("test-crawler")

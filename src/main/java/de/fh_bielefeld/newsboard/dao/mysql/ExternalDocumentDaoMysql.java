@@ -11,8 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static org.springframework.util.Assert.notNull;
 
@@ -22,13 +20,13 @@ import static org.springframework.util.Assert.notNull;
 @Component
 public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
 
-    private static final String GET_EXTERN_DOCUMENT_WITH_ID =
+    private static final String GET_EXTERNAL_DOCUMENT_WITH_ID =
             "SELECT * FROM external_document WHERE ext_document_id = ?";
 
-    private static final String UPDATE_EXTERN_DOCUMENT =
+    private static final String UPDATE_EXTERNAL_DOCUMENT =
             "UPDATE external_document SET title = ?, html = ?, module_id = ? WHERE ext_document_id = ?";
 
-    private static final String INSERT_EXTERN_DOCUMENT =
+    private static final String INSERT_EXTERNAL_DOCUMENT =
             "INSERT INTO external_document(title, html, module_id) VALUES (?, ?, ?)";
 
     private ExternalModuleDao externalModuleDao;
@@ -42,13 +40,13 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
 
     @Override
     public ExternalDocument get(int id) {
-        return jdbcTemplate.query(GET_EXTERN_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
+        return jdbcTemplate.query(GET_EXTERNAL_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
     }
 
     @Override
     public int update(ExternalDocument externalDocument) {
         notNull(externalDocument.getExternalModule());
-        return jdbcTemplate.update(UPDATE_EXTERN_DOCUMENT, externalDocument.getTitle(), externalDocument.getHtml(),
+        return jdbcTemplate.update(UPDATE_EXTERNAL_DOCUMENT, externalDocument.getTitle(), externalDocument.getHtml(),
                 externalDocument.getExternalModule().getId(), externalDocument.getId());
     }
 
@@ -57,7 +55,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
         notNull(externalDocument.getExternalModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
-            PreparedStatement pst = connection.prepareStatement(INSERT_EXTERN_DOCUMENT, new String[]{"ext_document_id"});
+            PreparedStatement pst = connection.prepareStatement(INSERT_EXTERNAL_DOCUMENT, new String[]{"ext_document_id"});
             pst.setString(1, externalDocument.getTitle());
             pst.setString(2, externalDocument.getHtml());
             pst.setString(3, externalDocument.getExternalModule().getId());
@@ -67,16 +65,9 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
         return numRows;
     }
 
-    private RowMapper<ExternalDocument> rowMapper = new RowMapper<ExternalDocument>() {
-        @Override
-        public ExternalDocument mapRow(ResultSet resultSet, int i) throws SQLException {
-            ExternalDocument document = new ExternalDocument();
-            String externalModuleId = resultSet.getString("module_id");
-            document.setId(resultSet.getInt("ext_document_id"));
-            document.setTitle(resultSet.getString("title"));
-            document.setHtml(resultSet.getString("html"));
-            document.setExternalModule(externalModuleDao.get(externalModuleId));
-            return document;
-        }
-    };
+    private RowMapper<ExternalDocument> rowMapper = (resultSet, i) -> new ExternalDocument(
+            resultSet.getInt("ext_document_id"),
+            resultSet.getString("title"),
+            resultSet.getString("html"),
+            externalModuleDao.get(resultSet.getString("module_id")));
 }

@@ -3,15 +3,13 @@ package de.fh_bielefeld.newsboard.model;
 /**
  * Domain class representing external documents, which may not be classified.
  *
- * @Author Felix Meyer
+ * @author Felix Meyer
  */
 public class ExternalDocument {
     private int id;
     private String title;
     private String html;
     private ExternalModule externalModule;
-
-    public ExternalDocument() {}
 
     public ExternalDocument(int id, String title, String html, ExternalModule module) {
         this.id = id;
@@ -25,6 +23,9 @@ public class ExternalDocument {
     }
 
     public void setId(int id) {
+        if (this.id != -1) {
+            throw new IllegalStateException("External document has already an ID assigned");
+        }
         this.id = id;
     }
 
@@ -46,9 +47,5 @@ public class ExternalDocument {
 
     public ExternalModule getExternalModule() {
         return externalModule;
-    }
-
-    public void setExternalModule(ExternalModule externalModule) {
-        this.externalModule = externalModule;
     }
 }

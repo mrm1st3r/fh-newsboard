@@ -46,7 +46,7 @@ final class TestUtils {
     }
 
     static sampleExternalDocument(ExternalModule module) {
-        new ExternalDocument(1, "Test external document", "<body><h1>Testing html</h1></body>", module)
+        new ExternalDocument(-1, "Test external document", "<body><h1>Testing html</h1></body>", module)
     }
 
     static sampleClassification(ExternalModule module, int sentenceId) {
