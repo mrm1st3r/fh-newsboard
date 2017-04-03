@@ -13,17 +13,12 @@ public class Sentence {
     private int id;
     private int number;
     private String text;
-    private List<Classification> classifications;
+    private List<Classification> classifications = new ArrayList<>();
 
-    public Sentence() {
-        classifications = new ArrayList<>();
-    }
-
-    public Sentence(int id, int number, String text, List<Classification> classifications) {
+    public Sentence(int id, int number, String text) {
         this.id = id;
         this.number = number;
         this.text = text;
-        this.classifications = classifications;
     }
 
     public int getId() {
@@ -31,6 +26,9 @@ public class Sentence {
     }
 
     public void setId(int id) {
+        if (this.id != -1) {
+            throw new IllegalStateException("Sentence has already an ID assigned");
+        }
         this.id = id;
     }
 
@@ -38,20 +36,12 @@ public class Sentence {
         return number;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public void setClassifications(List<Classification> classifications) {
-        this.classifications = classifications;
+    public void addClassifications(List<Classification> classifications) {
+        this.classifications.addAll(classifications);
     }
 
     public void addClassification(Classification classification) {
@@ -59,7 +49,7 @@ public class Sentence {
     }
 
     public List<Classification> getClassifications() {
-        return classifications;
+        return new ArrayList<>(classifications);
     }
 
     public double getAverageClassificationValue() {

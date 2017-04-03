@@ -52,11 +52,11 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> {
-        Sentence sentence = new Sentence();
-        sentence.setId(resultSet.getInt("sentence_id"));
-        sentence.setNumber(resultSet.getInt("document_seq"));
-        sentence.setText(resultSet.getString("content"));
-        sentence.setClassifications( classificationDao.findForSentence(sentence));
+        Sentence sentence = new Sentence(
+                resultSet.getInt("sentence_id"),
+                resultSet.getInt("document_seq"),
+                resultSet.getString("content"));
+        sentence.addClassifications(classificationDao.findForSentence(sentence));
         return sentence;
     };
 }

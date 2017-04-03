@@ -44,14 +44,12 @@ class SentenceDaoTest extends Specification {
 
     def "test selection with document"() {
         given:
-        Sentence sentence = TestUtils.sampleSentence()
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-        sentenceDao.create(sentence, dummyDocument)
-        sentenceIds.add(sentence.getId())
-
+        Sentence sentence
+        for (int i = 0; i < 3; i++) {
+            sentence = TestUtils.sampleSentence()
+            sentenceDao.create(sentence, dummyDocument)
+            sentenceIds.add(sentence.getId())
+        }
         when:
         List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument)
 

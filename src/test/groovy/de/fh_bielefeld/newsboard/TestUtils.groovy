@@ -40,7 +40,7 @@ final class TestUtils {
     }
 
     static sampleSentence() {
-        new Sentence(42, 1, "Example text of a sentence object for testing purposes.", Collections.emptyList())
+        new Sentence(-1, 1, "Example text of a sentence object for testing purposes.")
     }
 
     static sampleExternalDocument(ExternalModule module) {

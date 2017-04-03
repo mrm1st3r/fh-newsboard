@@ -41,7 +41,6 @@ class DocumentDaoTest extends Specification {
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(dummyModule)
         moduleIds.add(dummyModule.getId())
-        insertDocument(dummyDocument)
     }
 
     def "test insertion"() {
@@ -83,9 +82,9 @@ class DocumentDaoTest extends Specification {
 
     def "test selection only with metadata"() {
         when:
-        insertDocument(dummyDocument)
-        insertDocument(dummyDocument)
-        insertDocument(dummyDocument)
+        insertDocument(getNewDocument(dummyModule))
+        insertDocument(getNewDocument(dummyModule))
+        insertDocument(getNewDocument(dummyModule))
         List<Document> allDocuments = documentDao.findAllStubs()
 
         then:

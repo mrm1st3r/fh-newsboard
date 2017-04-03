@@ -30,10 +30,7 @@ public class RawDocumentProcessor {
         document.setMetaData(rawDocument.getMetaData());
         int sentNumber = 1;
         for (String s : tokenizePlaintext(rawDocument.getRawText())) {
-            Sentence sent = new Sentence();
-            sent.setText(s);
-            sent.setNumber(sentNumber++);
-            document.addSentence(sent);
+            document.addSentence(new Sentence(-1, sentNumber++, s));
         }
         return document;
     }
