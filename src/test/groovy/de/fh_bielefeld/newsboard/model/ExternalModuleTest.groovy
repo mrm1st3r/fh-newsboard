@@ -6,13 +6,10 @@ class ExternalModuleTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def m1 = new ExternalModule()
-        def m2 = new ExternalModule()
-        def m3 = new ExternalModule()
+        def m1 = new ExternalModule("mod1", "Module 1", "tester", "bla", "id")
+        def m2 = new ExternalModule("mod2", "Module 1", "tester", "bla", "id")
+        def m3 = new ExternalModule("mod1", "Module 1", "tester", "bla", "id")
         def d = new ExternalDocument(42, "Test", "Foo", null)
-        m1.setId("test-crawler")
-        m2.setId("test-classifier")
-        m3.setId("test-crawler")
 
         expect:
         m1 != m2

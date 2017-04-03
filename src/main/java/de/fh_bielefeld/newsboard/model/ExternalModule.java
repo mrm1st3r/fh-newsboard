@@ -12,8 +12,6 @@ public class ExternalModule {
     private String description;
     private String accessId;
 
-    public ExternalModule() {}
-
     public ExternalModule(String id, String name, String author, String description, String accessId) {
         this.id = id;
         this.name = name;
