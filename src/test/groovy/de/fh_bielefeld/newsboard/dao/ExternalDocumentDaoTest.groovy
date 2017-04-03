@@ -47,7 +47,7 @@ class ExternalDocumentDaoTest extends Specification {
         compareDocuments(externalDocumentDao.get(document.getId()), document)
     }
 
-    def "test updating"() {
+    def "should update correctly"() {
         given:
         ExternalDocument document = TestUtils.sampleExternalDocument(dummyModule)
 

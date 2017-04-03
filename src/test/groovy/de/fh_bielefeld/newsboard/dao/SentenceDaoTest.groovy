@@ -32,7 +32,7 @@ class SentenceDaoTest extends Specification {
         sentenceIds = new ArrayList<Integer>()
 
         ExternalModule module = TestUtils.sampleModule()
-        Document document = TestUtils.sampleDocument(module)
+        Document document = TestUtils.sampleDocumentForDb(module)
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(module)
 
@@ -40,7 +40,7 @@ class SentenceDaoTest extends Specification {
         dummyDocument = document
     }
 
-    def "test selection with document"() {
+    def "should create and find for document"() {
         given:
         documentDao.create(dummyDocument)
         def dummySentences = dummyDocument.getSentences()

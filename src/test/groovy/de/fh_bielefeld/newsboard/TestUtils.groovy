@@ -57,7 +57,7 @@ final class TestUtils {
         return new Access("test-access", new AccessRole("crawler"), "passphrase", "plain", true)
     }
 
-    static sampleDocument(ExternalModule module) {
+    static sampleDocumentForDb(ExternalModule module) {
         DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
                 new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1), module)
         ArrayList<Sentence> sentences = new ArrayList<>()
@@ -65,5 +65,16 @@ final class TestUtils {
             sentences.add(sampleSentence())
         }
         return new Document(-1, metaData, sentences)
+    }
+
+    static sampleDocumentForXml() {
+        DocumentMetaData meta = new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
+                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                null)
+        def s1 = new Sentence(1, 1, "Lorem ipsum dolor sit amet.")
+        def s2 = new Sentence(24, 2, "Die Würde des Tasters ist unanmenschbar.")
+        s1.addClassification(new Classification(1, null, 1, OptionalDouble.empty()))
+        s2.addClassification(new Classification(24, null, 0.9, OptionalDouble.of(0.95)))
+        return new Document(42, meta, [s1, s2])
     }
 }

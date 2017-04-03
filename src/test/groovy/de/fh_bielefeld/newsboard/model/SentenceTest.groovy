@@ -31,4 +31,17 @@ class SentenceTest extends Specification {
         expect:
         s.getAverageClassificationValue() == 0
     }
+
+    def "should set ID only once"() {
+        given:
+        Sentence sent = new Sentence(-1, 1, "Foo bar.")
+
+        when:
+        sent.setId(1)
+        sent.setId(2)
+
+        then:
+        thrown(IllegalStateException)
+        sent.getId() == 1
+    }
 }

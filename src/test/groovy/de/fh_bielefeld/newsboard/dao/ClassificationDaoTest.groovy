@@ -35,7 +35,7 @@ class ClassificationDaoTest extends Specification {
         sentenceIds = new ArrayList<Integer>()
 
         ExternalModule module = TestUtils.sampleModule()
-        Document document = TestUtils.sampleDocument(module)
+        Document document = TestUtils.sampleDocumentForDb(module)
         accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
         moduleIds.add(module.getId())
@@ -45,7 +45,7 @@ class ClassificationDaoTest extends Specification {
         dummyDocument = document
     }
 
-    def "test selection with sentence only"() {
+    def "should find for sentence"() {
         given:
         ExternalModule additionalModule = TestUtils.sampleModule()
         additionalModule.setId("additional_testing_module")

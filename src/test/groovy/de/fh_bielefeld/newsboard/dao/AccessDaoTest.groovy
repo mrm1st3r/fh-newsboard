@@ -35,7 +35,7 @@ class AccessDaoTest extends Specification {
         noExceptionThrown()
     }
 
-    def "test updating"() {
+    def "should update correctly"() {
         given:
         Access access = TestUtils.sampleAccess()
         accessDao.create(access)

@@ -1,9 +1,7 @@
 package de.fh_bielefeld.newsboard.xml
 
-import de.fh_bielefeld.newsboard.model.Classification
+import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.Document
-import de.fh_bielefeld.newsboard.model.DocumentMetaData
-import de.fh_bielefeld.newsboard.model.Sentence
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -19,7 +17,7 @@ class XmlDocumentWriterTest extends Specification {
     def "should write valid document stub list"() {
         given:
         List<Document> documents = new ArrayList<>()
-        Document doc = createSampleDocument()
+        Document doc = TestUtils.sampleDocumentForXml()
         documents.add(doc)
 
         when:
@@ -39,7 +37,7 @@ class XmlDocumentWriterTest extends Specification {
 
     def "should write valid document structure"() {
         when:
-        def result = writer.writeDocument(createSampleDocument())
+        def result = writer.writeDocument(TestUtils.sampleDocumentForXml())
 
         then:
         result == "<?xml version=\"1.0\" ?><documents xmlns=\"http://fh-bielefeld.de/newsboard\">" +
@@ -56,16 +54,5 @@ class XmlDocumentWriterTest extends Specification {
                 "<classification sentenceid=\"1\">1.0</classification>" +
                 "<classification sentenceid=\"24\" confidence=\"0.95\">0.9</classification>" +
                 "</classifications></document></documents>"
-    }
-
-    private static Document createSampleDocument() {
-        DocumentMetaData meta = new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
-                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
-                null)
-        def s1 = new Sentence(1, 1, "Lorem ipsum dolor sit amet.")
-        def s2 = new Sentence(24, 2, "Die Würde des Tasters ist unanmenschbar.")
-        s1.addClassification(new Classification(1, null, 1, OptionalDouble.empty()))
-        s2.addClassification(new Classification(24, null, 0.9, OptionalDouble.of(0.95)))
-        return new Document(42, meta, [s1, s2])
     }
 }

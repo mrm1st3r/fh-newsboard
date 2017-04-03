@@ -39,4 +39,17 @@ class DocumentTest extends Specification {
         expect:
         d.getAverageClassificationValue() == 0
     }
+
+    def "should set ID only once"() {
+        given:
+        def doc = new Document(-1, null, Collections.emptyList())
+
+        when:
+        doc.setId(1)
+        doc.setId(2)
+
+        then:
+        thrown(IllegalStateException)
+        doc.getId() == 1
+    }
 }

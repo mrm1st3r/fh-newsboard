@@ -37,24 +37,13 @@ class DocumentDaoTest extends Specification {
         sentenceIds = new ArrayList<Integer>()
 
         dummyModule = TestUtils.sampleModule()
-        dummyDocument = TestUtils.sampleDocument(dummyModule)
+        dummyDocument = TestUtils.sampleDocumentForDb(dummyModule)
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(dummyModule)
         moduleIds.add(dummyModule.getId())
     }
 
-    def "test insertion"() {
-        when:
-        Document document = TestUtils.sampleDocument(dummyModule)
-        documentDao.create(document)
-        documentIds.add(document.getId())
-
-        then:
-        Document testDocument = documentDao.get(document.getId())
-        compareDocuments(testDocument, document)
-    }
-
-    def "test insertion with sentences"() {
+    def "should create correctly"() {
         when:
         insertDocument(dummyDocument)
 
@@ -71,20 +60,11 @@ class DocumentDaoTest extends Specification {
         noExceptionThrown()
     }
 
-    def "test selection with id"() {
+    def "should find stubs"() {
         when:
-        insertDocument(dummyDocument)
-
-        then:
-        Document testDocument = documentDao.get(dummyDocument.getId())
-        compareDocuments(testDocument, dummyDocument)
-    }
-
-    def "test selection only with metadata"() {
-        when:
-        insertDocument(TestUtils.sampleDocument(dummyModule))
-        insertDocument(TestUtils.sampleDocument(dummyModule))
-        insertDocument(TestUtils.sampleDocument(dummyModule))
+        insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
+        insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
+        insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
         List<DocumentStub> allDocuments = documentDao.findAllStubs()
 
         then:
