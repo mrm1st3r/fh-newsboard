@@ -4,6 +4,7 @@ import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.Document
 import de.fh_bielefeld.newsboard.model.DocumentMetaData
+import de.fh_bielefeld.newsboard.model.DocumentStub
 import de.fh_bielefeld.newsboard.model.ExternalModule
 import de.fh_bielefeld.newsboard.model.Sentence
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,13 +86,10 @@ class DocumentDaoTest extends Specification {
         insertDocument(getNewDocument(dummyModule))
         insertDocument(getNewDocument(dummyModule))
         insertDocument(getNewDocument(dummyModule))
-        List<Document> allDocuments = documentDao.findAllStubs()
+        List<DocumentStub> allDocuments = documentDao.findAllStubs()
 
         then:
         allDocuments.size() >= 3
-        for (Document testDocument : allDocuments) {
-            testDocument.getSentences().size() == 0
-        }
         noExceptionThrown()
     }
 
@@ -99,7 +97,7 @@ class DocumentDaoTest extends Specification {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    void compareDocuments(Document thisDocument, Document thatDocument) {
+    void compareDocuments(DocumentStub thisDocument, DocumentStub thatDocument) {
         assert thisDocument.getAuthor() == thatDocument.getAuthor()
         assert thisDocument.getCrawlTime() == thatDocument.getCrawlTime()
         assert thisDocument.getCreationTime() == thatDocument.getCreationTime()

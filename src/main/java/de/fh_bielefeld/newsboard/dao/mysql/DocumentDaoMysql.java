@@ -5,6 +5,7 @@ import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.DocumentMetaData;
+import de.fh_bielefeld.newsboard.model.DocumentStub;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +51,7 @@ public class DocumentDaoMysql implements DocumentDao {
     }
 
     @Override
-    public List<Document> findAllStubs() {
+    public List<DocumentStub> findAllStubs() {
         return jdbcTemplate.query(GET_DOCUMENTS_ONLY_METADATA, stubMapper);
     }
 
@@ -89,22 +90,17 @@ public class DocumentDaoMysql implements DocumentDao {
         return cal;
     }
 
-    private final RowMapper<Document> stubMapper = (r, i) -> {
-        Document doc = new Document();
-        doc.setId(r.getInt("document_id"));
-
-        DocumentMetaData meta = new DocumentMetaData(r.getString("title"),
-                r.getString("author"), r.getString("source_url"),
-                getCalendarFromTime(r.getDate("creation_time")), getCalendarFromTime(r.getDate("crawl_time")),
-                externalModuleDao.get(r.getString("module_id")));
-
-        doc.setMetaData(meta);
-        return doc;
-    };
+    private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
+            r.getInt("document_id"),
+            new DocumentMetaData(r.getString("title"),
+                    r.getString("author"), r.getString("source_url"),
+                    getCalendarFromTime(r.getDate("creation_time")),
+                    getCalendarFromTime(r.getDate("crawl_time")),
+            externalModuleDao.get(r.getString("module_id")))
+    );
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {
-        Document doc = stubMapper.mapRow(resultSet, i);
-        doc.setSentences(sentenceDao.findForDocument(doc));
-        return doc;
+        DocumentStub doc = stubMapper.mapRow(resultSet, i);
+        return new Document(doc, sentenceDao.findForDocument(doc));
     };
 }

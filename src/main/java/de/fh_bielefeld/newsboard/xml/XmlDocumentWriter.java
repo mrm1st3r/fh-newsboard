@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.DocumentStub;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -24,7 +25,7 @@ public class XmlDocumentWriter {
         xmlOutputFactory = XMLOutputFactory.newInstance();
     }
 
-    public String writeStubList(List<Document> documents) throws XMLStreamException {
+    public String writeStubList(List<DocumentStub> documents) throws XMLStreamException {
         return writeDocument(new DocumentStubWriter(), documents);
     }
 
@@ -36,7 +37,7 @@ public class XmlDocumentWriter {
         return writeDocument(new DocumentWriter(), documents);
     }
 
-    private String writeDocument(DocumentContentWriter contentWriter, List<Document> documents) throws XMLStreamException {
+    private <T> String writeDocument(DocumentContentWriter<T> contentWriter, List<T> documents) throws XMLStreamException {
         StringWriter strWriter = new StringWriter();
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(strWriter);
 
@@ -44,7 +45,7 @@ public class XmlDocumentWriter {
         writer.writeStartElement("documents");
         writer.writeDefaultNamespace(NAMESPACE);
 
-        for (Document doc : documents) {
+        for (T doc : documents) {
             contentWriter.writeContent(writer, doc);
         }
 
@@ -54,7 +55,7 @@ public class XmlDocumentWriter {
         return strWriter.getBuffer().toString();
     }
 
-    interface DocumentContentWriter {
-        void writeContent(XMLStreamWriter writer, Document doc) throws XMLStreamException;
+    interface DocumentContentWriter<T> {
+        void writeContent(XMLStreamWriter writer, T doc) throws XMLStreamException;
     }
 }

@@ -1,6 +1,6 @@
 package de.fh_bielefeld.newsboard.xml;
 
-import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.DocumentStub;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -10,10 +10,10 @@ import static javax.xml.bind.DatatypeConverter.printDateTime;
 /**
  * Write document-stubs to XML
  */
-class DocumentStubWriter implements XmlDocumentWriter.DocumentContentWriter {
+class DocumentStubWriter implements XmlDocumentWriter.DocumentContentWriter<DocumentStub> {
 
     @Override
-    public void writeContent(XMLStreamWriter writer, Document doc) throws XMLStreamException {
+    public void writeContent(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException {
         writer.writeStartElement("document");
         writer.writeAttribute("id", Integer.toString(doc.getId()));
         writer.writeStartElement("meta");
@@ -40,5 +40,5 @@ class DocumentStubWriter implements XmlDocumentWriter.DocumentContentWriter {
     /**
      * Placeholder to be overridden in {@link DocumentWriter}
      */
-    void writeSubElements(XMLStreamWriter writer, Document doc) throws XMLStreamException { }
+    void writeSubElements(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException { }
 }

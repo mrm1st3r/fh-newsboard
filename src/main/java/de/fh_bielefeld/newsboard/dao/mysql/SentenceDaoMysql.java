@@ -3,6 +3,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.DocumentStub;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,7 +34,7 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     @Override
-    public List<Sentence> findForDocument(Document document) {
+    public List<Sentence> findForDocument(DocumentStub document) {
         return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, document.getId());
     }
 

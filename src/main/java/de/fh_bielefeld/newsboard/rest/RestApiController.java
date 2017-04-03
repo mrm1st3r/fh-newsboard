@@ -56,7 +56,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/document", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String listDocuments(HttpServletResponse response) {
-        List<Document> documents = documentDao.findAllStubs();
+        List<DocumentStub> documents = documentDao.findAllStubs();
         try {
             return xmlWriter.writeStubList(documents);
         } catch (XMLStreamException e) {

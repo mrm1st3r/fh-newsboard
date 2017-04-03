@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.frontend;
 
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.model.Document;
+import de.fh_bielefeld.newsboard.model.DocumentStub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class FrontendController {
      */
     @RequestMapping("/")
     public String index(Model model) {
-        List<Document> documentStubs = documentDao.findAllStubs();
+        List<DocumentStub> documentStubs = documentDao.findAllStubs();
         List<Document> documents = documentStubs.stream().limit(DOCUMENTS_PER_PAGE).map(
                 document -> documentDao.get(document.getId())).collect(Collectors.toList());
         model.addAttribute("documents", documents);

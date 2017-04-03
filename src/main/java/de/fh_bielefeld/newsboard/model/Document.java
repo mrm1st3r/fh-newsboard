@@ -1,7 +1,6 @@
 package de.fh_bielefeld.newsboard.model;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -9,54 +8,24 @@ import java.util.List;
  *
  * @author Felix Meyer, Lukas Taake
  */
-public class Document {
-    private int id;
-    private DocumentMetaData metaData;
-    private List<Sentence> sentences;
+public class Document extends DocumentStub {
+    private List<Sentence> sentences = new ArrayList<>();
 
     public Document(int id, DocumentMetaData metaData, List<Sentence> sentences) {
-        this.id = id;
-        this.metaData = metaData;
-        this.sentences = sentences;
+        super(id, metaData);
+        this.sentences.addAll(sentences);
+    }
+
+    public Document(DocumentStub stub, List<Sentence> sentences) {
+        super(stub);
+        this.sentences.addAll(sentences);
     }
 
     /**
      * Default constructor needed for SAX-Parsing.
      */
     public Document() {
-        sentences = new ArrayList<>();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return metaData.getTitle();
-    }
-
-    public String getAuthor() {
-        return metaData.getAuthor();
-    }
-
-    public String getSource() {
-        return metaData.getSource();
-    }
-
-    public Calendar getCreationTime() {
-        return metaData.getCreationTime();
-    }
-
-    public Calendar getCrawlTime() {
-        return metaData.getCrawlTime();
-    }
-
-    public ExternalModule getModule() {
-        return metaData.getModule();
+        super(0, null);
     }
 
     public List<Sentence> getSentences() {
@@ -69,10 +38,6 @@ public class Document {
 
     public void addSentence(Sentence sentence) {
         sentences.add(sentence);
-    }
-
-    public void setMetaData(DocumentMetaData documentMetaData) {
-        this.metaData = documentMetaData;
     }
 
     public double getAverageClassificationValue() {
@@ -92,6 +57,6 @@ public class Document {
             return false;
         }
         Document that = (Document) obj;
-        return this.id == that.id;
+        return this.getId() == that.getId();
     }
 }
