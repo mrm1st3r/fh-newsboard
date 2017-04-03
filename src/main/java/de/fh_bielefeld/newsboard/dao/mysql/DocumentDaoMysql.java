@@ -28,8 +28,6 @@ import static org.springframework.util.Assert.notNull;
 public class DocumentDaoMysql implements DocumentDao {
     private static final String GET_DOCUMENT_WITH_ID = "SELECT * FROM document WHERE document_id = ?";
     private static final String GET_DOCUMENTS_ONLY_METADATA = "SELECT * FROM document";
-    private static final String UPDATE_DOCUMENT =
-            "UPDATE document SET title = ?, author = ?, source_url = ?, creation_time = ?, crawl_time = ?, module_id = ? WHERE document_id = ?";
     private static final String INSERT_DOCUMENT = "INSERT INTO document VALUES (null, ?, ?, ?, ?, ?, ?)";
     private static final String GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE =
             "SELECT * FROM document WHERE document_id NOT IN(SELECT document_id FROM sentence WHERE sentence_id IN " +
@@ -54,13 +52,6 @@ public class DocumentDaoMysql implements DocumentDao {
     @Override
     public List<Document> findAllStubs() {
         return jdbcTemplate.query(GET_DOCUMENTS_ONLY_METADATA, stubMapper);
-    }
-
-    @Override
-    public int update(Document document) {
-        notNull(document.getModule());
-        return jdbcTemplate.update(UPDATE_DOCUMENT, document.getTitle(), document.getAuthor(), document.getSource(),
-                document.getCreationTime(), document.getCrawlTime(), document.getModule().getId(), document.getId());
     }
 
     @Override

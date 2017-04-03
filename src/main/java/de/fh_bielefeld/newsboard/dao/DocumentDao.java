@@ -11,8 +11,6 @@ public interface DocumentDao {
 
     Document get(int id);
 
-    int update(Document document);
-
     int create(Document document);
 
     List<Document> findAllStubs();

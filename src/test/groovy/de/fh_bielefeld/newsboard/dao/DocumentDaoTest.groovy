@@ -72,18 +72,6 @@ class DocumentDaoTest extends Specification {
         noExceptionThrown()
     }
 
-    def "test updating"() {
-        when:
-        DocumentMetaData metaData = new DocumentMetaData("Test document again", "Test author again", "Test source again",
-                dummyDocument.getCreationTime(), dummyDocument.getCrawlTime(), dummyModule)
-        dummyDocument.setMetaData(metaData)
-        documentDao.update(dummyDocument)
-
-        then:
-        Document testDocument = documentDao.get(dummyDocument.getId())
-        compareDocuments(dummyDocument, testDocument)
-    }
-
     def "test selection with id"() {
         when:
         insertDocument(dummyDocument)
