@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Tokenizer to split up texts received from crawlers into separate sentences.
@@ -26,13 +27,12 @@ public class RawDocumentProcessor {
     }
 
     public Document processDocument(RawDocument rawDocument) {
-        Document document = new Document();
-        document.setMetaData(rawDocument.getMetaData());
         int sentNumber = 1;
+        ArrayList<Sentence> sentences = new ArrayList<>();
         for (String s : tokenizePlaintext(rawDocument.getRawText())) {
-            document.addSentence(new Sentence(-1, sentNumber++, s));
+            sentences.add(new Sentence(-1, sentNumber++, s));
         }
-        return document;
+        return new Document(-1, rawDocument.getMetaData(), sentences);
     }
 
     private String[] tokenizePlaintext(String plaintext) {

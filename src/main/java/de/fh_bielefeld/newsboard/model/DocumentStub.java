@@ -24,6 +24,9 @@ public class DocumentStub {
     }
 
     public void setId(int id) {
+        if (this.id != -1) {
+            throw new IllegalStateException("Document has already an ID assigned");
+        }
         this.id = id;
     }
 
@@ -49,9 +52,5 @@ public class DocumentStub {
 
     public ExternalModule getModule() {
         return metaData.getModule();
-    }
-
-    public void setMetaData(DocumentMetaData documentMetaData) {
-        this.metaData = documentMetaData;
     }
 }

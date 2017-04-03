@@ -35,7 +35,7 @@ class ClassificationDaoTest extends Specification {
         sentenceIds = new ArrayList<Integer>()
 
         ExternalModule module = TestUtils.sampleModule()
-        Document document = getNewDocument(module)
+        Document document = TestUtils.sampleDocument(module)
         accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
         moduleIds.add(module.getId())
@@ -90,16 +90,5 @@ class ClassificationDaoTest extends Specification {
         for (Sentence s : document.getSentences()) {
             sentenceIds.add(s.getId())
         }
-    }
-
-    def getNewDocument(ExternalModule module) {
-        Document document = new Document()
-        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
-                Calendar.getInstance(), Calendar.getInstance(), module)
-        document.setMetaData(metaData)
-        for (int i = 0; i < 3; i++) {
-            document.addSentence(TestUtils.sampleSentence())
-        }
-        return document
     }
 }

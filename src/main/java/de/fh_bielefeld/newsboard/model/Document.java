@@ -21,23 +21,8 @@ public class Document extends DocumentStub {
         this.sentences.addAll(sentences);
     }
 
-    /**
-     * Default constructor needed for SAX-Parsing.
-     */
-    public Document() {
-        super(0, null);
-    }
-
     public List<Sentence> getSentences() {
         return sentences;
-    }
-
-    public void setSentences(List<Sentence> sentences) {
-        this.sentences = sentences;
-    }
-
-    public void addSentence(Sentence sentence) {
-        sentences.add(sentence);
     }
 
     public double getAverageClassificationValue() {

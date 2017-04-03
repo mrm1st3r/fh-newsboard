@@ -3,7 +3,6 @@ package de.fh_bielefeld.newsboard.dao
 import de.fh_bielefeld.newsboard.NewsboardApplication
 import de.fh_bielefeld.newsboard.TestUtils
 import de.fh_bielefeld.newsboard.model.Document
-import de.fh_bielefeld.newsboard.model.DocumentMetaData
 import de.fh_bielefeld.newsboard.model.DocumentStub
 import de.fh_bielefeld.newsboard.model.ExternalModule
 import de.fh_bielefeld.newsboard.model.Sentence
@@ -38,7 +37,7 @@ class DocumentDaoTest extends Specification {
         sentenceIds = new ArrayList<Integer>()
 
         dummyModule = TestUtils.sampleModule()
-        dummyDocument = getNewDocument(dummyModule)
+        dummyDocument = TestUtils.sampleDocument(dummyModule)
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(dummyModule)
         moduleIds.add(dummyModule.getId())
@@ -46,7 +45,7 @@ class DocumentDaoTest extends Specification {
 
     def "test insertion"() {
         when:
-        Document document = getNewDocument(dummyModule)
+        Document document = TestUtils.sampleDocument(dummyModule)
         documentDao.create(document)
         documentIds.add(document.getId())
 
@@ -83,9 +82,9 @@ class DocumentDaoTest extends Specification {
 
     def "test selection only with metadata"() {
         when:
-        insertDocument(getNewDocument(dummyModule))
-        insertDocument(getNewDocument(dummyModule))
-        insertDocument(getNewDocument(dummyModule))
+        insertDocument(TestUtils.sampleDocument(dummyModule))
+        insertDocument(TestUtils.sampleDocument(dummyModule))
+        insertDocument(TestUtils.sampleDocument(dummyModule))
         List<DocumentStub> allDocuments = documentDao.findAllStubs()
 
         then:
@@ -115,16 +114,5 @@ class DocumentDaoTest extends Specification {
         for (Sentence s : document.getSentences()) {
             sentenceIds.add(s.getId())
         }
-    }
-
-    def getNewDocument(ExternalModule module) {
-        Document document = new Document()
-        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
-                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1),  module)
-        document.setMetaData(metaData)
-        for (int i = 0; i < 3; i++) {
-            document.addSentence(TestUtils.sampleSentence())
-        }
-        return document
     }
 }

@@ -3,6 +3,8 @@ package de.fh_bielefeld.newsboard
 import de.fh_bielefeld.newsboard.model.Access
 import de.fh_bielefeld.newsboard.model.AccessRole
 import de.fh_bielefeld.newsboard.model.Classification
+import de.fh_bielefeld.newsboard.model.Document
+import de.fh_bielefeld.newsboard.model.DocumentMetaData
 import de.fh_bielefeld.newsboard.model.ExternalDocument
 import de.fh_bielefeld.newsboard.model.ExternalModule
 import de.fh_bielefeld.newsboard.model.Sentence
@@ -53,5 +55,15 @@ final class TestUtils {
 
     static sampleAccess() {
         return new Access("test-access", new AccessRole("crawler"), "passphrase", "plain", true)
+    }
+
+    static sampleDocument(ExternalModule module) {
+        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
+                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1), module)
+        ArrayList<Sentence> sentences = new ArrayList<>()
+        for (int i = 0; i < 3; i++) {
+            sentences.add(sampleSentence())
+        }
+        return new Document(-1, metaData, sentences)
     }
 }
