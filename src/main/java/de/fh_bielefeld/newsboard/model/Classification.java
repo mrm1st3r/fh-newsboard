@@ -8,56 +8,32 @@ import java.util.OptionalDouble;
  * @author Felix Meyer, Lukas Taake
  */
 public class Classification {
-    private int sentenceId;
+    private final int sentenceId;
     private ExternalModule externalModule;
-    private double value;
-    private OptionalDouble confidence = OptionalDouble.empty();
+    private final double value;
+    private final OptionalDouble confidence;
 
-    public Classification() {}
-
-    public Classification(int sentenceId, ExternalModule module, double value) {
+    public Classification(int sentenceId, ExternalModule module, double value, OptionalDouble confidence) {
         this.sentenceId = sentenceId;
         externalModule = module;
         this.value = value;
-    }
-
-    public Classification(int sentenceId, ExternalModule module, double value, double confidence) {
-        this.sentenceId = sentenceId;
-        externalModule = module;
-        this.value = value;
-        this.confidence = OptionalDouble.of(confidence);
+        this.confidence = confidence;
     }
 
     public int getSentenceId() {
         return sentenceId;
     }
 
-    public void setSentenceId(int sentenceId) {
-        this.sentenceId = sentenceId;
-    }
-
     public ExternalModule getExternalModule() {
         return externalModule;
-    }
-
-    public void setExternalModule(ExternalModule externalModule) {
-        this.externalModule = externalModule;
     }
 
     public double getValue() {
         return value;
     }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
-
     public OptionalDouble getConfidence() {
         return confidence;
-    }
-
-    public void setConfidence(double confidence) {
-        this.confidence = OptionalDouble.of(confidence);
     }
 
     @Override

@@ -48,7 +48,7 @@ final class TestUtils {
     }
 
     static sampleClassification(ExternalModule module, int sentenceId) {
-        new Classification(sentenceId, module, 2.0123, 1.0123)
+        new Classification(sentenceId, module, 2.0123, OptionalDouble.of(1.0123))
     }
 
     static sampleAccess() {

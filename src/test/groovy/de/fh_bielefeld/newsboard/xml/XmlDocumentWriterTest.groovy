@@ -70,15 +70,8 @@ class XmlDocumentWriterTest extends Specification {
         s2.setId(24)
         s2.setNumber(2)
         s2.setText("Die Würde des Tasters ist unanmenschbar.")
-        def c1 = new Classification()
-        c1.setSentenceId(1)
-        c1.setValue(1)
-        s1.addClassification(c1)
-        def c2 = new Classification()
-        c2.setSentenceId(24)
-        c2.setConfidence(0.95)
-        c2.setValue(0.9)
-        s2.addClassification(c2)
+        s1.addClassification(new Classification(1, null, 1, OptionalDouble.empty()))
+        s2.addClassification(new Classification(24, null, 0.9, OptionalDouble.of(0.95)))
         return new Document(42, meta, [s1, s2])
     }
 }

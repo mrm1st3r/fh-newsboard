@@ -1,7 +1,6 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
-import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.Sentence;
@@ -25,27 +24,15 @@ public class ClassificationDaoMysql implements ClassificationDao {
             "INSERT INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
-    private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public ClassificationDaoMysql(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
+    public ClassificationDaoMysql(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.externalModuleDao = externalModuleDao;
     }
 
     @Override
     public List<Classification> findForSentence(Sentence sentence) {
-        List<Classification> classifications = jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, rowMapper, (Object) sentence.getId());
-
-        for (Classification classification : classifications) {
-            if (classification.getExternalModule() != null) {
-                ExternalModule m = externalModuleDao.get(classification.getExternalModule().getId());
-                classification.setExternalModule(m);
-            } else {
-                classification.setExternalModule(null);
-            }
-        }
-        return classifications;
+        return jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, rowMapper, (Object) sentence.getId());
     }
 
     @Override
@@ -62,15 +49,18 @@ public class ClassificationDaoMysql implements ClassificationDao {
     }
 
     private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
-        Classification classification = new Classification();
-
-        classification.setSentenceId(resultSet.getInt("sentence_id"));
-        classification.setExternalModule(new ExternalModule(resultSet.getString("module_id")));
-        classification.setValue(resultSet.getDouble("result"));
-        double confidence = resultSet.getDouble("confidence");
+        double confidenceValue = resultSet.getDouble("confidence");
+        OptionalDouble confidence;
         if (!resultSet.wasNull()) {
-            classification.setConfidence(confidence);
+            confidence = OptionalDouble.of(confidenceValue);
+        } else {
+            confidence = OptionalDouble.empty();
         }
-        return classification;
+        return new Classification(
+                resultSet.getInt("sentence_id"),
+                new ExternalModule(resultSet.getString("module_id")),
+                resultSet.getDouble("result"),
+                confidence
+        );
     };
 }

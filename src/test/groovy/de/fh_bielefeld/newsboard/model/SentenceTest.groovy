@@ -7,12 +7,8 @@ class SentenceTest extends Specification {
     def "should calculate average classification value"() {
         given:
         def s = new Sentence()
-        def c1 = new Classification()
-        def c2 = new Classification()
-        c1.setValue(0.5)
-        c2.setValue(0.3)
-        s.addClassification(c1)
-        s.addClassification(c2)
+        s.addClassification(new Classification(1, null, 0.5, OptionalDouble.empty()))
+        s.addClassification(new Classification(1, null, 0.3, OptionalDouble.empty()))
 
         expect:
         s.getAverageClassificationValue() == 0.4d
@@ -21,13 +17,8 @@ class SentenceTest extends Specification {
     def "should calculate average classification with confidence"() {
         given:
         def s = new Sentence()
-        def c1 = new Classification()
-        def c2 = new Classification()
-        c1.setValue(0.6)
-        c1.setConfidence(0.5)
-        c2.setValue(0.3)
-        s.addClassification(c1)
-        s.addClassification(c2)
+        s.addClassification(new Classification(1, null, 0.6, OptionalDouble.of(0.5)))
+        s.addClassification(new Classification(1, null, 0.3, OptionalDouble.empty()))
 
         expect:
         s.getAverageClassificationValue() == 0.3d

@@ -47,27 +47,25 @@ class ClassificationDaoTest extends Specification {
 
     def "test selection with sentence only"() {
         given:
-        Sentence dummySentence = dummyDocument.getSentences().get(0)
-        Classification classification = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
-        classificationDao.create(classification)
-
-        when:
         ExternalModule additionalModule = TestUtils.sampleModule()
         additionalModule.setId("additional_testing_module")
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId())
+        Sentence dummySentence = dummyDocument.getSentences().get(0)
+        Classification c1 = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
+        classificationDao.create(c1)
 
-        classification.setExternalModule(additionalModule)
-        classificationDao.create(classification)
+        Classification c2 = TestUtils.sampleClassification(additionalModule, dummySentence.getId())
+        classificationDao.create(c2)
 
-
-        then:
+        when:
         List<Classification> testClassifications = classificationDao.findForSentence(dummySentence)
 
+        then:
         for (Classification c : testClassifications) {
-            c.getConfidence() == classification.getConfidence()
-            c.getValue() == classification.getValue()
-            c.getSentenceId() == classification.getSentenceId()
+            c.getConfidence() == c1.getConfidence()
+            c.getValue() == c1.getValue()
+            c.getSentenceId() == c1.getSentenceId()
         }
         testClassifications.get(0).getExternalModule().getId() == "additional_testing_module"
         testClassifications.get(1).getExternalModule().getId() == "test_module"

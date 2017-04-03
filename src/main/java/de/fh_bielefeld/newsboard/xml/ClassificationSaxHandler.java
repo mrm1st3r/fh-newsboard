@@ -8,13 +8,19 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
+import java.util.OptionalDouble;
 
 /**
  * SAX handler for reading documents with classifications received on PUT /document.
  */
 class ClassificationSaxHandler extends DefaultHandler {
     private ArrayList<Classification> classifications;
-    private Classification classification;
+    private boolean insideClassification;
+
+    private int sentenceId;
+    private OptionalDouble confidence;
+    private String classifierId;
+    private double value;
 
     ClassificationSaxHandler(ArrayList<Classification> classifications) {
         this.classifications = classifications;
@@ -23,33 +29,32 @@ class ClassificationSaxHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("classification")) {
-            classification = new Classification();
-            parseAttributes(classification, attributes);
+            parseAttributes(attributes);
+            insideClassification = true;
         }
     }
 
-    private void parseAttributes(Classification classification, Attributes attr) {
-        ExternalModule classifier = new ExternalModule(attr.getValue("classifier"));
-        classification.setExternalModule(classifier);
-        classification.setSentenceId(Integer.parseInt(attr.getValue("sentenceid")));
+    private void parseAttributes(Attributes attr) {
+        sentenceId = Integer.parseInt(attr.getValue("sentenceid"));
+        classifierId = attr.getValue("classifier");
         if (attr.getIndex("confidence") >= 0) {
-            classification.setConfidence(Double.parseDouble(attr.getValue("confidence")));
+            confidence = OptionalDouble.of(Double.parseDouble(attr.getValue("confidence")));
+        } else {
+            confidence = OptionalDouble.empty();
         }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (classification != null) {
-            double val = Double.parseDouble(new String(ch, start, length).trim());
-            classification.setValue(val);
+        if (insideClassification) {
+            value = Double.parseDouble(new String(ch, start, length).trim());
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("classification")) {
-            classifications.add(classification);
-            classification = null;
+            classifications.add(new Classification(sentenceId, new ExternalModule(classifierId), value, confidence));
         }
     }
 

@@ -6,22 +6,12 @@ class ClassificationTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def mod1 = new ExternalModule()
-        mod1.setId("randomClassifier")
-        def mod2 = new ExternalModule()
-        mod2.setId("zero-classifier")
-        def c1 = new Classification()
-        c1.setSentenceId(1)
-        c1.setExternalModule(mod1)
-        def c2 = new Classification()
-        c2.setSentenceId(2)
-        c2.setExternalModule(mod1)
-        def c3 = new Classification()
-        c3.setSentenceId(1)
-        c3.setExternalModule(mod1)
-        def c4 = new Classification()
-        c4.setSentenceId(1)
-        c4.setExternalModule(mod2)
+        def mod1 = new ExternalModule("randomClassifier")
+        def mod2 = new ExternalModule("zero-classifier")
+        def c1 = new Classification(1, mod1, 1, OptionalDouble.empty())
+        def c2 = new Classification(2, mod1, 1, OptionalDouble.empty())
+        def c3 = new Classification(1, mod1, 1, OptionalDouble.empty())
+        def c4 = new Classification(1, mod2, 1, OptionalDouble.empty())
 
         expect:
         c1 != null
