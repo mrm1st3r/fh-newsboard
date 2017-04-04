@@ -12,10 +12,10 @@ public class DocumentMetaData {
     private final String source;
     private final Calendar creationTime;
     private final Calendar crawlTime;
-    private final ExternalModule module;
+    private final ModuleReference module;
 
     public DocumentMetaData(String title, String author, String source,
-                            Calendar creationTime, Calendar crawlTime, ExternalModule crawler) {
+                            Calendar creationTime, Calendar crawlTime, ModuleReference crawler) {
         this.title = title;
         this.author = author;
         this.source = source;
@@ -44,7 +44,7 @@ public class DocumentMetaData {
         return crawlTime;
     }
 
-    public ExternalModule getModule() {
+    public ModuleReference getModule() {
         return module;
     }
 }

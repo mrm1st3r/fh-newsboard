@@ -2,7 +2,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.ExternalModule;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 import de.fh_bielefeld.newsboard.model.Sentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,7 +58,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
         }
         return new Classification(
                 resultSet.getInt("sentence_id"),
-                new ExternalModule(resultSet.getString("module_id")),
+                new ModuleReference(resultSet.getString("module_id")),
                 resultSet.getDouble("result"),
                 confidence
         );

@@ -9,11 +9,11 @@ import java.util.OptionalDouble;
  */
 public class Classification {
     private final int sentenceId;
-    private ExternalModule externalModule;
+    private ModuleReference externalModule;
     private final double value;
     private final OptionalDouble confidence;
 
-    public Classification(int sentenceId, ExternalModule module, double value, OptionalDouble confidence) {
+    public Classification(int sentenceId, ModuleReference module, double value, OptionalDouble confidence) {
         this.sentenceId = sentenceId;
         externalModule = module;
         this.value = value;
@@ -24,7 +24,7 @@ public class Classification {
         return sentenceId;
     }
 
-    public ExternalModule getExternalModule() {
+    public ModuleReference getExternalModule() {
         return externalModule;
     }
 

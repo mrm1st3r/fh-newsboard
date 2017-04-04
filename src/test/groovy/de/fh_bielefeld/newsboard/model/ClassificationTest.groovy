@@ -6,8 +6,8 @@ class ClassificationTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def mod1 = new ExternalModule("randomClassifier")
-        def mod2 = new ExternalModule("zero-classifier")
+        def mod1 = new ExternalModule("randomClassifier", "", "", "", "")
+        def mod2 = new ExternalModule("zero-classifier", "", "", "", "")
         def c1 = new Classification(1, mod1, 1, OptionalDouble.empty())
         def c2 = new Classification(2, mod1, 1, OptionalDouble.empty())
         def c3 = new Classification(1, mod1, 1, OptionalDouble.empty())

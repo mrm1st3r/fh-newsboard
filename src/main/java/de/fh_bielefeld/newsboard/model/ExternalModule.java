@@ -5,34 +5,18 @@ package de.fh_bielefeld.newsboard.model;
  *
  * @author Felix Meyer
  */
-public class ExternalModule {
-    private String id;
+public class ExternalModule extends ModuleReference {
     private String name;
     private String author;
     private String description;
     private String accessId;
 
     public ExternalModule(String id, String name, String author, String description, String accessId) {
-        this.id = id;
+        super(id);
         this.name = name;
         this.author = author;
         this.description = description;
         this.accessId = accessId;
-    }
-
-    /**
-     * Constructor needed for SAX-parsing.
-     */
-    public ExternalModule(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -65,7 +49,7 @@ public class ExternalModule {
             return false;
         }
         ExternalModule that = (ExternalModule) obj;
-        return this.id.equals(that.id);
+        return this.getId().equals(that.getId());
     }
 
     public String getAccessId() {

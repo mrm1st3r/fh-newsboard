@@ -138,7 +138,7 @@ public class RestApiController {
             return handleClientError(response, e);
         }
         for (Classification c : classifications) {
-            if (!c.getExternalModule().equals(classifier)) {
+            if (!c.getExternalModule().getId().equals(classifier.getId())) {
                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
             }
             classificationDao.create(c);

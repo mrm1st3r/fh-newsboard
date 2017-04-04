@@ -1,7 +1,7 @@
 package de.fh_bielefeld.newsboard.xml;
 
 import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.ExternalModule;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -54,7 +54,7 @@ class ClassificationSaxHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("classification")) {
-            classifications.add(new Classification(sentenceId, new ExternalModule(classifierId), value, confidence));
+            classifications.add(new Classification(sentenceId, new ModuleReference(classifierId), value, confidence));
         }
     }
 

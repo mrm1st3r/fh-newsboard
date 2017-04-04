@@ -50,7 +50,7 @@ public class DocumentStub {
         return metaData.getCrawlTime();
     }
 
-    public ExternalModule getModule() {
+    public ModuleReference getModule() {
         return metaData.getModule();
     }
 }

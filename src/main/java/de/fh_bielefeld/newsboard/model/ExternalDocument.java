@@ -9,9 +9,9 @@ public class ExternalDocument {
     private int id;
     private String title;
     private String html;
-    private ExternalModule externalModule;
+    private ModuleReference externalModule;
 
-    public ExternalDocument(int id, String title, String html, ExternalModule module) {
+    public ExternalDocument(int id, String title, String html, ModuleReference module) {
         this.id = id;
         this.title = title;
         this.html = html;
@@ -45,7 +45,7 @@ public class ExternalDocument {
         this.html = html;
     }
 
-    public ExternalModule getExternalModule() {
+    public ModuleReference getExternalModule() {
         return externalModule;
     }
 }
