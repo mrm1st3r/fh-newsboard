@@ -9,14 +9,14 @@ public class ExternalModule extends ModuleReference {
     private String name;
     private String author;
     private String description;
-    private String accessId;
+    private AccessReference access;
 
-    public ExternalModule(String id, String name, String author, String description, String accessId) {
+    public ExternalModule(String id, String name, String author, String description, AccessReference access) {
         super(id);
         this.name = name;
         this.author = author;
         this.description = description;
-        this.accessId = accessId;
+        this.access = access;
     }
 
     public String getName() {
@@ -52,7 +52,7 @@ public class ExternalModule extends ModuleReference {
         return this.getId().equals(that.getId());
     }
 
-    public String getAccessId() {
-        return accessId;
+    public AccessReference getAccessReference() {
+        return access;
     }
 }

@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard
 
 import de.fh_bielefeld.newsboard.model.Access
+import de.fh_bielefeld.newsboard.model.AccessReference
 import de.fh_bielefeld.newsboard.model.AccessRole
 import de.fh_bielefeld.newsboard.model.Classification
 import de.fh_bielefeld.newsboard.model.Document
@@ -38,7 +39,7 @@ final class TestUtils {
     }
 
     static sampleModule() {
-        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", "test-access")
+        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", new AccessReference("test-access"))
     }
 
     static sampleSentence() {

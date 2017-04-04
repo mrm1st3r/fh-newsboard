@@ -154,7 +154,7 @@ public class RestApiController {
             String[] values = credentials.split(":", 2);
             ExternalModule module = moduleDao.get(values[0]);
             if (module != null) {
-                Access access = accessDao.get(module.getAccessId());
+                Access access = accessDao.get(module.getAccessReference());
                 if (access.isEnabled() && access.getPassphrase().equals(values[1])) {
                     return module;
                 }

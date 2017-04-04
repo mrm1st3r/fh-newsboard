@@ -48,7 +48,7 @@ class ClassificationDaoTest extends Specification {
     def "should find for sentence"() {
         given:
         ExternalModule additionalModule = new ExternalModule(
-                "additional_testing_module", "", "", "", "test-access")
+                "additional_testing_module", "", "", "", new AccessReference("test-access"))
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId())
         Sentence dummySentence = dummyDocument.getSentences().get(0)

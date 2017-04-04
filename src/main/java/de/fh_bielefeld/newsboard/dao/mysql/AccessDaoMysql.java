@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.AccessDao;
 import de.fh_bielefeld.newsboard.model.Access;
+import de.fh_bielefeld.newsboard.model.AccessReference;
 import de.fh_bielefeld.newsboard.model.AccessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +30,8 @@ public class AccessDaoMysql implements AccessDao {
     }
 
     @Override
-    public Access get(String id) {
-        return jdbcTemplate.query(READ_QUERY, new RowMapperResultSetExtractor<>(rowMapper), id);
+    public Access get(AccessReference reference) {
+        return jdbcTemplate.query(READ_QUERY, new RowMapperResultSetExtractor<>(rowMapper), reference.getId());
     }
 
     @Override

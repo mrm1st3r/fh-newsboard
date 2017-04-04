@@ -31,7 +31,7 @@ class AccessDaoTest extends Specification {
         accessIds.add(access.getId())
 
         then:
-        access == accessDao.get(access.getId())
+        access == accessDao.get(access)
         noExceptionThrown()
     }
 
@@ -46,7 +46,7 @@ class AccessDaoTest extends Specification {
         accessDao.update(access)
 
         then:
-        access == accessDao.get(access.getId())
+        access == accessDao.get(access)
         noExceptionThrown()
     }
 

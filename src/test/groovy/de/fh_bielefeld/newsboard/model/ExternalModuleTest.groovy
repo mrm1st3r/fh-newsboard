@@ -6,9 +6,9 @@ class ExternalModuleTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def m1 = new ExternalModule("mod1", "Module 1", "tester", "bla", "id")
-        def m2 = new ExternalModule("mod2", "Module 1", "tester", "bla", "id")
-        def m3 = new ExternalModule("mod1", "Module 1", "tester", "bla", "id")
+        def m1 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessReference(""))
+        def m2 = new ExternalModule("mod2", "Module 1", "tester", "bla", new AccessReference(""))
+        def m3 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessReference(""))
         def d = new ExternalDocument(42, "Test", "Foo", null)
 
         expect:
