@@ -110,7 +110,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/unclassified/{moduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getUnclassified(HttpServletResponse response, @PathVariable String moduleId) {
-        List<Document> documents = documentDao.findUnclassifiedForModule(moduleId);
+        List<Document> documents = documentDao.findUnclassifiedForModule(new ModuleReference(moduleId));
         try {
             return xmlWriter.writeDocumentList(documents);
         } catch (XMLStreamException e) {
@@ -152,7 +152,7 @@ public class RestApiController {
             String base64Credentials = authorization.substring("Basic".length()).trim();
             String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
             String[] values = credentials.split(":", 2);
-            ExternalModule module = moduleDao.get(values[0]);
+            ExternalModule module = moduleDao.get(new ModuleReference(values[0]));
             if (module != null) {
                 Access access = accessDao.get(module.getAccessReference());
                 if (access.isEnabled() && access.getPassphrase().equals(values[1])) {

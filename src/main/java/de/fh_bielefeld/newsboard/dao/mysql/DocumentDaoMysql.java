@@ -1,12 +1,8 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
-import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
-import de.fh_bielefeld.newsboard.model.Document;
-import de.fh_bielefeld.newsboard.model.DocumentMetaData;
-import de.fh_bielefeld.newsboard.model.DocumentStub;
-import de.fh_bielefeld.newsboard.model.Sentence;
+import de.fh_bielefeld.newsboard.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,13 +32,11 @@ public class DocumentDaoMysql implements DocumentDao {
 
     private JdbcTemplate jdbcTemplate;
     private SentenceDao sentenceDao;
-    private ExternalModuleDao externalModuleDao;
 
     @Autowired
-    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ExternalModuleDao externalModuleDao) {
+    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
-        this.externalModuleDao = externalModuleDao;
     }
 
     @Override
@@ -77,8 +71,8 @@ public class DocumentDaoMysql implements DocumentDao {
     }
 
     @Override
-    public List<Document> findUnclassifiedForModule(String externalModuleId) {
-        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, externalModuleId);
+    public List<Document> findUnclassifiedForModule(ModuleReference module) {
+        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, module.getId());
     }
 
     private Calendar getCalendarFromTime(Date date) {
@@ -96,7 +90,7 @@ public class DocumentDaoMysql implements DocumentDao {
                     r.getString("author"), r.getString("source_url"),
                     getCalendarFromTime(r.getDate("creation_time")),
                     getCalendarFromTime(r.getDate("crawl_time")),
-            externalModuleDao.get(r.getString("module_id")))
+            new ModuleReference(r.getString("module_id")))
     );
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {

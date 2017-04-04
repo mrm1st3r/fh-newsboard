@@ -3,6 +3,7 @@ package de.fh_bielefeld.newsboard.dao.mysql;
 import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.AccessReference;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,8 +30,8 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     @Override
-    public ExternalModule get(String id) {
-        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
+    public ExternalModule get(ModuleReference reference) {
+        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), reference.getId());
     }
 
     @Override

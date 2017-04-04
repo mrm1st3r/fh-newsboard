@@ -83,9 +83,6 @@ class DocumentDaoTest extends Specification {
         assert thisDocument.getSource() == thatDocument.getSource()
         assert thisDocument.getTitle() == thatDocument.getTitle()
         assert thisDocument.getModule().getId() == thatDocument.getModule().getId()
-        assert thisDocument.getModule().getAuthor() == thatDocument.getModule().getAuthor()
-        assert thisDocument.getModule().getDescription() == thatDocument.getModule().getDescription()
-        assert thisDocument.getModule().getName() == thatDocument.getModule().getName()
     }
 
     def insertDocument(Document document) {

@@ -62,14 +62,11 @@ class ExternalDocumentDaoTest extends Specification {
         compareDocuments(externalDocumentDao.get(document.getId()), document)
     }
 
-    def compareDocuments(ExternalDocument testDocument, ExternalDocument document) {
-        testDocument.getId() == document.getId() &&
-        testDocument.getHtml() == document.getHtml() &&
-        testDocument.getTitle() == document.getTitle() &&
-        testDocument.getExternalModule().getId() == document.getExternalModule().getId() &&
-        testDocument.getExternalModule().getAuthor() == document.getExternalModule().getAuthor() &&
-        testDocument.getExternalModule().getDescription() == document.getExternalModule().getDescription() &&
-        testDocument.getExternalModule().getName() == document.getExternalModule().getName()
+    void compareDocuments(ExternalDocument testDocument, ExternalDocument document) {
+        assert testDocument.getId() == document.getId()
+        assert testDocument.getHtml() == document.getHtml()
+        assert testDocument.getTitle() == document.getTitle()
+        assert testDocument.getExternalModule().getId() == document.getExternalModule().getId()
     }
 
     def cleanup() {
