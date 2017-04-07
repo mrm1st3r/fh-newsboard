@@ -4,11 +4,25 @@ import spock.lang.Specification
 
 class SentenceTest extends Specification {
 
+    def "should not add multiple classifications for module"() {
+        given:
+        ModuleReference classifier = new ModuleReference("test-crawler")
+        Sentence sentence = new Sentence(1, 1, "Foo bar.")
+
+        when:
+        sentence.addClassification(classifier, 1, OptionalDouble.empty())
+        sentence.addClassification(classifier, 0.5, OptionalDouble.empty())
+
+        then:
+        thrown(IllegalArgumentException)
+        sentence.getClassifications().size() == 1
+    }
+
     def "should calculate average classification value"() {
         given:
         def s = new Sentence(1, 1, "Foo bar.")
-        s.addClassification(new Classification(1, null, 0.5, OptionalDouble.empty()))
-        s.addClassification(new Classification(1, null, 0.3, OptionalDouble.empty()))
+        s.addClassification(new ModuleReference("a"), 0.5, OptionalDouble.empty())
+        s.addClassification(new ModuleReference("b"), 0.3, OptionalDouble.empty())
 
         expect:
         s.getAverageClassificationValue() == 0.4d
@@ -17,8 +31,8 @@ class SentenceTest extends Specification {
     def "should calculate average classification with confidence"() {
         given:
         def s = new Sentence(1, 1, "Foo bar.")
-        s.addClassification(new Classification(1, null, 0.6, OptionalDouble.of(0.5)))
-        s.addClassification(new Classification(1, null, 0.3, OptionalDouble.empty()))
+        s.addClassification(new ModuleReference("a"), 0.6, OptionalDouble.of(0.5))
+        s.addClassification(new ModuleReference("b"), 0.3, OptionalDouble.empty())
 
         expect:
         s.getAverageClassificationValue() == 0.3d

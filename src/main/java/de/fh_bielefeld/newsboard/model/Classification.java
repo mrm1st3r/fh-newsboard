@@ -8,12 +8,19 @@ import java.util.OptionalDouble;
  * @author Felix Meyer, Lukas Taake
  */
 public class Classification {
+
     private final int sentenceId;
-    private ModuleReference externalModule;
+    private final ModuleReference externalModule;
     private final double value;
     private final OptionalDouble confidence;
 
     public Classification(int sentenceId, ModuleReference module, double value, OptionalDouble confidence) {
+        if (value < -1 || value > 1) {
+            throw new IllegalArgumentException("Classification value must be in range [-1 .. 1]");
+        }
+        if (confidence.isPresent() && (confidence.getAsDouble() < -1 || confidence.getAsDouble() > 1)) {
+            throw new IllegalArgumentException("Classification confidence must be in range [-1 .. 1]");
+        }
         this.sentenceId = sentenceId;
         externalModule = module;
         this.value = value;

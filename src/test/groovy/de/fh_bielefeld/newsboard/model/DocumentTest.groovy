@@ -24,9 +24,9 @@ class DocumentTest extends Specification {
         given:
         def s1 = new Sentence(1, 1, "Foo.")
         def s2 = new Sentence(2, 2, "Bar.")
-        s1.addClassification(new Classification(1, null, 0.6, OptionalDouble.empty()))
-        s1.addClassification(new Classification(1, null, 0.4, OptionalDouble.empty()))
-        s2.addClassification(new Classification(2, null, -0.1, OptionalDouble.empty()))
+        s1.addClassification(new ModuleReference("a"), 0.6, OptionalDouble.empty())
+        s1.addClassification(new ModuleReference("b"), 0.4, OptionalDouble.empty())
+        s2.addClassification(new ModuleReference("a"), -0.1, OptionalDouble.empty())
         def d = TestUtils.emptyDocument(1, [s1, s2])
 
         expect:

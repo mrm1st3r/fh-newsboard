@@ -43,7 +43,7 @@ final class TestUtils {
     }
 
     static sampleClassification(ExternalModule module, int sentenceId) {
-        new Classification(sentenceId, module, 2.0123, OptionalDouble.of(1.0123))
+        new Classification(sentenceId, module, 0.6, OptionalDouble.of(1))
     }
 
     static sampleAccess() {
@@ -62,8 +62,8 @@ final class TestUtils {
     static sampleDocumentForXml() {
         def s1 = new Sentence(1, 1, "Lorem ipsum dolor sit amet.")
         def s2 = new Sentence(24, 2, "Die Würde des Tasters ist unanmenschbar.")
-        s1.addClassification(new Classification(1, null, 1, OptionalDouble.empty()))
-        s2.addClassification(new Classification(24, null, 0.9, OptionalDouble.of(0.95)))
+        s1.addClassification(new ModuleReference("a"), 1, OptionalDouble.empty())
+        s2.addClassification(new ModuleReference("a"), 0.9, OptionalDouble.of(0.95))
         return new Document(42, "Wuppi Fluppi", "Hans Wurst", "http://example.com",
                 new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
                 null, [s1, s2])
