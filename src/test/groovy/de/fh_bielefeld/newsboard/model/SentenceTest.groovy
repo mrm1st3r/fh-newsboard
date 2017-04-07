@@ -58,4 +58,34 @@ class SentenceTest extends Specification {
         thrown(IllegalStateException)
         sent.getId() == 1
     }
+
+    def "should not create with number < 1"() {
+        when:
+        new Sentence(1, 0, "Foo")
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "should not create with empty text"() {
+        when:
+        new Sentence(1, 1, text)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        text << ["", null]
+    }
+
+    def "should not add classification with null module"() {
+        given:
+        def sentence = new Sentence(1, 1, "Foo")
+
+        when:
+        sentence.addClassification(null, 1, OptionalDouble.empty())
+
+        then:
+        thrown(IllegalArgumentException)
+    }
 }

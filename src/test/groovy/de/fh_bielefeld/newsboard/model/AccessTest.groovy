@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.model
 
+import de.fh_bielefeld.newsboard.TestUtils
 import spock.lang.Specification
 
 class AccessTest extends Specification {
@@ -22,5 +23,26 @@ class AccessTest extends Specification {
         a3 != a4
         a4 != a5
         a3 != a5
+    }
+
+    def "should set enabled state"() {
+        given:
+        def access = TestUtils.sampleAccess()
+
+        expect:
+        access.isEnabled()
+        access.setEnabled(false)
+        !access.isEnabled()
+        access.setEnabled(true)
+        access.isEnabled()
+    }
+
+    def "should set hash type"() {
+        given:
+        def access = TestUtils.sampleAccess()
+
+        expect:
+        access.setHashType("plain")
+        "plain" == access.getHashType()
     }
 }
