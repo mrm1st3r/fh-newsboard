@@ -1,14 +1,6 @@
 package de.fh_bielefeld.newsboard
 
-import de.fh_bielefeld.newsboard.model.Access
-import de.fh_bielefeld.newsboard.model.AccessReference
-import de.fh_bielefeld.newsboard.model.AccessRole
-import de.fh_bielefeld.newsboard.model.Classification
-import de.fh_bielefeld.newsboard.model.Document
-import de.fh_bielefeld.newsboard.model.DocumentMetaData
-import de.fh_bielefeld.newsboard.model.ExternalDocument
-import de.fh_bielefeld.newsboard.model.ExternalModule
-import de.fh_bielefeld.newsboard.model.Sentence
+import de.fh_bielefeld.newsboard.model.*
 import org.springframework.jdbc.core.JdbcTemplate
 
 /**
@@ -59,23 +51,25 @@ final class TestUtils {
     }
 
     static sampleDocumentForDb(ExternalModule module) {
-        DocumentMetaData metaData = new DocumentMetaData("Test document", "Test author", "Test source",
-                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1), module)
         ArrayList<Sentence> sentences = new ArrayList<>()
         for (int i = 0; i < 3; i++) {
             sentences.add(sampleSentence())
         }
-        return new Document(-1, metaData, sentences)
+        return new Document(-1, "Test document", "Test author", "Test source",
+                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1), module, sentences)
     }
 
     static sampleDocumentForXml() {
-        DocumentMetaData meta = new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
-                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
-                null)
         def s1 = new Sentence(1, 1, "Lorem ipsum dolor sit amet.")
         def s2 = new Sentence(24, 2, "Die Würde des Tasters ist unanmenschbar.")
         s1.addClassification(new Classification(1, null, 1, OptionalDouble.empty()))
         s2.addClassification(new Classification(24, null, 0.9, OptionalDouble.of(0.95)))
-        return new Document(42, meta, [s1, s2])
+        return new Document(42, "Wuppi Fluppi", "Hans Wurst", "http://example.com",
+                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                null, [s1, s2])
+    }
+
+    static emptyDocument(int id, List<Sentence> sentences) {
+        return new Document(id, "", "", "", null, null, null, sentences)
     }
 }

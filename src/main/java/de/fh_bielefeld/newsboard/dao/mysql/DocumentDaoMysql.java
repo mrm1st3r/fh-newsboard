@@ -86,11 +86,11 @@ public class DocumentDaoMysql implements DocumentDao {
 
     private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
             r.getInt("document_id"),
-            new DocumentMetaData(r.getString("title"),
-                    r.getString("author"), r.getString("source_url"),
-                    getCalendarFromTime(r.getDate("creation_time")),
-                    getCalendarFromTime(r.getDate("crawl_time")),
-            new ModuleReference(r.getString("module_id")))
+            r.getString("title"),
+            r.getString("author"), r.getString("source_url"),
+            getCalendarFromTime(r.getDate("creation_time")),
+            getCalendarFromTime(r.getDate("crawl_time")),
+            new ModuleReference(r.getString("module_id"))
     );
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {

@@ -32,7 +32,7 @@ public class RawDocumentProcessor {
         for (String s : tokenizePlaintext(rawDocument.getRawText())) {
             sentences.add(new Sentence(-1, sentNumber++, s));
         }
-        return new Document(-1, rawDocument.getMetaData(), sentences);
+        return new Document(rawDocument, sentences);
     }
 
     private String[] tokenizePlaintext(String plaintext) {

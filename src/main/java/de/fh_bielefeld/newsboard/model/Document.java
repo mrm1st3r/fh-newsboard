@@ -1,6 +1,7 @@
 package de.fh_bielefeld.newsboard.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -11,13 +12,14 @@ import java.util.List;
 public class Document extends DocumentStub {
     private List<Sentence> sentences = new ArrayList<>();
 
-    public Document(int id, DocumentMetaData metaData, List<Sentence> sentences) {
-        super(id, metaData);
+    public Document(DocumentStub stub, List<Sentence> sentences) {
+        super(stub);
         this.sentences.addAll(sentences);
     }
 
-    public Document(DocumentStub stub, List<Sentence> sentences) {
-        super(stub);
+    public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
+                        ModuleReference crawler, List<Sentence> sentences) {
+        super(id, title, author, source, creationTime, crawlTime, crawler);
         this.sentences.addAll(sentences);
     }
 

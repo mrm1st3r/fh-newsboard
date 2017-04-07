@@ -7,16 +7,32 @@ import java.util.Calendar;
  */
 public class DocumentStub {
     private int id;
-    private DocumentMetaData metaData;
+    private final String title;
+    private final String author;
+    private final String source;
+    private final Calendar creationTime;
+    private final Calendar crawlTime;
+    private final ModuleReference crawler;
 
-    public DocumentStub(int id, DocumentMetaData metaData) {
+    public DocumentStub(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
+                        ModuleReference crawler) {
         this.id = id;
-        this.metaData = metaData;
+        this.title = title;
+        this.author = author;
+        this.source = source;
+        this.creationTime = creationTime;
+        this.crawlTime = crawlTime;
+        this.crawler = crawler;
     }
 
     DocumentStub(DocumentStub stub) {
         this.id = stub.id;
-        this.metaData = stub.metaData;
+        this.title = stub.title;
+        this.author = stub.author;
+        this.source = stub.source;
+        this.creationTime = stub.creationTime;
+        this.crawlTime = stub.crawlTime;
+        this.crawler = stub.crawler;
     }
 
     public int getId() {
@@ -31,26 +47,26 @@ public class DocumentStub {
     }
 
     public String getTitle() {
-        return metaData.getTitle();
+        return title;
     }
 
     public String getAuthor() {
-        return metaData.getAuthor();
+        return author;
     }
 
     public String getSource() {
-        return metaData.getSource();
+        return source;
     }
 
     public Calendar getCreationTime() {
-        return metaData.getCreationTime();
+        return creationTime;
     }
 
     public Calendar getCrawlTime() {
-        return metaData.getCrawlTime();
+        return crawlTime;
     }
 
     public ModuleReference getModule() {
-        return metaData.getModule();
+        return crawler;
     }
 }

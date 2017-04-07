@@ -1,20 +1,18 @@
 package de.fh_bielefeld.newsboard.model;
 
+import java.util.Calendar;
+
 /**
  * Model class that represents a raw document as received from a crawler.
  */
-public class RawDocument {
+public class RawDocument extends DocumentStub {
 
-    private final DocumentMetaData metaData;
     private final String rawText;
 
-    public RawDocument(DocumentMetaData metaData, String rawText) {
-        this.metaData = metaData;
+    public RawDocument(String title, String author, String source, Calendar creationTime, Calendar crawlTime,
+                        ModuleReference crawler, String rawText) {
+        super(-1, title, author, source, creationTime, crawlTime, crawler);
         this.rawText = rawText;
-    }
-
-    public DocumentMetaData getMetaData() {
-        return metaData;
     }
 
     public String getRawText() {
