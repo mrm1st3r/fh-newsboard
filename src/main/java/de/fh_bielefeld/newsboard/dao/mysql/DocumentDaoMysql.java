@@ -1,5 +1,6 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
+import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
 import de.fh_bielefeld.newsboard.model.*;
@@ -30,18 +31,25 @@ public class DocumentDaoMysql implements DocumentDao {
             "SELECT * FROM document WHERE document_id NOT IN(SELECT document_id FROM sentence WHERE sentence_id IN " +
                     "(SELECT sentence_id FROM classification WHERE module_id = ?))";
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private SentenceDao sentenceDao;
+    private final ClassificationDao classificationDao;
 
     @Autowired
-    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao) {
+    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ClassificationDao classificationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
+        this.classificationDao = classificationDao;
     }
 
     @Override
     public Document get(int id) {
         return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id);
+    }
+
+    @Override
+    public void update(Document document) {
+        document.getSentences().forEach(s -> s.getClassifications().forEach(classificationDao::create));
     }
 
     @Override

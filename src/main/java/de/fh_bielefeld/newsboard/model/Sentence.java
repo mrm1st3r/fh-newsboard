@@ -67,4 +67,11 @@ public class Sentence {
         }
         return sum / classifications.size();
     }
+
+    public void addClassification(ExternalModule classifier, double value, OptionalDouble confidence) {
+        if (classifications.stream().anyMatch(c -> c.getExternalModule().equals(classifier))) {
+            throw new IllegalArgumentException("This sentence was already classified by: " + classifier.getId());
+        }
+        classifications.add(new Classification(this.getId(), classifier, value, confidence));
+    }
 }

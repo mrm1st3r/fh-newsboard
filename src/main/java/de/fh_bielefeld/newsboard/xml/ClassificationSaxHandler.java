@@ -1,29 +1,27 @@
 package de.fh_bielefeld.newsboard.xml;
 
-import de.fh_bielefeld.newsboard.model.Classification;
-import de.fh_bielefeld.newsboard.model.ModuleReference;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
 import java.util.OptionalDouble;
 
 /**
  * SAX handler for reading documents with classifications received on PUT /document.
  */
 class ClassificationSaxHandler extends DefaultHandler {
-    private ArrayList<Classification> classifications;
+    private final ClassificationParsedHandler handler;
     private boolean insideClassification;
 
     private int sentenceId;
     private OptionalDouble confidence;
     private String classifierId;
     private double value;
+    private int documentId;
 
-    ClassificationSaxHandler(ArrayList<Classification> classifications) {
-        this.classifications = classifications;
+    ClassificationSaxHandler(ClassificationParsedHandler handler) {
+        this.handler = handler;
     }
 
     @Override
@@ -31,6 +29,11 @@ class ClassificationSaxHandler extends DefaultHandler {
         if (qName.equals("classification")) {
             parseAttributes(attributes);
             insideClassification = true;
+        } else if (qName.equals("document")) {
+            if (attributes.getIndex("id") < 0) {
+                throw new SAXException("No document id given");
+            }
+            documentId = Integer.parseInt(attributes.getValue("id"));
         }
     }
 
@@ -48,13 +51,14 @@ class ClassificationSaxHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (insideClassification) {
             value = Double.parseDouble(new String(ch, start, length).trim());
+            insideClassification = false;
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("classification")) {
-            classifications.add(new Classification(sentenceId, new ModuleReference(classifierId), value, confidence));
+            handler.onClassificationParsed(documentId, sentenceId, classifierId, value, confidence);
         }
     }
 

@@ -17,16 +17,13 @@ class ClassificationReadTest extends Specification {
     def "should read valid classifications"() {
         given:
         def xml = sampleXml("valid_new_classifications")
+        def handler = Mock(ClassificationParsedHandler)
 
         when:
-        def classifications = reader.readClassifications(xml)
+        reader.readClassifications(xml, handler)
 
         then:
-        classifications.size() == 3
-        def c = classifications[1]
-        c.getConfidence().getAsDouble() == 1
-        c.getExternalModule().getId() == "test-classifier"
-        c.getSentenceId() == 2
-        c.getValue() == -1
+        1 * handler.onClassificationParsed(1, 1, "test-classifier", -1, OptionalDouble.empty())
+        1 * handler.onClassificationParsed(1, 2, "test-classifier", -1, OptionalDouble.of(1))
     }
 }

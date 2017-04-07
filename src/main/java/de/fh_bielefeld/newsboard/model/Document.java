@@ -1,8 +1,6 @@
 package de.fh_bielefeld.newsboard.model;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Domain class representing a classifiable document.
@@ -18,13 +16,21 @@ public class Document extends DocumentStub {
     }
 
     public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
-                        ModuleReference crawler, List<Sentence> sentences) {
+                    ModuleReference crawler, List<Sentence> sentences) {
         super(id, title, author, source, creationTime, crawlTime, crawler);
         this.sentences.addAll(sentences);
     }
 
     public List<Sentence> getSentences() {
         return sentences;
+    }
+
+    public Sentence getSentenceById(int id) {
+        Optional<Sentence> sentence = sentences.stream().filter(s -> s.getId() == id).findFirst();
+        if (!sentence.isPresent()) {
+            throw new NoSuchElementException("Document doesn't contain a sentence with id: " + id);
+        }
+        return sentence.get();
     }
 
     public double getAverageClassificationValue() {

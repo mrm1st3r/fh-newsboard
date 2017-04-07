@@ -21,7 +21,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
             "SELECT * FROM classification WHERE sentence_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
+            "INSERT IGNORE INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 

@@ -1,6 +1,8 @@
 package de.fh_bielefeld.newsboard.rest;
 
-import de.fh_bielefeld.newsboard.dao.*;
+import de.fh_bielefeld.newsboard.dao.AccessDao;
+import de.fh_bielefeld.newsboard.dao.DocumentDao;
+import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.*;
 import de.fh_bielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fh_bielefeld.newsboard.xml.XmlDocumentReader;
@@ -33,19 +35,16 @@ public class RestApiController {
     private final XmlDocumentWriter xmlWriter;
     private final RawDocumentProcessor documentProcessor;
     private final DocumentDao documentDao;
-    private final ClassificationDao classificationDao;
     private final AccessDao accessDao;
     private final ExternalModuleDao moduleDao;
 
     @Autowired
     public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
-                             DocumentDao documentDao, ClassificationDao classificationDao, AccessDao accessDao,
-                             ExternalModuleDao moduleDao) {
+                             DocumentDao documentDao, AccessDao accessDao, ExternalModuleDao moduleDao) {
         this.xmlReader = xmlReader;
         this.xmlWriter = xmlWriter;
         this.documentProcessor = documentProcessor;
         this.documentDao = documentDao;
-        this.classificationDao = classificationDao;
         this.accessDao = accessDao;
         this.moduleDao = moduleDao;
     }
@@ -95,7 +94,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/document/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getDocument(HttpServletResponse response, @PathVariable String id) {
-        int docId = Integer.valueOf(id);
+        int docId = Integer.parseInt(id);
         Document doc = documentDao.get(docId);
         try {
             return xmlWriter.writeDocument(doc);
@@ -131,17 +130,17 @@ public class RestApiController {
             return handleAuthenticationError(response, e);
         }
         StringReader in = new StringReader(body);
-        List<Classification> classifications;
         try {
-            classifications = xmlReader.readClassifications(in);
+            xmlReader.readClassifications(in, (documentId, sentenceId, classifierId, value, confidence) -> {
+                if (!classifierId.equals(classifier.getId())) {
+                    handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
+                }
+                Document document = documentDao.get(documentId);
+                document.getSentenceById(sentenceId).addClassification(classifier, value, confidence);
+                documentDao.update(document);
+            });
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return handleClientError(response, e);
-        }
-        for (Classification c : classifications) {
-            if (!c.getExternalModule().getId().equals(classifier.getId())) {
-                handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
-            }
-            classificationDao.create(c);
         }
         return "OK";
     }
