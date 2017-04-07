@@ -43,6 +43,10 @@ public class Classification {
         return confidence;
     }
 
+    double weightedValue() {
+        return confidence.orElse(1) * value;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Classification)) {

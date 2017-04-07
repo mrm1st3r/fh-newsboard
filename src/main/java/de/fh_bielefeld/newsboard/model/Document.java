@@ -37,11 +37,7 @@ public class Document extends DocumentStub {
         if (sentences.size() == 0) {
             return 0;
         }
-        double sum = 0;
-        for (Sentence s : sentences) {
-            sum += s.getAverageClassificationValue();
-        }
-        return sum / sentences.size();
+        return sentences.stream().mapToDouble(Sentence::getAverageClassificationValue).sum() / sentences.size();
     }
 
     @Override

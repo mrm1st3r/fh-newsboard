@@ -58,16 +58,7 @@ public class Sentence {
         if (classifications.size() == 0) {
             return 0;
         }
-        double sum = 0;
-        for (Classification c : classifications) {
-            OptionalDouble confidence = c.getConfidence();
-            if (confidence.isPresent()) {
-                sum += c.getValue() * confidence.getAsDouble();
-            } else {
-                sum += c.getValue();
-            }
-        }
-        return sum / classifications.size();
+        return classifications.stream().mapToDouble(Classification::weightedValue).sum() / classifications.size();
     }
 
     public void addClassification(ModuleReference classifier, double value, OptionalDouble confidence) {
