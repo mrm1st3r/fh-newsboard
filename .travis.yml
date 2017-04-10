@@ -4,6 +4,8 @@ before_install:
   - mysql -e 'CREATE DATABASE newsboard'
   - mysql newsboard < src/main/resources/sql/create_script.sql
   - mysql newsboard < src/main/resources/sql/example_data.sql
+env:
+  - TZ=Europe/Berlin
 language: java
 jdk: oraclejdk8
 script: mvn test -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis -Duser.timezone=Europe/Berlin
