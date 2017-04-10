@@ -1,6 +1,5 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,7 +21,7 @@ class RowMapperResultSetExtractor<T> implements ResultSetExtractor<T> {
     }
 
     @Override
-    public T extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public T extractData(ResultSet rs) throws SQLException {
         if (rs.next()) {
             return rowMapper.mapRow(rs, 1);
         } else {

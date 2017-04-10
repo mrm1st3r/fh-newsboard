@@ -55,7 +55,7 @@ public class Sentence {
     }
 
     public double getAverageClassificationValue() {
-        if (classifications.size() == 0) {
+        if (classifications.isEmpty()) {
             return 0;
         }
         return classifications.stream().mapToDouble(Classification::weightedValue).sum() / classifications.size();

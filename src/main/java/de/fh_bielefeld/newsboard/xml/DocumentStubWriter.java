@@ -37,8 +37,7 @@ class DocumentStubWriter implements XmlDocumentWriter.DocumentContentWriter<Docu
         writer.writeEndElement();
     }
 
-    /**
-     * Placeholder to be overridden in {@link DocumentWriter}
-     */
-    void writeSubElements(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException { }
+    void writeSubElements(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException {
+        // Placeholder to be overridden in {@link DocumentWriter}
+    }
 }

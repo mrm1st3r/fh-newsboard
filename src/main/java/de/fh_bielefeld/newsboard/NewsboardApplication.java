@@ -11,4 +11,8 @@ public class NewsboardApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NewsboardApplication.class, args);
 	}
+
+	private NewsboardApplication() throws InstantiationException {
+		throw new InstantiationException("You shall not construct!");
+	}
 }
