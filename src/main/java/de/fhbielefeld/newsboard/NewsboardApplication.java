@@ -12,7 +12,7 @@ public class NewsboardApplication {
 		SpringApplication.run(NewsboardApplication.class, args);
 	}
 
-	private NewsboardApplication() throws InstantiationException {
-		throw new InstantiationException("You shall not construct!");
+	public NewsboardApplication() {
+		// default constructor needed for Spring Boot.
 	}
 }
