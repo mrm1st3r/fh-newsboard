@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for REST-Api.
@@ -69,12 +70,11 @@ public class RestApiController {
      */
     @RequestMapping(path = "/document", method = RequestMethod.PUT)
     public String putDocument(HttpServletRequest request, HttpServletResponse response, @RequestBody String body) {
-        ExternalModule crawler;
-        try {
-            crawler = checkAuthentication(request);
-        } catch (SecurityException e) {
-            return handleAuthenticationError(response, e);
+        Optional<ExternalModule> authenticationResult = checkAuthentication(request);
+        if (!authenticationResult.isPresent()) {
+            return handleAuthenticationError(response);
         }
+        ExternalModule crawler = authenticationResult.get();
         List<RawDocument> documents;
         try {
             documents = xmlReader.readDocument(new StringReader(body), crawler);
@@ -123,12 +123,11 @@ public class RestApiController {
      */
     @RequestMapping(path = "/classify", method = RequestMethod.PUT)
     public String classify(HttpServletRequest request, HttpServletResponse response, @RequestBody String body) {
-        ExternalModule classifier;
-        try {
-            classifier = checkAuthentication(request);
-        } catch (SecurityException e) {
-            return handleAuthenticationError(response, e);
+        Optional<ExternalModule> authenticationResult = checkAuthentication(request);
+        if (!authenticationResult.isPresent()) {
+            return handleAuthenticationError(response);
         }
+        ExternalModule classifier = authenticationResult.get();
         StringReader in = new StringReader(body);
         try {
             xmlReader.readClassifications(in, (documentId, sentenceId, classifierId, value, confidence) -> {
@@ -145,7 +144,7 @@ public class RestApiController {
         return "OK";
     }
 
-    private ExternalModule checkAuthentication(HttpServletRequest request) throws SecurityException {
+    private Optional<ExternalModule> checkAuthentication(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Basic")) {
             String base64Credentials = authorization.substring("Basic".length()).trim();
@@ -155,11 +154,11 @@ public class RestApiController {
             if (module != null) {
                 Access access = accessDao.get(module.getAccessReference());
                 if (access.isEnabled() && access.getPassphrase().equals(values[1])) {
-                    return module;
+                    return Optional.of(module);
                 }
             }
         }
-        throw new SecurityException("Authentication failed!");
+        return Optional.empty();
     }
 
     private String handleClientError(HttpServletResponse response, Exception e) {
@@ -174,8 +173,8 @@ public class RestApiController {
         return "Internal Error: " + e.getMessage();
     }
 
-    private String handleAuthenticationError(HttpServletResponse response, SecurityException e) {
+    private String handleAuthenticationError(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        return "Authentication Error: " + e.getMessage();
+        return "Authentication failed.";
     }
 }
