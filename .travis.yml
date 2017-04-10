@@ -12,3 +12,5 @@ script: mvn test sonar:sonar -Dmaven.javadoc.skip=true -Dspring.profiles.active=
 addons:
   sonarqube:
     organization: "mrm1st3r-github"
+  branches:
+    - develop
