@@ -5,4 +5,5 @@ before_install:
   - mysql newsboard < src/main/resources/sql/create_script.sql
   - mysql newsboard < src/main/resources/sql/example_data.sql
 language: java
+jdk: oraclejdk8
 srcipt: mvn test -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis
