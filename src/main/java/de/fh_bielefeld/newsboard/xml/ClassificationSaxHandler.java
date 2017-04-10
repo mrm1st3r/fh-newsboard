@@ -26,10 +26,10 @@ class ClassificationSaxHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (qName.equals("classification")) {
+        if ("classification".equals(qName)) {
             parseAttributes(attributes);
             insideClassification = true;
-        } else if (qName.equals("document")) {
+        } else if ("document".equals(qName)) {
             if (attributes.getIndex("id") < 0) {
                 throw new SAXException("No document id given");
             }
@@ -57,7 +57,7 @@ class ClassificationSaxHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equals("classification")) {
+        if ("classification".equals(qName)) {
             handler.onClassificationParsed(documentId, sentenceId, classifierId, value, confidence);
         }
     }
