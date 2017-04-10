@@ -1,7 +1,8 @@
 services:
   - mysql
 before_install:
-  - mysql < src/main/resources/sql/create_script.sql
-  - mysql < src/main/resources/sql/example_data.sql
+  - mysql -e 'CREATE DATABASE newsboard'
+  - mysql newsboard < src/main/resources/sql/create_script.sql
+  - mysql newsboard < src/main/resources/sql/example_data.sql
 language: java
 srcipt: mvn test -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis
