@@ -61,6 +61,9 @@ class DocumentSaxHandler extends DefaultHandler {
                 break;
             case "rawtext":
                 currentState = State.RAW_TEXT;
+                break;
+            default:
+                currentState = State.UNDEFINED;
         }
     }
 
@@ -93,16 +96,19 @@ class DocumentSaxHandler extends DefaultHandler {
             case RAW_TEXT:
                 rawText = text;
                 break;
+            case DOCUMENT:
+            case UNDEFINED:
+            default:
+                break;
         }
         currentState = State.UNDEFINED;
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        switch (qName) {
-            case "document":
-                documentList.add(new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText));
-                break;
+        if ("document".equals(qName)) {
+            documentList.add(new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText));
+
         }
     }
 }

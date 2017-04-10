@@ -17,6 +17,7 @@ import java.util.List;
 class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document> {
 
     private List<Classification> collectedClassifications;
+
     @Override
     public void writeContent(XMLStreamWriter writer, Document doc) throws XMLStreamException {
         stubWriter.writeContent(writer, doc);
@@ -29,31 +30,31 @@ class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document
             writeSentences(writer, (Document) doc);
             writeClassifications(writer);
         }
-    };
 
-    private void writeSentences(XMLStreamWriter writer, Document doc) throws XMLStreamException {
-        writer.writeStartElement("sentences");
-        for (Sentence sent : doc.getSentences()) {
-            collectedClassifications.addAll(sent.getClassifications());
-            writer.writeStartElement("sentence");
-            writer.writeAttribute("id", Integer.toString(sent.getId()));
-            writer.writeCharacters(sent.getText());
-            writer.writeEndElement();
-        }
-        writer.writeEndElement();
-    }
-
-    private void writeClassifications(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement("classifications");
-        for (Classification c : collectedClassifications) {
-            writer.writeStartElement("classification");
-            writer.writeAttribute("sentenceid", Integer.toString(c.getSentenceId()));
-            if (c.getConfidence().isPresent()) {
-                writer.writeAttribute("confidence", Double.toString(c.getConfidence().getAsDouble()));
+        private void writeSentences(XMLStreamWriter writer, Document doc) throws XMLStreamException {
+            writer.writeStartElement("sentences");
+            for (Sentence sent : doc.getSentences()) {
+                collectedClassifications.addAll(sent.getClassifications());
+                writer.writeStartElement("sentence");
+                writer.writeAttribute("id", Integer.toString(sent.getId()));
+                writer.writeCharacters(sent.getText());
+                writer.writeEndElement();
             }
-            writer.writeCharacters(Double.toString(c.getValue()));
             writer.writeEndElement();
         }
-        writer.writeEndElement();
-    }
+
+        private void writeClassifications(XMLStreamWriter writer) throws XMLStreamException {
+            writer.writeStartElement("classifications");
+            for (Classification c : collectedClassifications) {
+                writer.writeStartElement("classification");
+                writer.writeAttribute("sentenceid", Integer.toString(c.getSentenceId()));
+                if (c.getConfidence().isPresent()) {
+                    writer.writeAttribute("confidence", Double.toString(c.getConfidence().getAsDouble()));
+                }
+                writer.writeCharacters(Double.toString(c.getValue()));
+                writer.writeEndElement();
+            }
+            writer.writeEndElement();
+        }
+    };
 }
