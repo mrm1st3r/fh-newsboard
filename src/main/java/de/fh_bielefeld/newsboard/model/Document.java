@@ -48,4 +48,9 @@ public class Document extends DocumentStub {
         Document that = (Document) obj;
         return this.getId() == that.getId();
     }
+
+    @Override
+    public int hashCode() {
+        return getId() + getAuthor().hashCode() + getTitle().hashCode();
+    }
 }

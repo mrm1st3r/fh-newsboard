@@ -55,4 +55,9 @@ public class Classification {
         Classification that = (Classification) obj;
         return this.sentenceId == that.sentenceId && this.externalModule.equals(that.externalModule);
     }
+
+    @Override
+    public int hashCode() {
+        return getSentenceId() + getExternalModule().hashCode();
+    }
 }

@@ -52,6 +52,11 @@ public class ExternalModule extends ModuleReference {
         return this.getId().equals(that.getId());
     }
 
+    @Override
+    public int hashCode() {
+        return getId().hashCode() + getAuthor().hashCode();
+    }
+
     public AccessReference getAccessReference() {
         return access;
     }

@@ -57,4 +57,9 @@ public class Access extends AccessReference {
                 && this.passphrase.equals(that.passphrase)
                 && this.enabled == that.enabled;
     }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode() + getPassphrase().hashCode() + getHashType().hashCode();
+    }
 }
