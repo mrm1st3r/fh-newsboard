@@ -1,6 +1,5 @@
 package de.fh_bielefeld.newsboard.processing
 
-import de.fh_bielefeld.newsboard.model.DocumentMetaData
 import de.fh_bielefeld.newsboard.model.RawDocument
 import spock.lang.Specification
 
@@ -27,9 +26,8 @@ class RawDocumentProcessorTest extends Specification {
 
     def "should create document from raw"() {
         given:
-        def meta = new DocumentMetaData("Die Entdeckung des Nichts", "Hans Wurst",
-                null, null, null, null)
-        def raw = new RawDocument(meta, exampleText)
+        def raw = new RawDocument("Die Entdeckung des Nichts", "Hans Wurst",
+                null, null, null, null, exampleText)
 
         when:
         def doc = tokenizer.processDocument(raw)

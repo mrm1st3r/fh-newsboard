@@ -36,12 +36,12 @@ class RawDocumentReadTest extends Specification {
 
         then:
         documents.size() == 1
-        def meta = documents[0].getMetaData()
-        meta.getTitle() == "Wuppi Fluppi"
-        meta.getAuthor() == "Bla"
-        meta.getSource() == "http://wuppi.fluppi"
-        meta.getCrawlTime() == new GregorianCalendar(2016, Calendar.DECEMBER, 01)
-        meta.getCreationTime() == new GregorianCalendar(2016, Calendar.NOVEMBER, 30)
+        def doc = documents[0]
+        doc.getTitle() == "Wuppi Fluppi"
+        doc.getAuthor() == "Bla"
+        doc.getSource() == "http://wuppi.fluppi"
+        doc.getCrawlTime() == new GregorianCalendar(2016, Calendar.DECEMBER, 01)
+        doc.getCreationTime() == new GregorianCalendar(2016, Calendar.NOVEMBER, 30)
         documents[0].getRawText().contains("Lorem ipsum")
     }
 }

@@ -1,12 +1,9 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
+import de.fh_bielefeld.newsboard.dao.ClassificationDao;
 import de.fh_bielefeld.newsboard.dao.DocumentDao;
-import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.dao.SentenceDao;
-import de.fh_bielefeld.newsboard.model.Document;
-import de.fh_bielefeld.newsboard.model.DocumentMetaData;
-import de.fh_bielefeld.newsboard.model.DocumentStub;
-import de.fh_bielefeld.newsboard.model.Sentence;
+import de.fh_bielefeld.newsboard.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,20 +31,25 @@ public class DocumentDaoMysql implements DocumentDao {
             "SELECT * FROM document WHERE document_id NOT IN(SELECT document_id FROM sentence WHERE sentence_id IN " +
                     "(SELECT sentence_id FROM classification WHERE module_id = ?))";
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private SentenceDao sentenceDao;
-    private ExternalModuleDao externalModuleDao;
+    private final ClassificationDao classificationDao;
 
     @Autowired
-    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ExternalModuleDao externalModuleDao) {
+    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ClassificationDao classificationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
-        this.externalModuleDao = externalModuleDao;
+        this.classificationDao = classificationDao;
     }
 
     @Override
     public Document get(int id) {
         return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id);
+    }
+
+    @Override
+    public void update(Document document) {
+        document.getSentences().forEach(s -> s.getClassifications().forEach(classificationDao::create));
     }
 
     @Override
@@ -77,8 +79,8 @@ public class DocumentDaoMysql implements DocumentDao {
     }
 
     @Override
-    public List<Document> findUnclassifiedForModule(String externalModuleId) {
-        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, externalModuleId);
+    public List<Document> findUnclassifiedForModule(ModuleReference module) {
+        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, module.getId());
     }
 
     private Calendar getCalendarFromTime(Date date) {
@@ -92,11 +94,11 @@ public class DocumentDaoMysql implements DocumentDao {
 
     private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
             r.getInt("document_id"),
-            new DocumentMetaData(r.getString("title"),
-                    r.getString("author"), r.getString("source_url"),
-                    getCalendarFromTime(r.getDate("creation_time")),
-                    getCalendarFromTime(r.getDate("crawl_time")),
-            externalModuleDao.get(r.getString("module_id")))
+            r.getString("title"),
+            r.getString("author"), r.getString("source_url"),
+            getCalendarFromTime(r.getDate("creation_time")),
+            getCalendarFromTime(r.getDate("crawl_time")),
+            new ModuleReference(r.getString("module_id"))
     );
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {

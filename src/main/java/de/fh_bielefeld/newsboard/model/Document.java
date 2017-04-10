@@ -1,7 +1,6 @@
 package de.fh_bielefeld.newsboard.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Domain class representing a classifiable document.
@@ -11,13 +10,14 @@ import java.util.List;
 public class Document extends DocumentStub {
     private List<Sentence> sentences = new ArrayList<>();
 
-    public Document(int id, DocumentMetaData metaData, List<Sentence> sentences) {
-        super(id, metaData);
+    public Document(DocumentStub stub, List<Sentence> sentences) {
+        super(stub);
         this.sentences.addAll(sentences);
     }
 
-    public Document(DocumentStub stub, List<Sentence> sentences) {
-        super(stub);
+    public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
+                    ModuleReference crawler, List<Sentence> sentences) {
+        super(id, title, author, source, creationTime, crawlTime, crawler);
         this.sentences.addAll(sentences);
     }
 
@@ -25,15 +25,19 @@ public class Document extends DocumentStub {
         return sentences;
     }
 
+    public Sentence getSentenceById(int id) {
+        Optional<Sentence> sentence = sentences.stream().filter(s -> s.getId() == id).findFirst();
+        if (!sentence.isPresent()) {
+            throw new NoSuchElementException("Document doesn't contain a sentence with id: " + id);
+        }
+        return sentence.get();
+    }
+
     public double getAverageClassificationValue() {
         if (sentences.size() == 0) {
             return 0;
         }
-        double sum = 0;
-        for (Sentence s : sentences) {
-            sum += s.getAverageClassificationValue();
-        }
-        return sum / sentences.size();
+        return sentences.stream().mapToDouble(Sentence::getAverageClassificationValue).sum() / sentences.size();
     }
 
     @Override

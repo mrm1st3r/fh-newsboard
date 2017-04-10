@@ -30,7 +30,7 @@ class ExternalModuleDaoTest extends Specification {
         externalModuleDao.create(module)
 
         then:
-        compareModules(externalModuleDao.get(module.getId()),module)
+        compareModules(externalModuleDao.get(module),module)
     }
 
     def "should update correctly"() {
@@ -45,7 +45,7 @@ class ExternalModuleDaoTest extends Specification {
         externalModuleDao.update(module)
 
         then:
-        compareModules(externalModuleDao.get(module.getId()), module)
+        compareModules(externalModuleDao.get(module), module)
     }
 
     def cleanup() {

@@ -1,6 +1,5 @@
 package de.fh_bielefeld.newsboard.xml;
 
-import de.fh_bielefeld.newsboard.model.Classification;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.RawDocument;
 import org.springframework.stereotype.Service;
@@ -51,10 +50,7 @@ public class XmlDocumentReader {
     /**
      * Read classifications from an xml input.
      */
-    public List<Classification> readClassifications(Reader xmlDocument) throws ParserConfigurationException, SAXException, IOException {
-        SAXParser parser = parserFactory.newSAXParser();
-        ArrayList<Classification> classifications = new ArrayList<>();
-        parser.parse(new InputSource(xmlDocument), new ClassificationSaxHandler(classifications));
-        return classifications;
+    public void readClassifications(Reader xmlDocument, ClassificationParsedHandler handler) throws ParserConfigurationException, SAXException, IOException {
+        parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new ClassificationSaxHandler(handler));
     }
 }

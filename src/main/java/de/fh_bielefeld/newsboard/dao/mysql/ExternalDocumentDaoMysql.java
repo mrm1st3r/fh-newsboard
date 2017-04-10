@@ -1,8 +1,8 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ExternalDocumentDao;
-import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
 import de.fh_bielefeld.newsboard.model.ExternalDocument;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,13 +29,11 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
     private static final String INSERT_EXTERNAL_DOCUMENT =
             "INSERT INTO external_document(title, html, module_id) VALUES (?, ?, ?)";
 
-    private ExternalModuleDao externalModuleDao;
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ExternalDocumentDaoMysql(JdbcTemplate jdbcTemplate, ExternalModuleDao externalModuleDao) {
+    public ExternalDocumentDaoMysql(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.externalModuleDao = externalModuleDao;
     }
 
     @Override
@@ -69,5 +67,5 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
             resultSet.getInt("ext_document_id"),
             resultSet.getString("title"),
             resultSet.getString("html"),
-            externalModuleDao.get(resultSet.getString("module_id")));
+            new ModuleReference(resultSet.getString("module_id")));
 }

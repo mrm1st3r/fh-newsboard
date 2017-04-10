@@ -11,11 +11,17 @@ import java.util.OptionalDouble;
  */
 public class Sentence {
     private int id;
-    private int number;
-    private String text;
-    private List<Classification> classifications = new ArrayList<>();
+    private final int number;
+    private final String text;
+    private final List<Classification> classifications = new ArrayList<>();
 
     public Sentence(int id, int number, String text) {
+        if (number < 1) {
+            throw new IllegalArgumentException("Sentence number must be greater than 0");
+        }
+        if (text == null || text.length() == 0) {
+            throw new IllegalArgumentException("Sentence text must not be empty");
+        }
         this.id = id;
         this.number = number;
         this.text = text;
@@ -44,10 +50,6 @@ public class Sentence {
         this.classifications.addAll(classifications);
     }
 
-    public void addClassification(Classification classification) {
-        classifications.add(classification);
-    }
-
     public List<Classification> getClassifications() {
         return new ArrayList<>(classifications);
     }
@@ -56,15 +58,16 @@ public class Sentence {
         if (classifications.size() == 0) {
             return 0;
         }
-        double sum = 0;
-        for (Classification c : classifications) {
-            OptionalDouble confidence = c.getConfidence();
-            if (confidence.isPresent()) {
-                sum += c.getValue() * confidence.getAsDouble();
-            } else {
-                sum += c.getValue();
-            }
+        return classifications.stream().mapToDouble(Classification::weightedValue).sum() / classifications.size();
+    }
+
+    public void addClassification(ModuleReference classifier, double value, OptionalDouble confidence) {
+        if (classifier == null) {
+            throw new IllegalArgumentException("Classifier must not be null");
         }
-        return sum / classifications.size();
+        if (classifications.stream().anyMatch(c -> c.getExternalModule().equals(classifier))) {
+            throw new IllegalArgumentException("This sentence was already classified by: " + classifier.getId());
+        }
+        classifications.add(new Classification(this.getId(), classifier, value, confidence));
     }
 }

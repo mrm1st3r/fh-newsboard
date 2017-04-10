@@ -1,6 +1,5 @@
 package de.fh_bielefeld.newsboard.xml;
 
-import de.fh_bielefeld.newsboard.model.DocumentMetaData;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
 import de.fh_bielefeld.newsboard.model.RawDocument;
 import org.xml.sax.Attributes;
@@ -102,9 +101,7 @@ class DocumentSaxHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case "document":
-                documentList.add(new RawDocument(
-                        new DocumentMetaData(title, author, source, creationTime, crawlTime, crawler),
-                        rawText));
+                documentList.add(new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText));
                 break;
         }
     }

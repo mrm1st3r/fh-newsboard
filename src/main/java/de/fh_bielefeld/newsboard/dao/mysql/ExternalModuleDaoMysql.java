@@ -1,7 +1,9 @@
 package de.fh_bielefeld.newsboard.dao.mysql;
 
 import de.fh_bielefeld.newsboard.dao.ExternalModuleDao;
+import de.fh_bielefeld.newsboard.model.AccessReference;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,8 +30,8 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     @Override
-    public ExternalModule get(String id) {
-        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), id);
+    public ExternalModule get(ModuleReference reference) {
+        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), reference.getId());
     }
 
     @Override
@@ -43,7 +45,7 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     private Object[] makeAttributes(ExternalModule module) {
-        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessId(), module.getId()};
+        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessReference().getId(), module.getId()};
     }
 
     private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
@@ -51,5 +53,5 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
             resultSet.getString("title"),
             resultSet.getString("author"),
             resultSet.getString("description"),
-            resultSet.getString("access_id"));
+            new AccessReference(resultSet.getString("access_id")));
 }

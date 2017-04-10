@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.DocumentStub;
+import de.fh_bielefeld.newsboard.model.ModuleReference;
 
 import java.util.List;
 
@@ -14,7 +15,12 @@ public interface DocumentDao {
 
     int create(Document document);
 
+    /**
+     * Persist new classifications of a document aggregate.
+     */
+    void update(Document document);
+
     List<DocumentStub> findAllStubs();
 
-    List<Document> findUnclassifiedForModule(String externalModuleId);
+    List<Document> findUnclassifiedForModule(ModuleReference module);
 }

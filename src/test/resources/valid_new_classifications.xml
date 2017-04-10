@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Sample document that might be sent from a classifier module to publish new classifications via PUT /classify -->
 <documents xmlns="http://fh-bielefeld.de/newsboard">
-    <document>
+    <document id="1">
         <meta>
             <title>Optional Meta Information</title>
             <source>Will be thrown away when parsing</source>
@@ -11,7 +11,6 @@
             <!-- Some possible alterations of provided attributes -->
             <classification sentenceid="1" classifier="test-classifier">-1</classification>
             <classification sentenceid="2" classifier="test-classifier" confidence="1">-1</classification>
-            <classification sentenceid="3" classifier="test-classifier">-0.5</classification>
         </classifications>
     </document>
 </documents>

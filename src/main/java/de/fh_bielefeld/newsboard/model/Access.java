@@ -4,24 +4,19 @@ package de.fh_bielefeld.newsboard.model;
  * An access contains login credentials and an access role
  * for authenticating and authorizing a user.
  */
-public class Access {
+public class Access extends AccessReference {
 
-    private final String id;
     private final AccessRole role;
     private String passphrase;
     private String hashType;
     private boolean enabled;
 
     public Access(String id, AccessRole role, String passphrase, String hashType, boolean enabled) {
-        this.id = id;
+        super(id);
         this.role = role;
         this.passphrase = passphrase;
         this.hashType = hashType;
         this.enabled = enabled;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getPassphrase() {
@@ -58,7 +53,7 @@ public class Access {
             return false;
         }
         Access that = (Access) obj;
-        return this.id.equals(that.id)
+        return this.getId().equals(that.getId())
                 && this.passphrase.equals(that.passphrase)
                 && this.enabled == that.enabled;
     }
