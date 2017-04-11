@@ -66,7 +66,8 @@ public class Sentence {
             throw new IllegalArgumentException("Classifier must not be null");
         }
         if (classifications.stream().anyMatch(c -> c.getExternalModule().equals(classifier))) {
-            throw new IllegalArgumentException("This sentence was already classified by: " + classifier.getId());
+            throw new IllegalArgumentException(String.format(
+                    "Sentence with ID %d was already classified by %s", getId(), classifier.getId()));
         }
         classifications.add(new Classification(this.getId(), classifier, value, confidence));
     }

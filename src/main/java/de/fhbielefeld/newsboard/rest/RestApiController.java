@@ -164,7 +164,7 @@ public class RestApiController {
     }
 
     private String handleClientError(HttpServletResponse response, Exception e) {
-        LOGGER.warn("Client error occurred", e);
+        LOGGER.warn("Client error: {}", e.getMessage());
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "FAILED: " + e.getMessage();
     }
