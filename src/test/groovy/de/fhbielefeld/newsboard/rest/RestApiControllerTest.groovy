@@ -78,9 +78,14 @@ class RestApiControllerTest extends Specification {
                 .andExpect(status().is4xxClientError())
     }
 
-    def "can put classification list"() {
+    def "can put classification list exactly once"() {
         expect:
         putRequest("/rest/classify", "/valid_new_classifications.xml", "test-classifier:abc123").andExpect(status().isOk())
+        putRequest("/rest/classify", "/valid_new_classifications.xml", "test-classifier:abc123").andExpect(status().is4xxClientError())
+    }
+
+    def "cannot put document without authentication"() {
+        putRequest("/rest/document", "/valid_raw_document.xml", "").andExpect(status().isForbidden())
     }
 
     private ResultActions putRequest(String url, String resourceFile, String creds) {

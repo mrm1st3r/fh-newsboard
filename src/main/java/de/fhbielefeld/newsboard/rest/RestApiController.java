@@ -139,7 +139,7 @@ public class RestApiController {
                 document.getSentenceById(sentenceId).addClassification(classifier, value, confidence);
                 documentDao.update(document);
             });
-        } catch (XmlException e) {
+        } catch (Exception e) {
             return handleClientError(response, e);
         }
         LOGGER.info("Added new classification");
