@@ -17,9 +17,10 @@ class RawDocumentReadTest extends Specification {
     def "should not read invalid document"() {
         given:
         def xml = sampleXml("invalid_raw_document")
+        def handler = Mock(DocumentParsedHandler)
 
         when:
-        reader.readDocument(xml, null)
+        reader.readDocument(xml, handler)
 
         then:
         def e = thrown(XmlException)
@@ -29,18 +30,15 @@ class RawDocumentReadTest extends Specification {
     def "should read valid document"() {
         given:
         def xml = sampleXml("valid_raw_document")
+        def handler = Mock(DocumentParsedHandler)
 
         when:
-        def documents = reader.readDocument(xml, null)
+        reader.readDocument(xml, handler)
 
         then:
-        documents.size() == 1
-        def doc = documents[0]
-        doc.getTitle() == "Wuppi Fluppi"
-        doc.getAuthor() == "Bla"
-        doc.getSource() == "http://wuppi.fluppi"
-        doc.getCrawlTime() == new GregorianCalendar(2016, Calendar.DECEMBER, 01)
-        doc.getCreationTime() == new GregorianCalendar(2016, Calendar.NOVEMBER, 30)
-        documents[0].getRawText().contains("Lorem ipsum")
+        1 * handler.onDocumentParsed("Wuppi Fluppi", "Bla", "http://wuppi.fluppi",
+                new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
+                new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                {it.startsWith("Lorem ipsum")})
     }
 }

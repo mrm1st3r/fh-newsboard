@@ -1,7 +1,5 @@
 package de.fhbielefeld.newsboard.xml;
 
-import de.fhbielefeld.newsboard.model.ExternalModule;
-import de.fhbielefeld.newsboard.model.RawDocument;
 import org.springframework.stereotype.Service;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -14,8 +12,6 @@ import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Unmarshall an XML document received via the REST-API into domain classes.
@@ -38,11 +34,9 @@ public class XmlDocumentReader {
     /**
      * Read raw documents from an xml input.
      */
-    public List<RawDocument> readDocument(Reader xmlDocument, ExternalModule crawler) throws XmlException {
+    public void readDocument(Reader xmlDocument, DocumentParsedHandler documentParsedHandler) throws XmlException {
         try {
-            ArrayList<RawDocument> documents = new ArrayList<>();
-            parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new DocumentSaxHandler(documents, crawler));
-            return documents;
+            parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new DocumentSaxHandler(documentParsedHandler));
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new XmlException(e);
         }

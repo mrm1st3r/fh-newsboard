@@ -1,14 +1,11 @@
 package de.fhbielefeld.newsboard.xml;
 
-import de.fhbielefeld.newsboard.model.ExternalModule;
-import de.fhbielefeld.newsboard.model.RawDocument;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.Calendar;
-import java.util.List;
 
 import static javax.xml.bind.DatatypeConverter.parseDateTime;
 
@@ -17,8 +14,7 @@ import static javax.xml.bind.DatatypeConverter.parseDateTime;
  */
 class DocumentSaxHandler extends DefaultHandler {
 
-    private final List<RawDocument> documentList;
-    private final ExternalModule crawler;
+    private final DocumentParsedHandler handler;
 
     private String rawText;
     private String title;
@@ -33,9 +29,8 @@ class DocumentSaxHandler extends DefaultHandler {
 
     private State currentState = State.UNDEFINED;
 
-    DocumentSaxHandler(List<RawDocument> documentList, ExternalModule crawler) {
-        this.documentList = documentList;
-        this.crawler = crawler;
+    DocumentSaxHandler(DocumentParsedHandler documentParsedHandler) {
+        this.handler = documentParsedHandler;
     }
 
     @Override
@@ -107,8 +102,7 @@ class DocumentSaxHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if ("document".equals(qName)) {
-            documentList.add(new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText));
-
+            handler.onDocumentParsed(title, author, source, creationTime, crawlTime, rawText);
         }
     }
 }

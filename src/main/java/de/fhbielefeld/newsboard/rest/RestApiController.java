@@ -77,15 +77,14 @@ public class RestApiController {
             return handleAuthenticationError(response);
         }
         ExternalModule crawler = authenticationResult.get();
-        List<RawDocument> documents;
         try {
-            documents = xmlReader.readDocument(new StringReader(body), crawler);
+            xmlReader.readDocument(new StringReader(body), (title, author, source, creationTime, crawlTime, rawText) -> {
+                RawDocument rawDocument = new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText);
+                Document document = documentProcessor.processDocument(rawDocument);
+                documentDao.create(document);
+            });
         } catch (XmlException e) {
             return handleClientError(response, e);
-        }
-        for (RawDocument rawDoc : documents) {
-            Document document = documentProcessor.processDocument(rawDoc);
-            documentDao.create(document);
         }
         return "OK";
     }
