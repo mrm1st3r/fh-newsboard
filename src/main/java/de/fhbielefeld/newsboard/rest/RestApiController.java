@@ -7,6 +7,8 @@ import de.fhbielefeld.newsboard.model.*;
 import de.fhbielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
 import de.fhbielefeld.newsboard.xml.XmlDocumentWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rest")
 public class RestApiController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestApiController.class);
 
     private final XmlDocumentReader xmlReader;
     private final XmlDocumentWriter xmlWriter;
@@ -141,6 +145,7 @@ public class RestApiController {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return handleClientError(response, e);
         }
+        LOGGER.info("Added new classification");
         return "OK";
     }
 
@@ -162,13 +167,13 @@ public class RestApiController {
     }
 
     private String handleClientError(HttpServletResponse response, Exception e) {
-        e.printStackTrace();
+        LOGGER.warn("Client error occurred", e);
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "FAILED: " + e.getMessage();
     }
 
     private String handleServerError(HttpServletResponse response, XMLStreamException e) {
-        e.printStackTrace();
+        LOGGER.warn("Server error occurred", e);
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return "Internal Error: " + e.getMessage();
     }
