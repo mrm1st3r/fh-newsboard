@@ -52,7 +52,7 @@ class ClassificationTest extends Specification {
         def c4 = new Classification(1, mod2, 1, OptionalDouble.empty())
 
         expect:
-        c1 != null
+        !c1.equals(null)
         c1 != mod1
         c1 != c2
         c2 != c3

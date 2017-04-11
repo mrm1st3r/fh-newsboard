@@ -20,7 +20,7 @@ class AccessTest extends Specification {
         a1 != a3
         a2 != a3
         a1 != role
-        a1 != null
+        !a1.equals(null)
         a3 != a4
         a4 != a5
         a3 != a5

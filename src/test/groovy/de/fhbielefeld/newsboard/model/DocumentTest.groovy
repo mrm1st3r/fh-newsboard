@@ -13,7 +13,7 @@ class DocumentTest extends Specification {
         def sent = new Sentence(42, 1, "Foo bar.")
 
         expect:
-        doc1 != null
+        !doc1.equals(null)
         doc1 != doc2
         doc1 != sent
         doc1 == doc1
