@@ -16,6 +16,7 @@ class AccessTest extends Specification {
 
         expect:
         a1 == a2
+        a1.hashCode() == a2.hashCode()
         a1 != a3
         a2 != a3
         a1 != role

@@ -17,7 +17,9 @@ class DocumentTest extends Specification {
         doc1 != doc2
         doc1 != sent
         doc1 == doc1
+        doc1.hashCode() == doc1.hashCode()
         doc1 == doc3
+        doc1.hashCode() == doc3.hashCode()
     }
 
     def "should calculate average classification value"() {

@@ -15,6 +15,7 @@ class ExternalModuleTest extends Specification {
         m1 != m2
         m2 != m3
         m1 == m3
+        m1.hashCode() == m3.hashCode()
         m1 != null
         m1 != d
     }

@@ -57,6 +57,7 @@ class ClassificationTest extends Specification {
         c1 != c2
         c2 != c3
         c1 == c3
+        c1.hashCode() == c3.hashCode()
         c1 != c4
     }
 }
