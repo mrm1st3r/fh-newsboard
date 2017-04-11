@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.xml
 
-import org.xml.sax.SAXParseException
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -23,7 +22,7 @@ class RawDocumentReadTest extends Specification {
         reader.readDocument(xml, null)
 
         then:
-        def e = thrown(SAXParseException)
+        def e = thrown(XmlException)
         e.getMessage().contains("sentences")
     }
 

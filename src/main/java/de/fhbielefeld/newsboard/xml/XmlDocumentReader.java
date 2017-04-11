@@ -8,7 +8,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -39,18 +38,24 @@ public class XmlDocumentReader {
     /**
      * Read raw documents from an xml input.
      */
-    public List<RawDocument> readDocument(Reader xmlDocument, ExternalModule crawler) throws ParserConfigurationException, SAXException, IOException {
-        SAXParser parser = parserFactory.newSAXParser();
-        ArrayList<RawDocument> documents = new ArrayList<>();
-        DocumentSaxHandler handler = new DocumentSaxHandler(documents, crawler);
-        parser.parse(new InputSource(xmlDocument), handler);
-        return documents;
+    public List<RawDocument> readDocument(Reader xmlDocument, ExternalModule crawler) throws XmlException {
+        try {
+            ArrayList<RawDocument> documents = new ArrayList<>();
+            parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new DocumentSaxHandler(documents, crawler));
+            return documents;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new XmlException(e);
+        }
     }
 
     /**
      * Read classifications from an xml input.
      */
-    public void readClassifications(Reader xmlDocument, ClassificationParsedHandler handler) throws ParserConfigurationException, SAXException, IOException {
-        parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new ClassificationSaxHandler(handler));
+    public void readClassifications(Reader xmlDocument, ClassificationParsedHandler handler) throws XmlException {
+        try {
+            parserFactory.newSAXParser().parse(new InputSource(xmlDocument), new ClassificationSaxHandler(handler));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new XmlException(e);
+        }
     }
 }

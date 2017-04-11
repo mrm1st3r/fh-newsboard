@@ -7,18 +7,16 @@ import de.fhbielefeld.newsboard.model.*;
 import de.fhbielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
 import de.fhbielefeld.newsboard.xml.XmlDocumentWriter;
+import de.fhbielefeld.newsboard.xml.XmlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -82,7 +80,7 @@ public class RestApiController {
         List<RawDocument> documents;
         try {
             documents = xmlReader.readDocument(new StringReader(body), crawler);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
+        } catch (XmlException e) {
             return handleClientError(response, e);
         }
         for (RawDocument rawDoc : documents) {
@@ -142,7 +140,7 @@ public class RestApiController {
                 document.getSentenceById(sentenceId).addClassification(classifier, value, confidence);
                 documentDao.update(document);
             });
-        } catch (ParserConfigurationException | IOException | SAXException e) {
+        } catch (XmlException e) {
             return handleClientError(response, e);
         }
         LOGGER.info("Added new classification");
