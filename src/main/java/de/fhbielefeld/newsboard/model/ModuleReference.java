@@ -17,8 +17,12 @@ public class ModuleReference {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ModuleReference)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ModuleReference)) {
+            return false;
+        }
 
         ModuleReference that = (ModuleReference) o;
 
