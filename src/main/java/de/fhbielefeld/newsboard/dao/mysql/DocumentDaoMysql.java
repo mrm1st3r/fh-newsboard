@@ -38,6 +38,20 @@ public class DocumentDaoMysql implements DocumentDao {
     private SentenceDao sentenceDao;
     private final ClassificationDao classificationDao;
 
+    private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
+            r.getInt("document_id"),
+            r.getString("title"),
+            r.getString("author"), r.getString("source_url"),
+            getCalendarFromTime(r.getDate("creation_time")),
+            getCalendarFromTime(r.getDate("crawl_time")),
+            new ModuleReference(r.getString("module_id"))
+    );
+
+    private final RowMapper<Document> documentMapper = (resultSet, i) -> {
+        DocumentStub doc = stubMapper.mapRow(resultSet, i);
+        return new Document(doc, sentenceDao.findForDocument(doc));
+    };
+
     @Autowired
     public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ClassificationDao classificationDao) {
         this.jdbcTemplate = jdbcTemplate;
@@ -94,18 +108,4 @@ public class DocumentDaoMysql implements DocumentDao {
         cal.setTime(date);
         return cal;
     }
-
-    private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
-            r.getInt("document_id"),
-            r.getString("title"),
-            r.getString("author"), r.getString("source_url"),
-            getCalendarFromTime(r.getDate("creation_time")),
-            getCalendarFromTime(r.getDate("crawl_time")),
-            new ModuleReference(r.getString("module_id"))
-    );
-
-    private final RowMapper<Document> documentMapper = (resultSet, i) -> {
-        DocumentStub doc = stubMapper.mapRow(resultSet, i);
-        return new Document(doc, sentenceDao.findForDocument(doc));
-    };
 }

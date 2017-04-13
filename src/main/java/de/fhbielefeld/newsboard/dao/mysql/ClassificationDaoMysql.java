@@ -23,7 +23,23 @@ public class ClassificationDaoMysql implements ClassificationDao {
     private static final String INSERT_CLASSIFICATION =
             "INSERT IGNORE INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
 
-    private JdbcTemplate jdbcTemplate;
+    private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
+        double confidenceValue = resultSet.getDouble("confidence");
+        OptionalDouble confidence;
+        if (!resultSet.wasNull()) {
+            confidence = OptionalDouble.of(confidenceValue);
+        } else {
+            confidence = OptionalDouble.empty();
+        }
+        return new Classification(
+                resultSet.getInt("sentence_id"),
+                new ModuleReference(resultSet.getString("module_id")),
+                resultSet.getDouble("result"),
+                confidence
+        );
+    };
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ClassificationDaoMysql(JdbcTemplate jdbcTemplate) {
@@ -47,20 +63,4 @@ public class ClassificationDaoMysql implements ClassificationDao {
                 classification.getSentenceId(),
                 classification.getExternalModule().getId());
     }
-
-    private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
-        double confidenceValue = resultSet.getDouble("confidence");
-        OptionalDouble confidence;
-        if (!resultSet.wasNull()) {
-            confidence = OptionalDouble.of(confidenceValue);
-        } else {
-            confidence = OptionalDouble.empty();
-        }
-        return new Classification(
-                resultSet.getInt("sentence_id"),
-                new ModuleReference(resultSet.getString("module_id")),
-                resultSet.getDouble("result"),
-                confidence
-        );
-    };
 }

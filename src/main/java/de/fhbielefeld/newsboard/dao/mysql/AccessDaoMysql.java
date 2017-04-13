@@ -22,7 +22,14 @@ public class AccessDaoMysql implements AccessDao {
     private static final String CREATE_QUERY =
             "INSERT INTO access (access_id, role_id, passphrase, hash_type, enabled) VALUES (?, ?, ?, ?, ?)";
 
-    private JdbcTemplate jdbcTemplate;
+    private final RowMapper<Access> rowMapper = (resultSet, i) -> new Access(
+            resultSet.getString("access_id"),
+            new AccessRole(resultSet.getString("role_id")),
+            resultSet.getString("passphrase"),
+            resultSet.getString("hash_type"),
+            resultSet.getBoolean("enabled"));
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public AccessDaoMysql(JdbcTemplate jdbcTemplate) {
@@ -52,11 +59,4 @@ public class AccessDaoMysql implements AccessDao {
                 access.getHashType(),
                 access.isEnabled());
     }
-
-    private final RowMapper<Access> rowMapper = (resultSet, i) -> new Access(
-            resultSet.getString("access_id"),
-            new AccessRole(resultSet.getString("role_id")),
-            resultSet.getString("passphrase"),
-            resultSet.getString("hash_type"),
-            resultSet.getBoolean("enabled"));
 }

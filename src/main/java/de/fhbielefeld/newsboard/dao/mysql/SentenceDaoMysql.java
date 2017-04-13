@@ -24,8 +24,17 @@ public class SentenceDaoMysql implements SentenceDao {
     private static final String GET_ALL_SENTENCES_IN_DOCUMENT = "SELECT * FROM sentence WHERE document_id = ?";
     private static final String INSERT_SENTENCE = "INSERT INTO sentence(document_seq, content, document_id) VALUES (?, ?, ?)";
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private ClassificationDao classificationDao;
+
+    private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> {
+        Sentence sentence = new Sentence(
+                resultSet.getInt("sentence_id"),
+                resultSet.getInt("document_seq"),
+                resultSet.getString("content"));
+        sentence.addClassifications(classificationDao.findForSentence(sentence));
+        return sentence;
+    };
 
     @Autowired
     public SentenceDaoMysql(JdbcTemplate jdbcTemplate, ClassificationDao classificationDao) {
@@ -51,13 +60,4 @@ public class SentenceDaoMysql implements SentenceDao {
         sentence.setId(keyHolder.getKey().intValue());
         return numRows;
     }
-
-    private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> {
-        Sentence sentence = new Sentence(
-                resultSet.getInt("sentence_id"),
-                resultSet.getInt("document_seq"),
-                resultSet.getString("content"));
-        sentence.addClassifications(classificationDao.findForSentence(sentence));
-        return sentence;
-    };
 }

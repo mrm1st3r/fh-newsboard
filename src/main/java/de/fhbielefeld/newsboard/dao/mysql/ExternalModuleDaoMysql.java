@@ -22,7 +22,14 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     private static final String INSERT_MODULE =
             "INSERT INTO module(title, author, description, access_id, module_id) VALUES (?, ?, ?, ?, ?)";
 
-    private JdbcTemplate jdbcTemplate;
+    private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
+            resultSet.getString("module_id"),
+            resultSet.getString("title"),
+            resultSet.getString("author"),
+            resultSet.getString("description"),
+            new AccessReference(resultSet.getString("access_id")));
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ExternalModuleDaoMysql(JdbcTemplate jdbcTemplate) {
@@ -47,11 +54,4 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     private Object[] makeAttributes(ExternalModule module) {
         return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessReference().getId(), module.getId()};
     }
-
-    private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
-            resultSet.getString("module_id"),
-            resultSet.getString("title"),
-            resultSet.getString("author"),
-            resultSet.getString("description"),
-            new AccessReference(resultSet.getString("access_id")));
 }

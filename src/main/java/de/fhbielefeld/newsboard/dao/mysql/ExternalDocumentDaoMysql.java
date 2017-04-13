@@ -29,7 +29,13 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
     private static final String INSERT_EXTERNAL_DOCUMENT =
             "INSERT INTO external_document(title, html, module_id) VALUES (?, ?, ?)";
 
-    private JdbcTemplate jdbcTemplate;
+    private final RowMapper<ExternalDocument> rowMapper = (resultSet, i) -> new ExternalDocument(
+            resultSet.getInt("ext_document_id"),
+            resultSet.getString("title"),
+            resultSet.getString("html"),
+            new ModuleReference(resultSet.getString("module_id")));
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ExternalDocumentDaoMysql(JdbcTemplate jdbcTemplate) {
@@ -62,10 +68,4 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
         externalDocument.setId(keyHolder.getKey().intValue());
         return numRows;
     }
-
-    private RowMapper<ExternalDocument> rowMapper = (resultSet, i) -> new ExternalDocument(
-            resultSet.getInt("ext_document_id"),
-            resultSet.getString("title"),
-            resultSet.getString("html"),
-            new ModuleReference(resultSet.getString("module_id")));
 }
