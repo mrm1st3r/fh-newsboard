@@ -55,6 +55,7 @@ public class XmlDocumentWriter {
         return strWriter.getBuffer().toString();
     }
 
+    @FunctionalInterface
     interface DocumentContentWriter<T> {
         void writeContent(XMLStreamWriter writer, T doc) throws XMLStreamException;
     }

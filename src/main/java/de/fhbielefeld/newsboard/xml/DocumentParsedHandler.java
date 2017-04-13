@@ -5,6 +5,7 @@ import java.util.Calendar;
 /**
  * Callback handler for reading new documents from XML.
  */
+@FunctionalInterface
 public interface DocumentParsedHandler {
 
     void onDocumentParsed(String title,
