@@ -16,6 +16,8 @@ import java.util.List;
  */
 class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document> {
 
+    private final DocumentStubWriter stubWriter = new DecoratedStubWriter();
+
     private List<Classification> collectedClassifications;
 
     @Override
@@ -23,7 +25,7 @@ class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document
         stubWriter.writeContent(writer, doc);
     }
 
-    private final DocumentStubWriter stubWriter = new DocumentStubWriter() {
+    private class DecoratedStubWriter extends DocumentStubWriter {
         @Override
         void writeSubElements(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException {
             collectedClassifications = new ArrayList<>();
@@ -56,5 +58,5 @@ class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document
             }
             writer.writeEndElement();
         }
-    };
+    }
 }
