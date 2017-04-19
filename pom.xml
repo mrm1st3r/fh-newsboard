@@ -111,6 +111,12 @@
             <version>2.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.smartsquare.ddd</groupId>
+            <artifactId>ddd-annotations</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 
 	<build>
