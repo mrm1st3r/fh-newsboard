@@ -1,5 +1,7 @@
 package de.fhbielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 import java.util.*;
 
 /**
@@ -7,6 +9,7 @@ import java.util.*;
  *
  * @author Felix Meyer, Lukas Taake
  */
+@DDDEntity
 public class Document extends DocumentStub {
     private List<Sentence> sentences = new ArrayList<>();
 

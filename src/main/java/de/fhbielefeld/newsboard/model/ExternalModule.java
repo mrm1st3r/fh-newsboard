@@ -1,10 +1,13 @@
 package de.fhbielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 /**
  * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.
  *
  * @author Felix Meyer
  */
+@DDDEntity
 public class ExternalModule extends ModuleReference {
     private String name;
     private String author;

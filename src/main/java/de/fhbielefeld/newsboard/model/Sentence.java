@@ -1,5 +1,7 @@
 package de.fhbielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -9,6 +11,7 @@ import java.util.OptionalDouble;
  *
  * @author Felix Meyer, Lukas Taake
  */
+@DDDEntity
 public class Sentence {
     private int id;
     private final int number;
