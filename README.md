@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/mrm1st3r/fh-newsboard.svg?branch=master)](https://travis-ci.org/mrm1st3r/fh-newsboard)
 # FH Newsboard
 A Java application for storing documents (news articles by original intend)
 along with AI-generated sentiment classifications.
