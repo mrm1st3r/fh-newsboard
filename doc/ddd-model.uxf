@@ -3,8 +3,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>330</x>
-      <y>250</y>
+      <x>350</x>
+      <y>270</y>
       <w>140</w>
       <h>40</h>
     </coordinates>
@@ -16,8 +16,8 @@ Document
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>350</x>
-      <y>340</y>
+      <x>330</x>
+      <y>360</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -27,12 +27,13 @@ Document
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>350</x>
-      <y>430</y>
-      <w>100</w>
-      <h>30</h>
+      <x>380</x>
+      <y>500</y>
+      <w>150</w>
+      <h>40</h>
     </coordinates>
-    <panel_attributes>Classification</panel_attributes>
+    <panel_attributes>&lt;&lt;AggregateRoot&gt;&gt;
+Classification</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -63,30 +64,30 @@ Module</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>460</x>
-      <y>250</y>
-      <w>180</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>160.0;90.0;160.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>440</x>
-      <y>380</y>
-      <w>200</w>
+      <x>480</x>
+      <y>270</y>
+      <w>160</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>180.0;10.0;180.0;70.0;10.0;70.0</additional_attributes>
+    <additional_attributes>140.0;70.0;140.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>390</x>
-      <y>280</y>
+      <x>520</x>
+      <y>380</y>
+      <w>120</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;100.0;140.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>370</x>
+      <y>300</y>
       <w>50</w>
       <h>80</h>
     </coordinates>
@@ -97,14 +98,14 @@ m2=1..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>390</x>
-      <y>360</y>
+      <x>450</x>
+      <y>300</y>
       <w>50</w>
-      <h>90</h>
+      <h>220</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+    <panel_attributes>lt=-&gt;
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;200.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -112,11 +113,11 @@ m2=0..n</panel_attributes>
       <x>390</x>
       <y>150</y>
       <w>130</w>
-      <h>120</h>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 transformed to</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -201,10 +202,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>270</x>
-      <y>220</y>
+      <x>320</x>
+      <y>450</y>
       <w>260</w>
-      <h>260</h>
+      <h>200</h>
     </coordinates>
     <panel_attributes>lt=.
 bg=#cccccc</panel_attributes>
@@ -261,12 +262,48 @@ bg=#cccccc</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>300</x>
-      <y>510</y>
+      <x>620</x>
+      <y>50</y>
       <w>270</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>Note: This UML represents the newsboards domain model from a domain driven design perspective</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>280</x>
+      <y>240</y>
+      <w>260</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>lt=.
+bg=#cccccc</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>370</x>
+      <y>580</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>ClassificationValue
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>530</y>
+      <w>50</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
 </diagram>
