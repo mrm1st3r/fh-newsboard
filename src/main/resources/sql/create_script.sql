@@ -53,11 +53,20 @@ CREATE TABLE IF NOT EXISTS document (
 );
 
 CREATE TABLE IF NOT EXISTS classification (
-  sentence_id INT             NOT NULL,
-  module_id   VARCHAR(50)     NOT NULL,
-  result      DECIMAL(5, 4)   NOT NULL,
-  confidence  DECIMAL(5, 4)   NULL,
+  classification_id INT           NOT NULL,
+  sentence_id       INT           NOT NULL,
+  module_id         VARCHAR(50)   NOT NULL,
+  result            DECIMAL(5, 4) NOT NULL,
+  confidence        DECIMAL(5, 4) NULL,
   PRIMARY KEY (sentence_id, module_id)
+);
+
+CREATE TABLE IF NOT EXISTS classification_value (
+  classification_id INT           NOT NULL,
+  order_seq         INT           NOT NULL,
+  classification    DECIMAL(5, 4) NOT NULL,
+  confidence        DECIMAL(5, 4) NULL,
+  PRIMARY KEY (classification_id, order_seq)
 );
 
 /*
@@ -104,6 +113,12 @@ ALTER TABLE classification
   ADD CONSTRAINT fk_classification_module
   FOREIGN KEY (module_id)
   REFERENCES module (module_id)
+  ON DELETE RESTRICT;
+
+ALTER TABLE classification_value
+  ADD CONSTRAINT fk_classification_id
+  FOREIGN KEY (classification_id)
+  REFERENCES classification(classification_id)
   ON DELETE RESTRICT;
 
 /*
