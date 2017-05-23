@@ -54,11 +54,10 @@ CREATE TABLE IF NOT EXISTS document (
 
 CREATE TABLE IF NOT EXISTS classification (
   classification_id INT           NOT NULL,
-  sentence_id       INT           NOT NULL,
+  document_id       INT           NOT NULL,
   module_id         VARCHAR(50)   NOT NULL,
-  result            DECIMAL(5, 4) NOT NULL,
-  confidence        DECIMAL(5, 4) NULL,
-  PRIMARY KEY (sentence_id, module_id)
+  created           DATETIME      NOT NULL,
+  PRIMARY KEY (classification_id)
 );
 
 CREATE TABLE IF NOT EXISTS classification_value (
@@ -105,8 +104,8 @@ ALTER TABLE document
 
 ALTER TABLE classification
   ADD CONSTRAINT fk_classification_sentence
-  FOREIGN KEY (sentence_id)
-  REFERENCES sentence (sentence_id)
+  FOREIGN KEY (document_id)
+  REFERENCES document (document_id)
   ON DELETE CASCADE;
 
 ALTER TABLE classification
