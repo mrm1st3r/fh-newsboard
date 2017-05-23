@@ -42,10 +42,6 @@ final class TestUtils {
         new ExternalDocument(-1, "Test external document", "<body><h1>Testing html</h1></body>", module)
     }
 
-    static sampleClassification(ExternalModule module, int sentenceId) {
-        new Classification(sentenceId, module, 0.6, OptionalDouble.of(1))
-    }
-
     static sampleAccess() {
         return new Access("test-access", new AccessRole("crawler"), "passphrase", "plain", true)
     }

@@ -1,5 +1,6 @@
 -- Clean up
 DELETE FROM external_document;
+DELETE FROM classification_value;
 DELETE FROM classification;
 DELETE FROM sentence;
 DELETE FROM document;
@@ -29,5 +30,10 @@ INSERT INTO sentence(sentence_id, document_seq, content, document_id) VALUES
 (4, 2, 'Wichtige Nachrichten gibt\'s hier nicht.', 2);
 
 -- Classifications
-INSERT INTO classification(sentence_id, module_id, result, confidence) VALUES
-(4, 'test-classifier', 0.8, NULL);
+INSERT INTO classification(classification_id, document_id, module_id, created) VALUES
+(4, 1, 'test-classifier', '2017-05-23');
+
+-- Classification values
+INSERT INTO classification_value(classification_id, order_seq, classification, confidence) VALUES
+(4, 1, 1, 1),
+(4, 2, -1, 1);

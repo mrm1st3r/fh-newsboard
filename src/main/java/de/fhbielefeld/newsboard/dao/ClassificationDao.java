@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.dao;
 
-import de.fhbielefeld.newsboard.model.Classification;
-import de.fhbielefeld.newsboard.model.Sentence;
+import de.fhbielefeld.newsboard.model.Document;
+import de.fhbielefeld.newsboard.model.DocumentClassification;
 
 import java.util.List;
 
@@ -10,8 +10,7 @@ import java.util.List;
  */
 public interface ClassificationDao {
 
-    int create(Classification classification);
+    int create(Document document, DocumentClassification classification);
 
-    List<Classification> findForSentence(Sentence sentence);
-
+    List<DocumentClassification> forForDocument(Document document);
 }

@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS document (
 );
 
 CREATE TABLE IF NOT EXISTS classification (
-  classification_id INT           NOT NULL,
+  classification_id INT           NOT NULL AUTO_INCREMENT,
   document_id       INT           NOT NULL,
   module_id         VARCHAR(50)   NOT NULL,
   created           DATETIME      NOT NULL,
@@ -124,7 +124,7 @@ ALTER TABLE classification_value
  * Add base data
  */
 
-INSERT INTO access_role (role_id) VALUES
+INSERT IGNORE INTO access_role (role_id) VALUES
   ('crawler'),
   ('classifier'),
   ('external-source'),

@@ -50,11 +50,6 @@ public class Sentence {
     }
 
     @Deprecated
-    public void addClassifications(List<Classification> classifications) {
-        this.classifications.addAll(classifications);
-    }
-
-    @Deprecated
     public List<Classification> getClassifications() {
         return new ArrayList<>(classifications);
     }

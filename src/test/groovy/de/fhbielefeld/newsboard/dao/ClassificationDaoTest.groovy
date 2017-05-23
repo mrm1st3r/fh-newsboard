@@ -45,43 +45,37 @@ class ClassificationDaoTest extends Specification {
         dummyDocument = document
     }
 
-    def "should find for sentence"() {
+    def "should find for document"() {
         given:
         ExternalModule additionalModule = new ExternalModule(
                 "additional_testing_module", "", "", "", new AccessReference("test-access"))
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId())
-        Sentence dummySentence = dummyDocument.getSentences().get(0)
-        Classification c1 = TestUtils.sampleClassification(dummyModule, dummySentence.getId())
-        classificationDao.create(c1)
 
-        Classification c2 = TestUtils.sampleClassification(additionalModule, dummySentence.getId())
-        classificationDao.create(c2)
+        DocumentClassification classification = new DocumentClassification(null, dummyModule, [
+                ClassificationValue.of(1),
+                ClassificationValue.of(-1)
+        ])
+        classificationDao.create(dummyDocument, classification)
 
         when:
-        List<Classification> testClassifications = classificationDao.findForSentence(dummySentence)
+        List<DocumentClassification> actual = classificationDao.forForDocument(dummyDocument)
 
         then:
-        for (Classification c : testClassifications) {
-            c.getConfidence() == c1.getConfidence()
-            c.getValue() == c1.getValue()
-            c.getSentenceId() == c1.getSentenceId()
-        }
-        testClassifications.get(0).getExternalModule().getId() == "additional_testing_module"
-        testClassifications.get(1).getExternalModule().getId() == "test_module"
+        actual.size() == 1
+        def dc = actual.get(0)
+
+        dc.getModule().getId() == dummyModule.getId()
+        dc.values.size() == 2
+        dc.values[0].value == 1
+        dc.values[0].confidence == 1
+        dc.values[1].value == -1
 
         noExceptionThrown()
     }
 
     def cleanup() {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
-    }
-
-    def compareClassifications(Classification thisClassification, Classification thatClassification) {
-        thisClassification.getConfidence() == thatClassification.getConfidence() &&
-        thisClassification.getValue() == thatClassification.getValue() &&
-        thisClassification.getSentenceId() == thatClassification.getSentenceId() &&
-        thisClassification.getExternalModule().getId() == thatClassification.getExternalModule().getId()
     }
 
     def insertDocument(Document document) {

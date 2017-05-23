@@ -1,16 +1,22 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.dao.ClassificationDao;
-import de.fhbielefeld.newsboard.model.Classification;
-import de.fhbielefeld.newsboard.model.ModuleReference;
-import de.fhbielefeld.newsboard.model.Sentence;
+import de.fhbielefeld.newsboard.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 
 /**
  * Mysql implementation for Classification DAO.
@@ -19,25 +25,13 @@ import java.util.OptionalDouble;
 public class ClassificationDaoMysql implements ClassificationDao {
 
     private static final String GET_CLASSIFICATIONS_FOR_SENTENCE =
-            "SELECT * FROM classification WHERE sentence_id = ?";
+            "SELECT * FROM classification c " +
+                    "LEFT JOIN classification_value v ON c.classification_id = v.classification_id " +
+                    "WHERE c.document_id = ?";
     private static final String INSERT_CLASSIFICATION =
-            "INSERT IGNORE INTO classification (confidence, result, sentence_id, module_id) VALUES (?, ?, ?, ?)";
-
-    private final RowMapper<Classification> rowMapper = (resultSet, i) -> {
-        double confidenceValue = resultSet.getDouble("confidence");
-        OptionalDouble confidence;
-        if (!resultSet.wasNull()) {
-            confidence = OptionalDouble.of(confidenceValue);
-        } else {
-            confidence = OptionalDouble.empty();
-        }
-        return new Classification(
-                resultSet.getInt("sentence_id"),
-                new ModuleReference(resultSet.getString("module_id")),
-                resultSet.getDouble("result"),
-                confidence
-        );
-    };
+            "INSERT INTO classification (document_id, module_id, created) VALUES (?, ?, ?)";
+    private static final String INSERT_CLASSIFICATION_VALUE =
+            "INSERT INTO classification_value (classification_id, order_seq, classification, confidence) VALUES (?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -47,20 +41,55 @@ public class ClassificationDaoMysql implements ClassificationDao {
     }
 
     @Override
-    public List<Classification> findForSentence(Sentence sentence) {
-        return jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, rowMapper, (Object) sentence.getId());
+    public List<DocumentClassification> forForDocument(Document document) {
+        return jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, new ClassificationResultExtractor(), (Object) document.getId());
     }
 
     @Override
-    public int create(Classification classification) {
-        Double confidence = null;
-        OptionalDouble optionalConfidence = classification.getConfidence();
-        if (optionalConfidence.isPresent()) {
-            confidence = optionalConfidence.getAsDouble();
+    public int create(Document document, DocumentClassification classification) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int updatedRows = jdbcTemplate.update(connection -> {
+            PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{"classification_id"});
+            pst.setInt(1, document.getId());
+            pst.setString(2, classification.getModule().getId());
+            pst.setDate(3, Date.valueOf(LocalDate.now()));
+            return pst;
+        }, keyHolder);
+
+        int sequence = 1;
+        for (ClassificationValue v : classification.getValues()) {
+            updatedRows += jdbcTemplate.update(INSERT_CLASSIFICATION_VALUE,
+                    keyHolder.getKey().intValue(),
+                    sequence++,
+                    v.getValue(),
+                    v.getConfidence());
         }
-        return jdbcTemplate.update(INSERT_CLASSIFICATION, confidence,
-                classification.getValue(),
-                classification.getSentenceId(),
-                classification.getExternalModule().getId());
+        return updatedRows;
+    }
+
+    private class ClassificationResultExtractor implements ResultSetExtractor<List<DocumentClassification>> {
+
+        @Override
+        public List<DocumentClassification> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+            List<DocumentClassification> classifications = new ArrayList<>();
+            while (resultSet.next()) {
+                List<ClassificationValue> values = new ArrayList<>();
+                int classification_id = resultSet.getInt("classification_id");
+                String module_id = resultSet.getString("module_id");
+                while (!resultSet.isAfterLast() && classification_id == resultSet.getInt("classification_id")) {
+                    values.add(ClassificationValue.of(
+                            resultSet.getDouble("classification"),
+                            resultSet.getDouble("confidence")
+                    ));
+                    resultSet.next();
+                }
+                classifications.add(new DocumentClassification(
+                        new ClassificationId(classification_id),
+                        new ModuleReference(module_id),
+                        values
+                ));
+            }
+            return classifications;
+        }
     }
 }
