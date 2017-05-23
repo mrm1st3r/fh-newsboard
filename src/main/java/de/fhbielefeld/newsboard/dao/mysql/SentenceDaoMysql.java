@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.dao.ClassificationDao;
 import de.fhbielefeld.newsboard.dao.SentenceDao;
 import de.fhbielefeld.newsboard.model.Document;
 import de.fhbielefeld.newsboard.model.DocumentStub;
@@ -25,21 +24,15 @@ public class SentenceDaoMysql implements SentenceDao {
     private static final String INSERT_SENTENCE = "INSERT INTO sentence(document_seq, content, document_id) VALUES (?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
-    private ClassificationDao classificationDao;
 
-    private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> {
-        Sentence sentence = new Sentence(
-                resultSet.getInt("sentence_id"),
-                resultSet.getInt("document_seq"),
-                resultSet.getString("content"));
-        sentence.addClassifications(classificationDao.findForSentence(sentence));
-        return sentence;
-    };
+    private final RowMapper<Sentence> sentenceRowMapper = (resultSet, i) -> new Sentence(
+            resultSet.getInt("sentence_id"),
+            resultSet.getInt("document_seq"),
+            resultSet.getString("content"));
 
     @Autowired
-    public SentenceDaoMysql(JdbcTemplate jdbcTemplate, ClassificationDao classificationDao) {
+    public SentenceDaoMysql(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.classificationDao = classificationDao;
     }
 
     @Override
