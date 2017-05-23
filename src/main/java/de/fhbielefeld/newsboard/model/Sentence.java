@@ -49,14 +49,17 @@ public class Sentence {
         return text;
     }
 
+    @Deprecated
     public void addClassifications(List<Classification> classifications) {
         this.classifications.addAll(classifications);
     }
 
+    @Deprecated
     public List<Classification> getClassifications() {
         return new ArrayList<>(classifications);
     }
 
+    @Deprecated
     public double getAverageClassificationValue() {
         if (classifications.isEmpty()) {
             return 0;
@@ -64,6 +67,7 @@ public class Sentence {
         return classifications.stream().mapToDouble(Classification::weightedValue).sum() / classifications.size();
     }
 
+    @Deprecated
     public void addClassification(ModuleReference classifier, double value, OptionalDouble confidence) {
         if (classifier == null) {
             throw new IllegalArgumentException("Classifier must not be null");

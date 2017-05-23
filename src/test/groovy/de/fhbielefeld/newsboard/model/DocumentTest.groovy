@@ -22,27 +22,6 @@ class DocumentTest extends Specification {
         doc1.hashCode() == doc3.hashCode()
     }
 
-    def "should calculate average classification value"() {
-        given:
-        def s1 = new Sentence(1, 1, "Foo.")
-        def s2 = new Sentence(2, 2, "Bar.")
-        s1.addClassification(new ModuleReference("a"), 0.6, OptionalDouble.empty())
-        s1.addClassification(new ModuleReference("b"), 0.4, OptionalDouble.empty())
-        s2.addClassification(new ModuleReference("a"), -0.1, OptionalDouble.empty())
-        def d = TestUtils.emptyDocument(1, [s1, s2])
-
-        expect:
-        d.getAverageClassificationValue() == 0.2d
-    }
-
-    def "should calculate average without sentences"() {
-        given:
-        def d = TestUtils.emptyDocument(42, Collections.emptyList())
-
-        expect:
-        d.getAverageClassificationValue() == 0
-    }
-
     def "should set ID only once"() {
         given:
         def doc = TestUtils.emptyDocument(-1, Collections.emptyList())

@@ -10,6 +10,7 @@ import java.util.OptionalDouble;
  * @author Felix Meyer, Lukas Taake
  */
 @DDDEntity
+@Deprecated
 public class Classification {
 
     private final int sentenceId;

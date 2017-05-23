@@ -12,6 +12,7 @@ import java.util.*;
 @DDDEntity
 public class Document extends DocumentStub {
     private List<Sentence> sentences = new ArrayList<>();
+    private final List<DocumentClassification> classifications = new ArrayList<>();
 
     public Document(DocumentStub stub, List<Sentence> sentences) {
         super(stub);
@@ -28,6 +29,7 @@ public class Document extends DocumentStub {
         return sentences;
     }
 
+    @Deprecated
     public Sentence getSentenceById(int id) {
         Optional<Sentence> sentence = sentences.stream().filter(s -> s.getId() == id).findFirst();
         if (!sentence.isPresent()) {
@@ -36,11 +38,20 @@ public class Document extends DocumentStub {
         return sentence.get();
     }
 
+    @Deprecated
     public double getAverageClassificationValue() {
         if (sentences.isEmpty()) {
             return 0;
         }
         return sentences.stream().mapToDouble(Sentence::getAverageClassificationValue).sum() / sentences.size();
+    }
+
+    public void addClassification(DocumentClassification classification) {
+        this.classifications.add(classification);
+    }
+
+    public List<DocumentClassification> getClassifications() {
+        return classifications;
     }
 
     @Override
