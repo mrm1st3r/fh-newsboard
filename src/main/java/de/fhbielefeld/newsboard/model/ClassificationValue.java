@@ -50,4 +50,12 @@ public class ClassificationValue {
     public double effectiveValue() {
         return value * confidence;
     }
+
+    public double getValue() {
+        return value;
+    }
+
+    public double getConfidence() {
+        return confidence;
+    }
 }

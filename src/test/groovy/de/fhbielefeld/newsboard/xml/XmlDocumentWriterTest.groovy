@@ -51,8 +51,8 @@ class XmlDocumentWriterTest extends Specification {
                 "<sentence id=\"1\">Lorem ipsum dolor sit amet.</sentence>" +
                 "<sentence id=\"24\">Die Würde des Tasters ist unanmenschbar.</sentence>" +
                 "</sentences><classifications>" +
-                "<classification sentenceid=\"1\">1.0</classification>" +
-                "<classification sentenceid=\"24\" confidence=\"0.95\">0.9</classification>" +
+                "<classification sentence=\"1\" confidence=\"1.0\">1.0</classification>" +
+                "<classification sentence=\"2\" confidence=\"0.95\">0.9</classification>" +
                 "</classifications></document></documents>"
     }
 }
