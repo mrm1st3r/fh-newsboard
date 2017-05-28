@@ -118,7 +118,7 @@ ALTER TABLE classification_value
   ADD CONSTRAINT fk_classification_id
   FOREIGN KEY (classification_id)
   REFERENCES classification(classification_id)
-  ON DELETE RESTRICT;
+  ON DELETE CASCADE;
 
 /*
  * Add base data
