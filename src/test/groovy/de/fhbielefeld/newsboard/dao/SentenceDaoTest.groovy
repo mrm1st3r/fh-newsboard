@@ -53,7 +53,6 @@ class SentenceDaoTest extends Specification {
         for ( int i = 0; i < testSentences.size(); i++) {
             testSentences[i].getNumber() == dummySentences[i].getNumber()
             testSentences[i].getText() == dummySentences[i].getText()
-            testSentences[i].getClassifications().size() == dummySentences[i].getClassifications().size()
         }
     }
 

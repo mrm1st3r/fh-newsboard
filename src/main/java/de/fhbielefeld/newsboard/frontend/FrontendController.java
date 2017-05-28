@@ -1,6 +1,8 @@
 package de.fhbielefeld.newsboard.frontend;
 
 import de.fhbielefeld.newsboard.dao.DocumentDao;
+import de.fhbielefeld.newsboard.model.AverageClassificationService;
+import de.fhbielefeld.newsboard.model.ClassificationValue;
 import de.fhbielefeld.newsboard.model.Document;
 import de.fhbielefeld.newsboard.model.DocumentStub;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -25,10 +28,12 @@ public class FrontendController {
     private static final String ABOUT_TEMPLATE = "about";
 
     private final DocumentDao documentDao;
+    private final AverageClassificationService classificationService;
 
     @Autowired
-    public FrontendController(DocumentDao documentDao) {
+    public FrontendController(DocumentDao documentDao, AverageClassificationService classificationService) {
         this.documentDao = documentDao;
+        this.classificationService = classificationService;
     }
 
     /**
@@ -37,9 +42,13 @@ public class FrontendController {
     @RequestMapping("/")
     public String index(Model model) {
         List<DocumentStub> documentStubs = documentDao.findAllStubs();
-        List<Document> documents = documentStubs.stream().limit(DOCUMENTS_PER_PAGE).map(
-                document -> documentDao.get(document.getId())).collect(Collectors.toList());
-        model.addAttribute("documents", documents);
+        List<Document> documents = documentStubs
+                .stream()
+                .limit(DOCUMENTS_PER_PAGE)
+                .map(document -> documentDao.get(document.getId()))
+                .collect(Collectors.toList());
+        Map<ClassificationValue, Document> classificationMapping = classificationService.calculateAverageFor(documents);
+        model.addAttribute("documents", classificationMapping);
         return INDEX_TEMPLATE;
     }
 
@@ -50,6 +59,7 @@ public class FrontendController {
     public String details(Model model, @PathVariable String id) {
         Document doc = documentDao.get(Integer.parseInt(id));
         model.addAttribute("doc", doc);
+        model.addAttribute("average", classificationService.calculateAverageFor(doc));
         return DETAIL_TEMPLATE;
     }
 

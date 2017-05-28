@@ -38,14 +38,6 @@ public class Document extends DocumentStub {
         return sentence.get();
     }
 
-    @Deprecated
-    public double getAverageClassificationValue() {
-        if (sentences.isEmpty()) {
-            return 0;
-        }
-        return sentences.stream().mapToDouble(Sentence::getAverageClassificationValue).sum() / sentences.size();
-    }
-
     public void addClassification(DocumentClassification classification) {
         this.classifications.add(classification);
     }

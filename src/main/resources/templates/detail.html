@@ -5,11 +5,12 @@
 <body>
 <div th:replace="include/header::header"></div>
 <!--/*@thymesVar id="doc" type="de.fhbielefeld.newsboard.model.Document"*/-->
+<!--/*@thymesVar id="average" type="de.fhbielefeld.newsboard.model.ClassificationValue"*/-->
 <div class="container">
     <div class="row">
         <div class="column-md-12 page-header">
             <h1 th:text="${doc.title}"></h1>
-            Bewertung: <span th:text="${#numbers.formatDecimal(doc.averageClassificationValue,1,2)}">-0.42</span>
+            Bewertung: <span th:text="${#numbers.formatDecimal(average.effectiveValue(),1,2)}">-0.42</span>
         </div>
     </div>
     <div class="row">
