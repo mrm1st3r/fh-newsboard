@@ -31,7 +31,7 @@ INSERT INTO sentence(sentence_id, document_seq, content, document_id) VALUES
 
 -- Classifications
 INSERT INTO classification(classification_id, document_id, module_id, created) VALUES
-(4, 1, 'test-classifier', '2017-05-23');
+(4, 2, 'test-classifier', '2017-05-23');
 
 -- Classification values
 INSERT INTO classification_value(classification_id, order_seq, classification, confidence) VALUES

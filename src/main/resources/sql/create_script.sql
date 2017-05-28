@@ -114,6 +114,10 @@ ALTER TABLE classification
   REFERENCES module (module_id)
   ON DELETE RESTRICT;
 
+ALTER TABLE classification
+  ADD CONSTRAINT uq_document_module
+  UNIQUE KEY (document_id, module_id);
+
 ALTER TABLE classification_value
   ADD CONSTRAINT fk_classification_id
   FOREIGN KEY (classification_id)
