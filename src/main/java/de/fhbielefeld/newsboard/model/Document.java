@@ -54,6 +54,10 @@ public class Document extends DocumentStub {
         return classifications;
     }
 
+    public DocumentClassification addClassification(ModuleReference module, List<ClassificationValue> values) {
+        return new DocumentClassification(new DocumentId(getId()), null, module, values);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Document)) {

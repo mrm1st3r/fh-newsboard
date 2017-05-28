@@ -52,11 +52,11 @@ class ClassificationDaoTest extends Specification {
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId())
 
-        DocumentClassification classification = new DocumentClassification(null, dummyModule, [
+        DocumentClassification classification = new DocumentClassification(new DocumentId(dummyDocument.getId()), null, dummyModule, [
                 ClassificationValue.of(1),
                 ClassificationValue.of(-1)
         ])
-        classificationDao.create(dummyDocument, classification)
+        classificationDao.create(classification)
 
         when:
         List<DocumentClassification> actual = classificationDao.forForDocument(dummyDocument)

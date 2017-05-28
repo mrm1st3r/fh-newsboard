@@ -58,7 +58,9 @@ class ClassificationSaxHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if ("classification".equals(qName)) {
-            handler.onClassificationParsed(documentId, sentenceId, classifierId, value, confidence);
+            handler.onValueParsed(value, confidence);
+        } else if ("document".equals(qName)) {
+            handler.onClassificationParsed(documentId, classifierId);
         }
     }
 

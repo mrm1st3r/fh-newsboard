@@ -23,7 +23,7 @@ class ClassificationReadTest extends Specification {
         reader.readClassifications(xml, handler)
 
         then:
-        1 * handler.onClassificationParsed(1, 1, "test-classifier", -1, OptionalDouble.empty())
-        1 * handler.onClassificationParsed(1, 2, "test-classifier", -1, OptionalDouble.of(1))
+        1 * handler.onValueParsed(-1, OptionalDouble.empty())
+        1 * handler.onValueParsed(-1, OptionalDouble.of(1))
     }
 }

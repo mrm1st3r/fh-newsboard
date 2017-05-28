@@ -7,11 +7,13 @@ import java.util.List;
  */
 public class DocumentClassification {
 
+    private final DocumentId documentId;
     private final ClassificationId id;
     private final ModuleReference module;
     private final List<ClassificationValue> values;
 
-    public DocumentClassification(ClassificationId id, ModuleReference module, List<ClassificationValue> values) {
+    public DocumentClassification(DocumentId documentId, ClassificationId id, ModuleReference module, List<ClassificationValue> values) {
+        this.documentId = documentId;
         this.id = id;
         this.module = module;
         this.values = values;
@@ -19,6 +21,10 @@ public class DocumentClassification {
 
     public ClassificationId getId() {
         return id;
+    }
+
+    public DocumentId getDocumentId() {
+        return documentId;
     }
 
     public ModuleReference getModule() {

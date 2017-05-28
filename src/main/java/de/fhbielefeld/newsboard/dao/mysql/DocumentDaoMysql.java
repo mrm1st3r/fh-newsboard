@@ -68,7 +68,7 @@ public class DocumentDaoMysql implements DocumentDao {
     public void update(Document document) {
         document.getClassifications().stream()
                 .filter(c -> c.getId() != null)
-                .forEach(classification -> classificationDao.create(document, classification));
+                .forEach(classification -> classificationDao.create(classification));
     }
 
     @Override

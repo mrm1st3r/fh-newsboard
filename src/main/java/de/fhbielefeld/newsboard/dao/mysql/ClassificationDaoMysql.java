@@ -46,11 +46,11 @@ public class ClassificationDaoMysql implements ClassificationDao {
     }
 
     @Override
-    public int create(Document document, DocumentClassification classification) {
+    public int create(DocumentClassification classification) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int updatedRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{"classification_id"});
-            pst.setInt(1, document.getId());
+            pst.setInt(1, classification.getDocumentId().getId());
             pst.setString(2, classification.getModule().getId());
             pst.setDate(3, Date.valueOf(LocalDate.now()));
             return pst;
@@ -75,6 +75,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
             while (resultSet.next()) {
                 List<ClassificationValue> values = new ArrayList<>();
                 int classification_id = resultSet.getInt("classification_id");
+                int document_id = resultSet.getInt("document_id");
                 String module_id = resultSet.getString("module_id");
                 while (!resultSet.isAfterLast() && classification_id == resultSet.getInt("classification_id")) {
                     values.add(ClassificationValue.of(
@@ -84,7 +85,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
                     resultSet.next();
                 }
                 classifications.add(new DocumentClassification(
-                        new ClassificationId(classification_id),
+                        new DocumentId(document_id), new ClassificationId(classification_id),
                         new ModuleReference(module_id),
                         values
                 ));

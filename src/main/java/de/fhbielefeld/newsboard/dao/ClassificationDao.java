@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ClassificationDao {
 
-    int create(Document document, DocumentClassification classification);
+    int create(DocumentClassification classification);
 
     List<DocumentClassification> forForDocument(Document document);
 }

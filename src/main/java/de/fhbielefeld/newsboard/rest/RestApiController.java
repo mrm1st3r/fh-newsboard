@@ -1,10 +1,12 @@
 package de.fhbielefeld.newsboard.rest;
 
 import de.fhbielefeld.newsboard.dao.AccessDao;
+import de.fhbielefeld.newsboard.dao.ClassificationDao;
 import de.fhbielefeld.newsboard.dao.DocumentDao;
 import de.fhbielefeld.newsboard.dao.ExternalModuleDao;
 import de.fhbielefeld.newsboard.model.*;
 import de.fhbielefeld.newsboard.processing.RawDocumentProcessor;
+import de.fhbielefeld.newsboard.xml.ClassificationParsedHandler;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
 import de.fhbielefeld.newsboard.xml.XmlDocumentWriter;
 import de.fhbielefeld.newsboard.xml.XmlException;
@@ -19,9 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLStreamException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller for REST-Api.
@@ -40,16 +40,18 @@ public class RestApiController {
     private final DocumentDao documentDao;
     private final AccessDao accessDao;
     private final ExternalModuleDao moduleDao;
+    private final ClassificationDao classificationDao;
 
     @Autowired
     public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
-                             DocumentDao documentDao, AccessDao accessDao, ExternalModuleDao moduleDao) {
+                             DocumentDao documentDao, AccessDao accessDao, ExternalModuleDao moduleDao, ClassificationDao classificationDao) {
         this.xmlReader = xmlReader;
         this.xmlWriter = xmlWriter;
         this.documentProcessor = documentProcessor;
         this.documentDao = documentDao;
         this.accessDao = accessDao;
         this.moduleDao = moduleDao;
+        this.classificationDao = classificationDao;
     }
 
     /**
@@ -129,16 +131,30 @@ public class RestApiController {
             return handleAuthenticationError(response);
         }
         ExternalModule classifier = authenticationResult.get();
+        List<ClassificationValue> values = new ArrayList<>();
         StringReader in = new StringReader(body);
         try {
-            xmlReader.readClassifications(in, (documentId, sentenceId, classifierId, value, confidence) -> {
-                if (!classifierId.equals(classifier.getId())) {
-                    handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
-                }
-                Document document = documentDao.get(documentId);
-                document.getSentenceById(sentenceId).addClassification(classifier, value, confidence);
-                documentDao.update(document);
-            });
+            xmlReader.readClassifications(in,
+                    new ClassificationParsedHandler() {
+                        @Override
+                        public void onValueParsed(double value, OptionalDouble confidence) {
+                            if (confidence.isPresent()) {
+                                values.add(ClassificationValue.of(value, confidence.getAsDouble()));
+                            } else {
+                                values.add(ClassificationValue.of(value));
+                            }
+                        }
+
+                        @Override
+                        public void onClassificationParsed(int documentId, String classifierId) {
+                            if (!classifierId.equals(classifier.getId())) {
+                                handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
+                            }
+                            Document document = documentDao.get(documentId);
+                            DocumentClassification classification = document.addClassification(new ModuleReference(classifierId), values);
+                            classificationDao.create(classification);
+                        }
+                    });
         } catch (Exception e) {
             return handleClientError(response, e);
         }
