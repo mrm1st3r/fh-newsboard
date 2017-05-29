@@ -1,13 +1,10 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDEntity;
-
 import java.util.Calendar;
 
 /**
  * Model class that represents a raw document as received from a crawler.
  */
-@DDDEntity
 public class RawDocument extends DocumentStub {
 
     private final String rawText;

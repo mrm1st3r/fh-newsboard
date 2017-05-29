@@ -1,12 +1,9 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDValueObject;
-
 /**
  * A single classification value consisting of
  * a classification value and an optional confidence.
  */
-@DDDValueObject
 public class ClassificationValue {
 
     private static final double DEFAULT_CONFIDENCE = 1;

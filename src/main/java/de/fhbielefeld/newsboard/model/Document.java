@@ -1,15 +1,14 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDEntity;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Domain class representing a classifiable document.
  *
  * @author Felix Meyer, Lukas Taake
  */
-@DDDEntity
 public class Document extends DocumentStub {
     private final List<Sentence> sentences = new ArrayList<>();
 

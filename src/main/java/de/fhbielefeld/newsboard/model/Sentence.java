@@ -1,13 +1,10 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDEntity;
-
 /**
  * Domain class representing a sentence inside a classifiable document.
  *
  * @author Felix Meyer, Lukas Taake
  */
-@DDDEntity
 public class Sentence {
     private int id;
     private final int number;

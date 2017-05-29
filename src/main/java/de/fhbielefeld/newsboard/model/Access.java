@@ -1,12 +1,9 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDEntity;
-
 /**
  * An access contains login credentials and an access role
  * for authenticating and authorizing a user.
  */
-@DDDEntity
 public class Access extends AccessReference {
 
     private final AccessRole role;

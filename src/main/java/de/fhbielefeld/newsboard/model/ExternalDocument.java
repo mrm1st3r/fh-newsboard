@@ -1,13 +1,10 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.smartsquare.ddd.annotations.DDDEntity;
-
 /**
  * Domain class representing external documents, which may not be classified.
  *
  * @author Felix Meyer
  */
-@DDDEntity
 public class ExternalDocument {
     private int id;
     private String title;
