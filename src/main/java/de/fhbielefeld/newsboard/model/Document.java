@@ -12,7 +12,6 @@ import java.util.*;
 @DDDEntity
 public class Document extends DocumentStub {
     private final List<Sentence> sentences = new ArrayList<>();
-    private final List<DocumentClassification> classifications = new ArrayList<>();
 
     public Document(DocumentStub stub, List<Sentence> sentences) {
         super(stub);
@@ -27,14 +26,6 @@ public class Document extends DocumentStub {
 
     public List<Sentence> getSentences() {
         return sentences;
-    }
-
-    public void addClassification(DocumentClassification classification) {
-        this.classifications.add(classification);
-    }
-
-    public List<DocumentClassification> getClassifications() {
-        return classifications;
     }
 
     public DocumentClassification addClassification(ModuleReference module, List<ClassificationValue> values) {
