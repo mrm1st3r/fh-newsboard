@@ -47,7 +47,7 @@ public class FrontendController {
                 .limit(DOCUMENTS_PER_PAGE)
                 .map(document -> documentDao.get(document.getId()))
                 .collect(Collectors.toList());
-        Map<ClassificationValue, Document> classificationMapping = classificationService.calculateAverageFor(documents);
+        Map<Document, ClassificationValue> classificationMapping = classificationService.calculateAverageFor(documents);
         model.addAttribute("documents", classificationMapping);
         return INDEX_TEMPLATE;
     }

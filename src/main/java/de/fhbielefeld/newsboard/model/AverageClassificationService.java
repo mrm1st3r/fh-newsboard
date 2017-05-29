@@ -21,11 +21,11 @@ public class AverageClassificationService {
         this.classificationDao = classificationDao;
     }
 
-    public Map<ClassificationValue, Document> calculateAverageFor(List<Document> documents) {
-        Map<ClassificationValue, Document> mapping = new HashMap<>();
+    public Map<Document, ClassificationValue> calculateAverageFor(List<Document> documents) {
+        Map<Document, ClassificationValue> mapping = new HashMap<>();
         for (Document document : documents) {
             ClassificationValue average = calculateAverageFor(document);
-            mapping.put(average, document);
+            mapping.put(document, average);
         }
         return mapping;
     }
