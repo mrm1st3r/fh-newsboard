@@ -99,8 +99,9 @@ public class RestApiController {
     public String getDocument(HttpServletResponse response, @PathVariable String id) {
         int docId = Integer.parseInt(id);
         Document doc = documentDao.get(docId);
+        List<DocumentClassification> classifications = classificationDao.forForDocument(doc);
         try {
-            return xmlWriter.writeDocument(doc);
+            return xmlWriter.writeDocument(doc, classifications);
         } catch (XMLStreamException e) {
             return handleServerError(response, e);
         }
@@ -113,8 +114,12 @@ public class RestApiController {
     @RequestMapping(path = "/unclassified/{moduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getUnclassified(HttpServletResponse response, @PathVariable String moduleId) {
         List<Document> documents = documentDao.findUnclassifiedForModule(new ModuleReference(moduleId));
+        Map<Document, List<DocumentClassification>> classificationMap = new HashMap<>();
+        for (Document document : documents) {
+            classificationMap.put(document, classificationDao.forForDocument(document));
+        }
         try {
-            return xmlWriter.writeDocumentList(documents);
+            return xmlWriter.writeDocumentList(classificationMap);
         } catch (XMLStreamException e) {
             return handleServerError(response, e);
         }

@@ -1,6 +1,7 @@
 package de.fhbielefeld.newsboard.xml;
 
 import de.fhbielefeld.newsboard.model.Document;
+import de.fhbielefeld.newsboard.model.DocumentClassification;
 import de.fhbielefeld.newsboard.model.DocumentStub;
 import org.springframework.stereotype.Service;
 
@@ -8,8 +9,9 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.StringWriter;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Write XML-Documents from domain classes to be transmitted via the REST-API.
@@ -29,15 +31,17 @@ public class XmlDocumentWriter {
         return writeDocument(new DocumentStubWriter(), documents);
     }
 
-    public String writeDocument(Document document) throws XMLStreamException {
-        return writeDocument(new DocumentWriter(), Collections.singletonList(document));
+    public String writeDocument(Document document, List<DocumentClassification> classifications) throws XMLStreamException {
+        Map<Document, List<DocumentClassification>> map = new HashMap<>();
+        map.put(document, classifications);
+        return writeDocument(new DocumentWriter(map), map.entrySet());
     }
 
-    public String writeDocumentList(List<Document> documents) throws XMLStreamException {
-        return writeDocument(new DocumentWriter(), documents);
+    public String writeDocumentList(Map<Document, List<DocumentClassification>> documents) throws XMLStreamException {
+        return writeDocument(new DocumentWriter(documents), documents.entrySet());
     }
 
-    private <T> String writeDocument(DocumentContentWriter<T> contentWriter, List<T> documents) throws XMLStreamException {
+    private <T> String writeDocument(DocumentContentWriter<T> contentWriter, Iterable<T> documents) throws XMLStreamException {
         StringWriter strWriter = new StringWriter();
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(strWriter);
 

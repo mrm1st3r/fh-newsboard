@@ -61,15 +61,18 @@ final class TestUtils {
         def document = new Document(42, "Wuppi Fluppi", "Hans Wurst", "http://example.com",
                 new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
                 null, [s1, s2])
-        def c = new DocumentClassification(null, new ClassificationId(1), new ModuleReference("a"), [
-                ClassificationValue.of(1),
-                ClassificationValue.of(0.9, 0.95)
-        ])
-        document.addClassification(c)
         return document
     }
 
     static emptyDocument(int id, List<Sentence> sentences) {
         return new Document(id, "", "", "", null, null, null, sentences)
+    }
+
+    static List<DocumentClassification> classificationsForDocument(Document document) {
+        def c = document.addClassification(new ModuleReference("a"), [
+                ClassificationValue.of(1),
+                ClassificationValue.of(0.9, 0.95)
+        ])
+        return Collections.singletonList(c)
     }
 }

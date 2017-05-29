@@ -4,18 +4,26 @@ import de.fhbielefeld.newsboard.model.*;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Write complete document-structure to xml.
  * Acts as a decorator for DocumentStubWriter to write meta data.
  */
-class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document> {
+class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Map.Entry<Document, List<DocumentClassification>>> {
 
     private final DocumentStubWriter stubWriter = new DecoratedStubWriter();
+    private final Map<Document, List<DocumentClassification>> mapping;
+
+    DocumentWriter(Map<Document, List<DocumentClassification>> map) {
+        this.mapping = map;
+    }
 
     @Override
-    public void writeContent(XMLStreamWriter writer, Document doc) throws XMLStreamException {
-        stubWriter.writeContent(writer, doc);
+    public void writeContent(XMLStreamWriter writer, Map.Entry<Document, List<DocumentClassification>> doc)
+            throws XMLStreamException {
+        stubWriter.writeContent(writer, doc.getKey());
     }
 
     private class DecoratedStubWriter extends DocumentStubWriter {
@@ -38,7 +46,7 @@ class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Document
 
         private void writeClassifications(XMLStreamWriter writer, Document doc) throws XMLStreamException {
             writer.writeStartElement("classifications");
-            for (DocumentClassification c : doc.getClassifications()) {
+            for (DocumentClassification c : mapping.get(doc)) {
                 int sentenceNumber = 1;
                 for (ClassificationValue v : c.getValues()) {
                     writer.writeStartElement("classification");

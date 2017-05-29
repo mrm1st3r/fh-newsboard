@@ -36,8 +36,12 @@ class XmlDocumentWriterTest extends Specification {
     }
 
     def "should write valid document structure"() {
+        given:
+        def document = TestUtils.sampleDocumentForXml()
+        def classifications = TestUtils.classificationsForDocument(document)
+
         when:
-        def result = writer.writeDocument(TestUtils.sampleDocumentForXml())
+        def result = writer.writeDocument(document, classifications)
 
         then:
         result == "<?xml version=\"1.0\" ?><documents xmlns=\"http://fh-bielefeld.de/newsboard\">" +

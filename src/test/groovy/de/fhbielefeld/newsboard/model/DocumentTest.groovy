@@ -34,16 +34,4 @@ class DocumentTest extends Specification {
         thrown(IllegalStateException)
         doc.getId() == 1
     }
-
-    def "should not find unknown sentence"() {
-        given:
-        def sentence = new Sentence(1, 1, "Foo")
-        def document = new Document(1, "", "", "", null, null, null, [sentence])
-
-        when:
-        document.getSentenceById(2)
-
-        then:
-        thrown(NoSuchElementException)
-    }
 }

@@ -29,15 +29,6 @@ public class Document extends DocumentStub {
         return sentences;
     }
 
-    @Deprecated
-    public Sentence getSentenceById(int id) {
-        Optional<Sentence> sentence = sentences.stream().filter(s -> s.getId() == id).findFirst();
-        if (!sentence.isPresent()) {
-            throw new NoSuchElementException("Document doesn't contain a sentence with id: " + id);
-        }
-        return sentence.get();
-    }
-
     public void addClassification(DocumentClassification classification) {
         this.classifications.add(classification);
     }
