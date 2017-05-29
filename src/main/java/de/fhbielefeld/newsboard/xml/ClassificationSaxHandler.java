@@ -14,7 +14,6 @@ class ClassificationSaxHandler extends DefaultHandler {
     private final ClassificationParsedHandler handler;
     private boolean insideClassification;
 
-    private int sentenceId;
     private OptionalDouble confidence;
     private String classifierId;
     private double value;
@@ -38,7 +37,6 @@ class ClassificationSaxHandler extends DefaultHandler {
     }
 
     private void parseAttributes(Attributes attr) {
-        sentenceId = Integer.parseInt(attr.getValue("sentenceid"));
         classifierId = attr.getValue("classifier");
         if (attr.getIndex("confidence") >= 0) {
             confidence = OptionalDouble.of(Double.parseDouble(attr.getValue("confidence")));

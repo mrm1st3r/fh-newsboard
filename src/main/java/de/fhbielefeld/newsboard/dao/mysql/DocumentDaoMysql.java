@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.dao.ClassificationDao;
 import de.fhbielefeld.newsboard.dao.DocumentDao;
 import de.fhbielefeld.newsboard.dao.SentenceDao;
 import de.fhbielefeld.newsboard.model.Document;
@@ -36,7 +35,6 @@ public class DocumentDaoMysql implements DocumentDao {
 
     private final JdbcTemplate jdbcTemplate;
     private SentenceDao sentenceDao;
-    private final ClassificationDao classificationDao;
 
     private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
             r.getInt("document_id"),
@@ -53,22 +51,14 @@ public class DocumentDaoMysql implements DocumentDao {
     };
 
     @Autowired
-    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao, ClassificationDao classificationDao) {
+    public DocumentDaoMysql(JdbcTemplate jdbcTemplate, SentenceDao sentenceDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.sentenceDao = sentenceDao;
-        this.classificationDao = classificationDao;
     }
 
     @Override
     public Document get(int id) {
         return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id);
-    }
-
-    @Override
-    public void update(Document document) {
-        document.getClassifications().stream()
-                .filter(c -> c.getId() != null)
-                .forEach(classification -> classificationDao.create(classification));
     }
 
     @Override

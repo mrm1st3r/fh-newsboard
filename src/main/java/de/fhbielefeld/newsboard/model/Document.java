@@ -11,7 +11,7 @@ import java.util.*;
  */
 @DDDEntity
 public class Document extends DocumentStub {
-    private List<Sentence> sentences = new ArrayList<>();
+    private final List<Sentence> sentences = new ArrayList<>();
     private final List<DocumentClassification> classifications = new ArrayList<>();
 
     public Document(DocumentStub stub, List<Sentence> sentences) {

@@ -15,11 +15,6 @@ public interface DocumentDao {
 
     int create(Document document);
 
-    /**
-     * Persist new classifications of a document aggregate.
-     */
-    void update(Document document);
-
     List<DocumentStub> findAllStubs();
 
     List<Document> findUnclassifiedForModule(ModuleReference module);
