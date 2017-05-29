@@ -1,7 +1,4 @@
-package de.fhbielefeld.newsboard.dao;
-
-import de.fhbielefeld.newsboard.model.Access;
-import de.fhbielefeld.newsboard.model.AccessReference;
+package de.fhbielefeld.newsboard.model.access;
 
 /**
  * Data access interface for authentication tokens used by external modules.

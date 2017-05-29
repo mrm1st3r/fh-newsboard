@@ -1,7 +1,4 @@
-package de.fhbielefeld.newsboard.dao;
-
-import de.fhbielefeld.newsboard.model.Document;
-import de.fhbielefeld.newsboard.model.DocumentClassification;
+package de.fhbielefeld.newsboard.model.document;
 
 import java.util.List;
 

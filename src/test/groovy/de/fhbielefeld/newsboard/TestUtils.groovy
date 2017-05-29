@@ -1,6 +1,15 @@
 package de.fhbielefeld.newsboard
 
-import de.fhbielefeld.newsboard.model.*
+import de.fhbielefeld.newsboard.model.ExternalDocument
+import de.fhbielefeld.newsboard.model.access.Access
+import de.fhbielefeld.newsboard.model.access.AccessReference
+import de.fhbielefeld.newsboard.model.access.AccessRole
+import de.fhbielefeld.newsboard.model.document.ClassificationValue
+import de.fhbielefeld.newsboard.model.document.Document
+import de.fhbielefeld.newsboard.model.document.DocumentClassification
+import de.fhbielefeld.newsboard.model.document.Sentence
+import de.fhbielefeld.newsboard.model.module.ExternalModule
+import de.fhbielefeld.newsboard.model.module.ModuleReference
 import org.springframework.jdbc.core.JdbcTemplate
 
 /**

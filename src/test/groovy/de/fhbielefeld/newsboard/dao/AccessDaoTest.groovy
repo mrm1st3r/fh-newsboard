@@ -2,7 +2,8 @@ package de.fhbielefeld.newsboard.dao
 
 import de.fhbielefeld.newsboard.NewsboardApplication
 import de.fhbielefeld.newsboard.TestUtils
-import de.fhbielefeld.newsboard.model.Access
+import de.fhbielefeld.newsboard.model.access.Access
+import de.fhbielefeld.newsboard.model.access.AccessDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate

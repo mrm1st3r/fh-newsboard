@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.frontend
 
-import de.fhbielefeld.newsboard.dao.DocumentDao
+import de.fhbielefeld.newsboard.model.document.DocumentDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest

@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model
+package de.fhbielefeld.newsboard.model.access
 
 import de.fhbielefeld.newsboard.TestUtils
 import spock.lang.Specification

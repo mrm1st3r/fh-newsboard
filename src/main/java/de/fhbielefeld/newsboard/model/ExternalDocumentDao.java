@@ -1,6 +1,4 @@
-package de.fhbielefeld.newsboard.dao;
-
-import de.fhbielefeld.newsboard.model.ExternalDocument;
+package de.fhbielefeld.newsboard.model;
 
 /**
  * Data access interface for external documents.

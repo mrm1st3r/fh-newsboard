@@ -1,8 +1,8 @@
 package de.fhbielefeld.newsboard.xml;
 
-import de.fhbielefeld.newsboard.model.Document;
-import de.fhbielefeld.newsboard.model.DocumentClassification;
-import de.fhbielefeld.newsboard.model.DocumentStub;
+import de.fhbielefeld.newsboard.model.document.Document;
+import de.fhbielefeld.newsboard.model.document.DocumentClassification;
+import de.fhbielefeld.newsboard.model.document.DocumentStub;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.XMLOutputFactory;

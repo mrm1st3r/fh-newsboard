@@ -1,10 +1,6 @@
 package de.fhbielefeld.newsboard.frontend;
 
-import de.fhbielefeld.newsboard.dao.DocumentDao;
-import de.fhbielefeld.newsboard.model.AverageClassificationService;
-import de.fhbielefeld.newsboard.model.ClassificationValue;
-import de.fhbielefeld.newsboard.model.Document;
-import de.fhbielefeld.newsboard.model.DocumentStub;
+import de.fhbielefeld.newsboard.model.document.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

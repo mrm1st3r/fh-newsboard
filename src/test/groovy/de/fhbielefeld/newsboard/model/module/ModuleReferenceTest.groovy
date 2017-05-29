@@ -1,5 +1,6 @@
-package de.fhbielefeld.newsboard.model
+package de.fhbielefeld.newsboard.model.module
 
+import de.fhbielefeld.newsboard.model.access.AccessReference
 import spock.lang.Specification
 
 class ModuleReferenceTest extends Specification {

@@ -1,7 +1,4 @@
-package de.fhbielefeld.newsboard.dao;
-
-import de.fhbielefeld.newsboard.model.ExternalModule;
-import de.fhbielefeld.newsboard.model.ModuleReference;
+package de.fhbielefeld.newsboard.model.module;
 
 /**
  * Data access interface for external modules.

@@ -1,8 +1,8 @@
 package de.fhbielefeld.newsboard.processing;
 
-import de.fhbielefeld.newsboard.model.Document;
 import de.fhbielefeld.newsboard.model.RawDocument;
-import de.fhbielefeld.newsboard.model.Sentence;
+import de.fhbielefeld.newsboard.model.document.Document;
+import de.fhbielefeld.newsboard.model.document.Sentence;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.springframework.stereotype.Component;

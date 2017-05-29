@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model
 
+import de.fhbielefeld.newsboard.model.module.ModuleReference
 import spock.lang.Specification
 
 class ExternalDocumentTest extends Specification {

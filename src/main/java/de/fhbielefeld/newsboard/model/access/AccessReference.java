@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.access;
 
 /**
  * Reference to an access to be used within other aggregates.

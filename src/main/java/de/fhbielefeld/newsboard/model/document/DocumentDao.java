@@ -1,8 +1,6 @@
-package de.fhbielefeld.newsboard.dao;
+package de.fhbielefeld.newsboard.model.document;
 
-import de.fhbielefeld.newsboard.model.Document;
-import de.fhbielefeld.newsboard.model.DocumentStub;
-import de.fhbielefeld.newsboard.model.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
 
 import java.util.List;
 

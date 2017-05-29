@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model
+package de.fhbielefeld.newsboard.model.document
 
 import spock.lang.Specification
 

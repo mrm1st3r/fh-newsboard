@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.access;
 
 /**
  * An Access Role grants access to specific parts of the application.

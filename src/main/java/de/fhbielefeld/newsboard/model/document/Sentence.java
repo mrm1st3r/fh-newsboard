@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.document;
 
 /**
  * Domain class representing a sentence inside a classifiable document.

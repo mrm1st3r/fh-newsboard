@@ -2,9 +2,13 @@ package de.fhbielefeld.newsboard.dao
 
 import de.fhbielefeld.newsboard.NewsboardApplication
 import de.fhbielefeld.newsboard.TestUtils
-import de.fhbielefeld.newsboard.model.Document
-import de.fhbielefeld.newsboard.model.ExternalModule
-import de.fhbielefeld.newsboard.model.Sentence
+import de.fhbielefeld.newsboard.model.access.AccessDao
+import de.fhbielefeld.newsboard.model.document.Document
+import de.fhbielefeld.newsboard.model.document.DocumentDao
+import de.fhbielefeld.newsboard.model.document.Sentence
+import de.fhbielefeld.newsboard.model.document.SentenceDao
+import de.fhbielefeld.newsboard.model.module.ExternalModule
+import de.fhbielefeld.newsboard.model.module.ExternalModuleDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate

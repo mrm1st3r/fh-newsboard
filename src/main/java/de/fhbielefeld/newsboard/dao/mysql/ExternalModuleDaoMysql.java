@@ -1,9 +1,9 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.dao.ExternalModuleDao;
-import de.fhbielefeld.newsboard.model.AccessReference;
-import de.fhbielefeld.newsboard.model.ExternalModule;
-import de.fhbielefeld.newsboard.model.ModuleReference;
+import de.fhbielefeld.newsboard.model.access.AccessReference;
+import de.fhbielefeld.newsboard.model.module.ExternalModule;
+import de.fhbielefeld.newsboard.model.module.ExternalModuleDao;
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

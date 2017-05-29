@@ -1,4 +1,6 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.module;
+
+import de.fhbielefeld.newsboard.model.access.AccessReference;
 
 /**
  * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.

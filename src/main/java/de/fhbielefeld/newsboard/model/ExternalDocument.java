@@ -1,5 +1,7 @@
 package de.fhbielefeld.newsboard.model;
 
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
+
 /**
  * Domain class representing external documents, which may not be classified.
  *

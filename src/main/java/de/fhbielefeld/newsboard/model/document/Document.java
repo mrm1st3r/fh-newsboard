@@ -1,4 +1,6 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.document;
+
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;

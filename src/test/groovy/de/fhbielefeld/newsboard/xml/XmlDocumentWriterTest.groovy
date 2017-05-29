@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.xml
 
 import de.fhbielefeld.newsboard.TestUtils
-import de.fhbielefeld.newsboard.model.Document
+import de.fhbielefeld.newsboard.model.document.Document
 import spock.lang.Shared
 import spock.lang.Specification
 

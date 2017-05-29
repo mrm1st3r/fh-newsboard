@@ -1,11 +1,7 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.dao.DocumentDao;
-import de.fhbielefeld.newsboard.dao.SentenceDao;
-import de.fhbielefeld.newsboard.model.Document;
-import de.fhbielefeld.newsboard.model.DocumentStub;
-import de.fhbielefeld.newsboard.model.ModuleReference;
-import de.fhbielefeld.newsboard.model.Sentence;
+import de.fhbielefeld.newsboard.model.document.*;
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

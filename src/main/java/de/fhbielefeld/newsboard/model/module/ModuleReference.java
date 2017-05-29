@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.module;
 
 /**
  * Reference to an external module to be used within other aggregates.

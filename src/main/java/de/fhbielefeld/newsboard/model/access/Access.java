@@ -1,4 +1,4 @@
-package de.fhbielefeld.newsboard.model;
+package de.fhbielefeld.newsboard.model.access;
 
 /**
  * An access contains login credentials and an access role

@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.xml;
 
-import de.fhbielefeld.newsboard.model.*;
+import de.fhbielefeld.newsboard.model.document.*;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

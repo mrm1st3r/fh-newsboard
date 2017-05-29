@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.dao.ClassificationDao;
-import de.fhbielefeld.newsboard.model.*;
+import de.fhbielefeld.newsboard.model.document.*;
+import de.fhbielefeld.newsboard.model.module.ModuleReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
