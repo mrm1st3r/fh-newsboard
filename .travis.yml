@@ -17,6 +17,6 @@ addons:
   sonarqube:
     organization: "mrm1st3r-github"
     branches:
-      - develop
+      - master
 
 script: mvn test sonar:sonar -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis -Duser.timezone=Europe/Berlin -Dsonar.language=java
