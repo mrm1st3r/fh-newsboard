@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleReference;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author Felix Meyer, Lukas Taake
  */
-public class Document extends DocumentStub {
+public class Document extends DocumentStub implements Aggregate<Document> {
     private final List<Sentence> sentences = new ArrayList<>();
 
     public Document(DocumentStub stub, List<Sentence> sentences) {

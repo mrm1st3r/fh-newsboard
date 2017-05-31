@@ -1,10 +1,12 @@
 package de.fhbielefeld.newsboard.model.access;
 
+import de.fhbielefeld.newsboard.model.Aggregate;
+
 /**
  * An access contains login credentials and an access role
  * for authenticating and authorizing a user.
  */
-public class Access extends AccessReference {
+public class Access extends AccessReference implements Aggregate<Access> {
 
     private final AccessRole role;
     private String passphrase;

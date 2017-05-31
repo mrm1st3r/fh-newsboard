@@ -7,7 +7,7 @@ import de.fhbielefeld.newsboard.model.module.ModuleReference;
  *
  * @author Felix Meyer
  */
-public class ExternalDocument {
+public class ExternalDocument implements Aggregate<ExternalDocument> {
     private int id;
     private String title;
     private String html;

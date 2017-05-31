@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleReference;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Classification of a document, done by a specific classifier.
  */
-public class DocumentClassification {
+public class DocumentClassification implements Aggregate<DocumentClassification> {
 
     private final DocumentId documentId;
     private final ClassificationId id;

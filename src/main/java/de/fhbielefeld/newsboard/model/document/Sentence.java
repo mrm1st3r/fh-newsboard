@@ -1,11 +1,13 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import de.fhbielefeld.newsboard.model.Entity;
+
 /**
  * Domain class representing a sentence inside a classifiable document.
  *
  * @author Felix Meyer, Lukas Taake
  */
-public class Sentence {
+public class Sentence implements Entity<Document> {
     private int id;
     private final int number;
     private final String text;

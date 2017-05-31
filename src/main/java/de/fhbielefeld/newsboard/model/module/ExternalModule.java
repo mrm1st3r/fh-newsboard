@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.module;
 
+import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.access.AccessReference;
 
 /**
@@ -7,7 +8,7 @@ import de.fhbielefeld.newsboard.model.access.AccessReference;
  *
  * @author Felix Meyer
  */
-public class ExternalModule extends ModuleReference {
+public class ExternalModule extends ModuleReference implements Aggregate<ExternalModule> {
     private String name;
     private String author;
     private String description;
