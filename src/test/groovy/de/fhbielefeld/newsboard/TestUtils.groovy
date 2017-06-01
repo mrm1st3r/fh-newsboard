@@ -2,7 +2,7 @@ package de.fhbielefeld.newsboard
 
 import de.fhbielefeld.newsboard.model.ExternalDocument
 import de.fhbielefeld.newsboard.model.access.Access
-import de.fhbielefeld.newsboard.model.access.AccessReference
+import de.fhbielefeld.newsboard.model.access.AccessId
 import de.fhbielefeld.newsboard.model.access.AccessRole
 import de.fhbielefeld.newsboard.model.document.ClassificationValue
 import de.fhbielefeld.newsboard.model.document.Document
@@ -40,7 +40,7 @@ final class TestUtils {
     }
 
     static sampleModule() {
-        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", new AccessReference("test-access"))
+        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", new AccessId("test-access"))
     }
 
     static sampleSentence() {

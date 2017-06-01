@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.model.module;
 
 import de.fhbielefeld.newsboard.model.Aggregate;
-import de.fhbielefeld.newsboard.model.access.AccessReference;
+import de.fhbielefeld.newsboard.model.access.AccessId;
 
 /**
  * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.
@@ -12,9 +12,9 @@ public class ExternalModule extends ModuleReference implements Aggregate<Externa
     private String name;
     private String author;
     private String description;
-    private AccessReference access;
+    private AccessId access;
 
-    public ExternalModule(String id, String name, String author, String description, AccessReference access) {
+    public ExternalModule(String id, String name, String author, String description, AccessId access) {
         super(id);
         this.name = name;
         this.author = author;
@@ -60,7 +60,7 @@ public class ExternalModule extends ModuleReference implements Aggregate<Externa
         return getId().hashCode() + getAuthor().hashCode();
     }
 
-    public AccessReference getAccessReference() {
+    public AccessId getAccessReference() {
         return access;
     }
 }

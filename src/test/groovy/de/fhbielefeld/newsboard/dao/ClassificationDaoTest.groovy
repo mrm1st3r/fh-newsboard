@@ -3,7 +3,7 @@ package de.fhbielefeld.newsboard.dao
 import de.fhbielefeld.newsboard.NewsboardApplication
 import de.fhbielefeld.newsboard.TestUtils
 import de.fhbielefeld.newsboard.model.access.AccessDao
-import de.fhbielefeld.newsboard.model.access.AccessReference
+import de.fhbielefeld.newsboard.model.access.AccessId
 import de.fhbielefeld.newsboard.model.document.*
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao
@@ -52,7 +52,7 @@ class ClassificationDaoTest extends Specification {
     def "should find for document"() {
         given:
         ExternalModule additionalModule = new ExternalModule(
-                "additional_testing_module", "", "", "", new AccessReference("test-access"))
+                "additional_testing_module", "", "", "", new AccessId("test-access"))
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId())
 

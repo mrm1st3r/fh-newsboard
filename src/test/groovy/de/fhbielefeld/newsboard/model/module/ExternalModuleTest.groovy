@@ -1,16 +1,16 @@
 package de.fhbielefeld.newsboard.model.module
 
 import de.fhbielefeld.newsboard.model.ExternalDocument
-import de.fhbielefeld.newsboard.model.access.AccessReference
+import de.fhbielefeld.newsboard.model.access.AccessId
 import spock.lang.Specification
 
 class ExternalModuleTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def m1 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessReference(""))
-        def m2 = new ExternalModule("mod2", "Module 1", "tester", "bla", new AccessReference(""))
-        def m3 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessReference(""))
+        def m1 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessId(""))
+        def m2 = new ExternalModule("mod2", "Module 1", "tester", "bla", new AccessId(""))
+        def m3 = new ExternalModule("mod1", "Module 1", "tester", "bla", new AccessId(""))
         def d = new ExternalDocument(42, "Test", "Foo", null)
 
         expect:

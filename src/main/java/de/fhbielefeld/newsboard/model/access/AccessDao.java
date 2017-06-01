@@ -5,7 +5,7 @@ package de.fhbielefeld.newsboard.model.access;
  */
 public interface AccessDao {
 
-    Access get(AccessReference reference);
+    Access get(AccessId reference);
 
     int update(Access authToken);
 

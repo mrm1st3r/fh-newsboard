@@ -29,10 +29,10 @@ class AccessDaoTest extends Specification {
 
         when:
         accessDao.create(access)
-        accessIds.add(access.getId())
+        accessIds.add(access.getId().raw())
 
         then:
-        access == accessDao.get(access)
+        access == accessDao.get(access.getId())
         noExceptionThrown()
     }
 
@@ -40,14 +40,14 @@ class AccessDaoTest extends Specification {
         given:
         Access access = TestUtils.sampleAccess()
         accessDao.create(access)
-        accessIds.add(access.getId())
+        accessIds.add(access.getId().raw())
 
         when:
         access.setPassphrase("ghi")
         accessDao.update(access)
 
         then:
-        access == accessDao.get(access)
+        access == accessDao.get(access.getId())
         noExceptionThrown()
     }
 

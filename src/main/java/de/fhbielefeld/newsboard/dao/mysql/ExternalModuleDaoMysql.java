@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import de.fhbielefeld.newsboard.model.access.AccessReference;
+import de.fhbielefeld.newsboard.model.access.AccessId;
 import de.fhbielefeld.newsboard.model.module.ExternalModule;
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao;
 import de.fhbielefeld.newsboard.model.module.ModuleReference;
@@ -27,7 +27,7 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
             resultSet.getString("title"),
             resultSet.getString("author"),
             resultSet.getString("description"),
-            new AccessReference(resultSet.getString("access_id")));
+            new AccessId(resultSet.getString("access_id")));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -52,6 +52,6 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     private Object[] makeAttributes(ExternalModule module) {
-        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessReference().getId(), module.getId()};
+        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessReference().raw(), module.getId()};
     }
 }

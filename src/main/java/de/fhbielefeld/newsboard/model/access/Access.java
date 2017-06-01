@@ -6,19 +6,24 @@ import de.fhbielefeld.newsboard.model.Aggregate;
  * An access contains login credentials and an access role
  * for authenticating and authorizing a user.
  */
-public class Access extends AccessReference implements Aggregate<Access> {
+public class Access implements Aggregate<Access> {
 
+    private final AccessId id;
     private final AccessRole role;
     private String passphrase;
     private String hashType;
     private boolean enabled;
 
     public Access(String id, AccessRole role, String passphrase, String hashType, boolean enabled) {
-        super(id);
+        this.id = new AccessId(id);
         this.role = role;
         this.passphrase = passphrase;
         this.hashType = hashType;
         this.enabled = enabled;
+    }
+
+    public AccessId getId() {
+        return id;
     }
 
     public String getPassphrase() {

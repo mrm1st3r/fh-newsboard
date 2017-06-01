@@ -2,7 +2,7 @@ package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.access.Access;
-import de.fhbielefeld.newsboard.model.access.AccessReference;
+import de.fhbielefeld.newsboard.model.access.AccessId;
 import de.fhbielefeld.newsboard.model.access.AccessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,8 +37,8 @@ public class AccessDaoMysql implements AccessDao {
     }
 
     @Override
-    public Access get(AccessReference reference) {
-        return jdbcTemplate.query(READ_QUERY, new RowMapperResultSetExtractor<>(rowMapper), reference.getId());
+    public Access get(AccessId reference) {
+        return jdbcTemplate.query(READ_QUERY, new RowMapperResultSetExtractor<>(rowMapper), reference.raw());
     }
 
     @Override
@@ -47,13 +47,13 @@ public class AccessDaoMysql implements AccessDao {
                 access.getPassphrase(),
                 access.getHashType(),
                 access.isEnabled(),
-                access.getId());
+                access.getId().raw());
     }
 
     @Override
     public int create(Access access) {
         return jdbcTemplate.update(CREATE_QUERY,
-                access.getId(),
+                access.getId().raw(),
                 access.getRole().getRole(),
                 access.getPassphrase(),
                 access.getHashType(),

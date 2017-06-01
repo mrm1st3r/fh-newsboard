@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.model.module
 
-import de.fhbielefeld.newsboard.model.access.AccessReference
+import de.fhbielefeld.newsboard.model.access.AccessId
 import spock.lang.Specification
 
 class ModuleReferenceTest extends Specification {
@@ -10,7 +10,7 @@ class ModuleReferenceTest extends Specification {
         def mod1 = new ModuleReference("a")
         def mod2 = new ModuleReference("b")
         def mod3 = new ModuleReference("a")
-        def access = new AccessReference("a")
+        def access = new AccessId("a")
 
         expect:
         mod1 == mod1
