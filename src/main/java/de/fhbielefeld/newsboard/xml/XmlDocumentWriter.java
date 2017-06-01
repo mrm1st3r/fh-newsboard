@@ -2,7 +2,6 @@ package de.fhbielefeld.newsboard.xml;
 
 import de.fhbielefeld.newsboard.model.document.Document;
 import de.fhbielefeld.newsboard.model.document.DocumentClassification;
-import de.fhbielefeld.newsboard.model.document.DocumentStub;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -27,7 +26,7 @@ public class XmlDocumentWriter {
         xmlOutputFactory = XMLOutputFactory.newInstance();
     }
 
-    public String writeStubList(List<DocumentStub> documents) throws XMLStreamException {
+    public String writeStubList(List<Document> documents) throws XMLStreamException {
         return writeDocument(new DocumentStubWriter(), documents);
     }
 

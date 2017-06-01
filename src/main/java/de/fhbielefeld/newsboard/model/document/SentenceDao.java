@@ -9,5 +9,5 @@ public interface SentenceDao {
 
     int create(Sentence sentence, Document document);
 
-    List<Sentence> findForDocument(DocumentStub document);
+    List<Sentence> findForDocument(DocumentId document);
 }

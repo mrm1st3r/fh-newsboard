@@ -27,8 +27,8 @@ class FrontendControllerTest extends Specification {
 
     def "should access detail page"() {
         when:
-        def docs = documentDao.findAllStubs()
-        int id = docs[0].getId()
+        def docs = documentDao.findLatest(1)
+        int id = docs[0].getId().raw()
 
         then:
         mvc.perform(get("/document/" + id)).andExpect(status().isOk())

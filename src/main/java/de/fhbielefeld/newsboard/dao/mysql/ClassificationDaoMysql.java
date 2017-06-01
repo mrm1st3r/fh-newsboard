@@ -41,8 +41,8 @@ public class ClassificationDaoMysql implements ClassificationDao {
     }
 
     @Override
-    public List<DocumentClassification> forForDocument(Document document) {
-        return jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, new ClassificationResultExtractor(), (Object) document.getId());
+    public List<DocumentClassification> findForDocument(Document document) {
+        return jdbcTemplate.query(GET_CLASSIFICATIONS_FOR_SENTENCE, new ClassificationResultExtractor(), document.getId().raw());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int updatedRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{"classification_id"});
-            pst.setInt(1, classification.getDocumentId().getId());
+            pst.setInt(1, classification.getDocumentId().raw());
             pst.setString(2, classification.getModule().raw());
             pst.setDate(3, Date.valueOf(LocalDate.now()));
             return pst;

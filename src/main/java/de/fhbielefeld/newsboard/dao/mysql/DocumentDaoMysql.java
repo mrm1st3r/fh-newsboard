@@ -23,7 +23,7 @@ import static org.springframework.util.Assert.notNull;
 @Component
 public class DocumentDaoMysql implements DocumentDao {
     private static final String GET_DOCUMENT_WITH_ID = "SELECT * FROM document WHERE document_id = ?";
-    private static final String GET_DOCUMENTS_ONLY_METADATA = "SELECT * FROM document";
+    private static final String GET_DOCUMENT_LIST = "SELECT * FROM document ORDER BY crawl_time DESC LIMIT ?";
     private static final String INSERT_DOCUMENT = "INSERT INTO document VALUES (null, ?, ?, ?, ?, ?, ?)";
     private static final String GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE =
             "SELECT * FROM document WHERE document_id NOT IN(SELECT document_id FROM sentence WHERE sentence_id IN " +
@@ -32,18 +32,16 @@ public class DocumentDaoMysql implements DocumentDao {
     private final JdbcTemplate jdbcTemplate;
     private SentenceDao sentenceDao;
 
-    private final RowMapper<DocumentStub> stubMapper = (r, i) -> new DocumentStub(
-            r.getInt("document_id"),
-            r.getString("title"),
-            r.getString("author"), r.getString("source_url"),
-            getCalendarFromTime(r.getDate("creation_time")),
-            getCalendarFromTime(r.getDate("crawl_time")),
-            new ModuleId(r.getString("module_id"))
-    );
-
-    private final RowMapper<Document> documentMapper = (resultSet, i) -> {
-        DocumentStub doc = stubMapper.mapRow(resultSet, i);
-        return new Document(doc, sentenceDao.findForDocument(doc));
+    private final RowMapper<Document> documentMapper = (r, i) -> {
+        DocumentId id = new DocumentId(r.getInt("document_id"));
+        DocumentMetaData meta = new DocumentMetaData(
+                r.getString("title"),
+                r.getString("author"), r.getString("source_url"),
+                getCalendarFromTime(r.getDate("creation_time")),
+                getCalendarFromTime(r.getDate("crawl_time")),
+                new ModuleId(r.getString("module_id"))
+        );
+        return new Document(id, meta, sentenceDao.findForDocument(id));
     };
 
     @Autowired
@@ -53,34 +51,35 @@ public class DocumentDaoMysql implements DocumentDao {
     }
 
     @Override
-    public Document get(int id) {
-        return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id);
+    public Document get(DocumentId id) {
+        return jdbcTemplate.query(GET_DOCUMENT_WITH_ID, new RowMapperResultSetExtractor<>(documentMapper), id.raw());
     }
 
     @Override
-    public List<DocumentStub> findAllStubs() {
-        return jdbcTemplate.query(GET_DOCUMENTS_ONLY_METADATA, stubMapper);
-    }
-
-    @Override
-    public int create(Document document) {
-        notNull(document.getModule());
+    public Document create(Document document) {
+        DocumentMetaData metaData = document.getMetaData();
+        notNull(metaData.getModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int numRows = jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_DOCUMENT, new String[]{"document_id"});
-            pst.setString(1, document.getTitle());
-            pst.setString(2, document.getAuthor());
-            pst.setString(3, document.getSource());
-            pst.setDate(4, new Date(document.getCreationTime().getTimeInMillis()));
-            pst.setDate(5, new Date(document.getCrawlTime().getTimeInMillis()));
-            pst.setString(6, document.getModule().raw());
+            pst.setString(1, metaData.getTitle());
+            pst.setString(2, metaData.getAuthor());
+            pst.setString(3, metaData.getSource());
+            pst.setDate(4, new Date(metaData.getCreationTime().getTimeInMillis()));
+            pst.setDate(5, new Date(metaData.getCrawlTime().getTimeInMillis()));
+            pst.setString(6, metaData.getModule().raw());
             return pst;
         }, keyHolder);
-        document.setId(keyHolder.getKey().intValue());
+        Document identifiedDocument = document.copyForId(keyHolder.getKey().intValue());
         for (Sentence s : document.getSentences()) {
-            numRows += sentenceDao.create(s, document);
+            sentenceDao.create(s, identifiedDocument);
         }
-        return numRows;
+        return identifiedDocument;
+    }
+
+    @Override
+    public List<Document> findLatest(int maximumAmount) {
+        return jdbcTemplate.query(GET_DOCUMENT_LIST, documentMapper, maximumAmount);
     }
 
     @Override

@@ -21,17 +21,4 @@ class DocumentTest extends Specification {
         doc1 == doc3
         doc1.hashCode() == doc3.hashCode()
     }
-
-    def "should set ID only once"() {
-        given:
-        def doc = TestUtils.emptyDocument(-1, Collections.emptyList())
-
-        when:
-        doc.setId(1)
-        doc.setId(2)
-
-        then:
-        thrown(IllegalStateException)
-        doc.getId() == 1
-    }
 }

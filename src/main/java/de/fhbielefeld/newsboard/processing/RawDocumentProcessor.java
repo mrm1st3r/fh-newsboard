@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.processing;
 
-import de.fhbielefeld.newsboard.model.RawDocument;
+import de.fhbielefeld.newsboard.model.document.RawDocument;
 import de.fhbielefeld.newsboard.model.document.Document;
 import de.fhbielefeld.newsboard.model.document.Sentence;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -32,7 +32,7 @@ public class RawDocumentProcessor {
         for (String s : tokenizePlaintext(rawDocument.getRawText())) {
             sentences.add(new Sentence(-1, sentNumber++, s));
         }
-        return new Document(rawDocument, sentences);
+        return new Document(rawDocument.getMetaData(), sentences);
     }
 
     private String[] tokenizePlaintext(String plaintext) {

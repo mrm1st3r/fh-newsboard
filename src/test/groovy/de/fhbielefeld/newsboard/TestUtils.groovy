@@ -7,6 +7,8 @@ import de.fhbielefeld.newsboard.model.access.AccessRole
 import de.fhbielefeld.newsboard.model.document.ClassificationValue
 import de.fhbielefeld.newsboard.model.document.Document
 import de.fhbielefeld.newsboard.model.document.DocumentClassification
+import de.fhbielefeld.newsboard.model.document.DocumentId
+import de.fhbielefeld.newsboard.model.document.DocumentMetaData
 import de.fhbielefeld.newsboard.model.document.Sentence
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ModuleId
@@ -60,24 +62,32 @@ final class TestUtils {
         for (int i = 0; i < 3; i++) {
             sentences.add(sampleSentence())
         }
-        return new Document(-1, "Test document", "Test author", "Test source",
+        return new Document(
+                new DocumentMetaData("Test document", "Test author", "Test source",
                 new GregorianCalendar(2017, 6, 4),
                 new GregorianCalendar(2010, 2, 1),
-                module.getId(),
+                module.getId()),
                 sentences)
     }
 
     static sampleDocumentForXml() {
         def s1 = new Sentence(1, 1, "Lorem ipsum dolor sit amet.")
         def s2 = new Sentence(24, 2, "Die Würde des Tasters ist unanmenschbar.")
-        def document = new Document(42, "Wuppi Fluppi", "Hans Wurst", "http://example.com",
-                new GregorianCalendar(2016, Calendar.NOVEMBER, 30), new GregorianCalendar(2016, Calendar.DECEMBER, 01),
-                null, [s1, s2])
+        def document = new Document(new DocumentId(42),
+                new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
+                        new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
+                        new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                        new ModuleId("test-module")), [s1, s2])
         return document
     }
 
     static emptyDocument(int id, List<Sentence> sentences) {
-        return new Document(id, "", "", "", null, null, null, sentences)
+        return new Document(new DocumentId(id),
+                new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
+                        new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
+                        new GregorianCalendar(2016, Calendar.DECEMBER, 01),
+                        new ModuleId("test-module")),
+                sentences)
     }
 
     static List<DocumentClassification> classificationsForDocument(Document document) {

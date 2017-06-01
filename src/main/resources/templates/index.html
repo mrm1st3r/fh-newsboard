@@ -13,7 +13,7 @@
         <th:block th:with="doc = ${mapping.key}">
         <div class="column-md-12">
             <h2><span th:text="${#numbers.formatDecimal(mapping.value.effectiveValue(),1,2)}">-0.42</span>
-                <a th:text="${doc.title}" th:href="@{/document/{docId}(docId=${doc.id})}">Hallo, Welt!</a>
+                <a th:text="${doc.metaData.title}" th:href="@{/document/{docId}(docId=${doc.id})}">Hallo, Welt!</a>
             </h2>
             <p>
                 <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text} + ' '"></span>

@@ -30,7 +30,7 @@ public class AverageClassificationService {
     }
 
     public ClassificationValue calculateAverageFor(Document document) {
-        List<DocumentClassification> classifications = classificationDao.forForDocument(document);
+        List<DocumentClassification> classifications = classificationDao.findForDocument(document);
         double average = classifications
                 .stream()
                 .mapToDouble(c -> c.getValues()

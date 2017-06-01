@@ -28,9 +28,9 @@ class DocumentWriter implements XmlDocumentWriter.DocumentContentWriter<Map.Entr
 
     private class DecoratedStubWriter extends DocumentStubWriter {
         @Override
-        void writeSubElements(XMLStreamWriter writer, DocumentStub doc) throws XMLStreamException {
-            writeSentences(writer, (Document) doc);
-            writeClassifications(writer, (Document) doc);
+        void writeSubElements(XMLStreamWriter writer, Document doc) throws XMLStreamException {
+            writeSentences(writer, doc);
+            writeClassifications(writer, doc);
         }
 
         private void writeSentences(XMLStreamWriter writer, Document doc) throws XMLStreamException {

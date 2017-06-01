@@ -4,7 +4,6 @@ import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -12,18 +11,34 @@ import java.util.List;
  *
  * @author Felix Meyer, Lukas Taake
  */
-public class Document extends DocumentStub implements Aggregate<Document> {
-    private final List<Sentence> sentences = new ArrayList<>();
+public class Document implements Aggregate<Document> {
 
-    public Document(DocumentStub stub, List<Sentence> sentences) {
-        super(stub);
-        this.sentences.addAll(sentences);
+    private final DocumentId id;
+    private final DocumentMetaData metaData;
+    private final List<Sentence> sentences;
+
+    public Document(DocumentMetaData metaData, List<Sentence> sentences) {
+        id = DocumentId.NONE;
+        this.metaData = metaData;
+        this.sentences = new ArrayList<>(sentences);
     }
 
-    public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
-                    ModuleId crawler, List<Sentence> sentences) {
-        super(id, title, author, source, creationTime, crawlTime, crawler);
-        this.sentences.addAll(sentences);
+    public Document(DocumentId id, DocumentMetaData metaData, List<Sentence> sentences) {
+        this.id = id;
+        this.metaData = metaData;
+        this.sentences = sentences;
+    }
+
+    public Document copyForId(int id) {
+        return new Document(new DocumentId(id), this.metaData, this.sentences);
+    }
+
+    public DocumentId getId() {
+        return id;
+    }
+
+    public DocumentMetaData getMetaData() {
+        return metaData;
     }
 
     public List<Sentence> getSentences() {
@@ -31,7 +46,7 @@ public class Document extends DocumentStub implements Aggregate<Document> {
     }
 
     public DocumentClassification addClassification(ModuleId module, List<ClassificationValue> values) {
-        return new DocumentClassification(new DocumentId(getId()), null, module, values);
+        return new DocumentClassification(getId(), null, module, values);
     }
 
     @Override
@@ -40,11 +55,11 @@ public class Document extends DocumentStub implements Aggregate<Document> {
             return false;
         }
         Document that = (Document) obj;
-        return this.getId() == that.getId();
+        return this.getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return getId() + getAuthor().hashCode() + getTitle().hashCode();
+        return getId().hashCode() + metaData.hashCode();
     }
 }

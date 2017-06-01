@@ -45,11 +45,11 @@ class DocumentDaoTest extends Specification {
 
     def "should create correctly"() {
         when:
-        insertDocument(dummyDocument)
+        dummyDocument = insertDocument(dummyDocument)
 
         then:
         Document testDocument = documentDao.get(dummyDocument.getId())
-        compareDocuments(testDocument, dummyDocument)
+        testDocument.metaData == dummyDocument.metaData
         testDocument.getSentences().size() == dummyDocument.getSentences().size()
         for (int i = 0; i < testDocument.getSentences().size(); i++) {
             testDocument.getSentences().get(i).getId() == dummyDocument.getSentences().get(i).getId()
@@ -65,7 +65,7 @@ class DocumentDaoTest extends Specification {
         insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
         insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
         insertDocument(TestUtils.sampleDocumentForDb(dummyModule))
-        List<DocumentStub> allDocuments = documentDao.findAllStubs()
+        List<Document> allDocuments = documentDao.findLatest(0xFFFF)
 
         then:
         allDocuments.size() >= 3
@@ -76,20 +76,12 @@ class DocumentDaoTest extends Specification {
         TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, documentIds, moduleIds)
     }
 
-    void compareDocuments(DocumentStub thisDocument, DocumentStub thatDocument) {
-        assert thisDocument.getAuthor() == thatDocument.getAuthor()
-        assert thisDocument.getCrawlTime() == thatDocument.getCrawlTime()
-        assert thisDocument.getCreationTime() == thatDocument.getCreationTime()
-        assert thisDocument.getSource() == thatDocument.getSource()
-        assert thisDocument.getTitle() == thatDocument.getTitle()
-        assert thisDocument.getModule().raw() == thatDocument.getModule().raw()
-    }
-
     def insertDocument(Document document) {
-        documentDao.create(document)
-        documentIds.add(document.getId())
+        def identified = documentDao.create(document)
+        documentIds.add(identified.getId().raw())
         for (Sentence s : document.getSentences()) {
             sentenceIds.add(s.getId())
         }
+        return identified
     }
 }

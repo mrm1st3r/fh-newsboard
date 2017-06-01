@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.rest;
 
-import de.fhbielefeld.newsboard.model.RawDocument;
+import de.fhbielefeld.newsboard.model.document.RawDocument;
 import de.fhbielefeld.newsboard.model.access.Access;
 import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.document.*;
@@ -62,7 +62,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/document", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String listDocuments(HttpServletResponse response) {
-        List<DocumentStub> documents = documentDao.findAllStubs();
+        List<Document> documents = documentDao.findLatest(0xFFFF);
         try {
             return xmlWriter.writeStubList(documents);
         } catch (XMLStreamException e) {
@@ -100,8 +100,8 @@ public class RestApiController {
     @RequestMapping(value = "/document/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getDocument(HttpServletResponse response, @PathVariable String id) {
         int docId = Integer.parseInt(id);
-        Document doc = documentDao.get(docId);
-        List<DocumentClassification> classifications = classificationDao.forForDocument(doc);
+        Document doc = documentDao.get(new DocumentId(docId));
+        List<DocumentClassification> classifications = classificationDao.findForDocument(doc);
         try {
             return xmlWriter.writeDocument(doc, classifications);
         } catch (XMLStreamException e) {
@@ -118,7 +118,7 @@ public class RestApiController {
         List<Document> documents = documentDao.findUnclassifiedForModule(new ModuleId(moduleId));
         Map<Document, List<DocumentClassification>> classificationMap = new HashMap<>();
         for (Document document : documents) {
-            classificationMap.put(document, classificationDao.forForDocument(document));
+            classificationMap.put(document, classificationDao.findForDocument(document));
         }
         try {
             return xmlWriter.writeDocumentList(classificationMap);
@@ -157,7 +157,7 @@ public class RestApiController {
                             if (!classifierId.equals(classifier.getId().raw())) {
                                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
                             }
-                            Document document = documentDao.get(documentId);
+                            Document document = documentDao.get(new DocumentId(documentId));
                             DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values);
                             classificationDao.create(classification);
                         }

@@ -46,11 +46,11 @@ class SentenceDaoTest extends Specification {
 
     def "should create and find for document"() {
         given:
-        documentDao.create(dummyDocument)
+        dummyDocument = documentDao.create(dummyDocument)
         def dummySentences = dummyDocument.getSentences()
 
         when:
-        List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument)
+        List<Sentence> testSentences = sentenceDao.findForDocument(dummyDocument.getId())
 
         then:
         testSentences.size() == dummySentences.size()
@@ -61,6 +61,6 @@ class SentenceDaoTest extends Specification {
     }
 
     def cleanup() {
-        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, [dummyDocument.getId()], [dummyModule.getId().raw()])
+        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, [dummyDocument.getId().raw()], [dummyModule.getId().raw()])
     }
 }

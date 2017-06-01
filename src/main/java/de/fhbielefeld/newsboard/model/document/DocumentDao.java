@@ -9,11 +9,11 @@ import java.util.List;
  */
 public interface DocumentDao {
 
-    Document get(int id);
+    Document get(DocumentId id);
 
-    int create(Document document);
+    Document create(Document document);
 
-    List<DocumentStub> findAllStubs();
+    List<Document> findLatest(int maximumAmount);
 
     List<Document> findUnclassifiedForModule(ModuleId module);
 }

@@ -43,10 +43,9 @@ class ClassificationDaoTest extends Specification {
         accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
         moduleIds.add(module.getId().raw())
-        insertDocument(document)
+        dummyDocument = insertDocument(document)
 
         dummyModule = module
-        dummyDocument = document
     }
 
     def "should find for document"() {
@@ -57,7 +56,7 @@ class ClassificationDaoTest extends Specification {
         moduleIds.add(additionalModule.getId().raw())
 
         DocumentClassification classification = new DocumentClassification(
-                new DocumentId(dummyDocument.getId()),
+                dummyDocument.getId(),
                 null,
                 dummyModule.getId(),
                 [
@@ -67,7 +66,7 @@ class ClassificationDaoTest extends Specification {
         classificationDao.create(classification)
 
         when:
-        List<DocumentClassification> actual = classificationDao.forForDocument(dummyDocument)
+        List<DocumentClassification> actual = classificationDao.findForDocument(dummyDocument)
 
         then:
         actual.size() == 1
@@ -87,10 +86,11 @@ class ClassificationDaoTest extends Specification {
     }
 
     def insertDocument(Document document) {
-        documentDao.create(document)
-        documentIds.add(document.getId())
+        def identified = documentDao.create(document)
+        documentIds.add(identified.getId().raw())
         for (Sentence s : document.getSentences()) {
             sentenceIds.add(s.getId())
         }
+        return identified
     }
 }

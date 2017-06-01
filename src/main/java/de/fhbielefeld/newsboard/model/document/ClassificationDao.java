@@ -9,5 +9,5 @@ public interface ClassificationDao {
 
     int create(DocumentClassification classification);
 
-    List<DocumentClassification> forForDocument(Document document);
+    List<DocumentClassification> findForDocument(Document document);
 }

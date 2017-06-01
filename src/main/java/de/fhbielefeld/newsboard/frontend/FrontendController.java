@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Controller for frontend requests
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Controller
 public class FrontendController {
 
-    private static final long DOCUMENTS_PER_PAGE = 10;
+    private static final int DOCUMENTS_PER_PAGE = 10;
 
     private static final String INDEX_TEMPLATE = "index";
     private static final String DETAIL_TEMPLATE = "detail";
@@ -37,12 +36,7 @@ public class FrontendController {
      */
     @RequestMapping("/")
     public String index(Model model) {
-        List<DocumentStub> documentStubs = documentDao.findAllStubs();
-        List<Document> documents = documentStubs
-                .stream()
-                .limit(DOCUMENTS_PER_PAGE)
-                .map(document -> documentDao.get(document.getId()))
-                .collect(Collectors.toList());
+        List<Document> documents = documentDao.findLatest(DOCUMENTS_PER_PAGE);
         Map<Document, ClassificationValue> classificationMapping = classificationService.calculateAverageFor(documents);
         model.addAttribute("documents", classificationMapping);
         return INDEX_TEMPLATE;
@@ -53,7 +47,7 @@ public class FrontendController {
      */
     @RequestMapping(value = "/document/{id}")
     public String details(Model model, @PathVariable String id) {
-        Document doc = documentDao.get(Integer.parseInt(id));
+        Document doc = documentDao.get(new DocumentId(Integer.parseInt(id)));
         model.addAttribute("doc", doc);
         model.addAttribute("average", classificationService.calculateAverageFor(doc));
         return DETAIL_TEMPLATE;

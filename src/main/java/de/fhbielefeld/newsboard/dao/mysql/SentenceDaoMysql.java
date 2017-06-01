@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.model.document.Document;
-import de.fhbielefeld.newsboard.model.document.DocumentStub;
+import de.fhbielefeld.newsboard.model.document.DocumentId;
 import de.fhbielefeld.newsboard.model.document.Sentence;
 import de.fhbielefeld.newsboard.model.document.SentenceDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     @Override
-    public List<Sentence> findForDocument(DocumentStub document) {
-        return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, document.getId());
+    public List<Sentence> findForDocument(DocumentId id) {
+        return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, id.raw());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SentenceDaoMysql implements SentenceDao {
             PreparedStatement pst = connection.prepareStatement(INSERT_SENTENCE, new String[]{"sentence_id"});
             pst.setInt(1, sentence.getNumber());
             pst.setString(2, sentence.getText());
-            pst.setInt(3, document.getId());
+            pst.setInt(3, document.getId().raw());
             return pst;
         }, keyHolder);
         sentence.setId(keyHolder.getKey().intValue());

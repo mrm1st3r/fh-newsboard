@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.processing
 
-import de.fhbielefeld.newsboard.model.RawDocument
+import de.fhbielefeld.newsboard.model.document.RawDocument
 import spock.lang.Specification
 
 class RawDocumentProcessorTest extends Specification {
@@ -34,7 +34,7 @@ class RawDocumentProcessorTest extends Specification {
 
         then:
         doc.getSentences().size() == 3
-        doc.getTitle() == "Die Entdeckung des Nichts"
+        doc.metaData.getTitle() == "Die Entdeckung des Nichts"
         def sents = doc.getSentences()
         sents[0].getText() == "Ich fahre schnell zum Knäckebrot-Laden!"
         sents[0].getNumber() == 1

@@ -60,8 +60,8 @@ class RestApiControllerTest extends Specification {
 
     def "can read specific document"() {
         when:
-        def docs = documentDao.findAllStubs()
-        int id = docs[0].getId()
+        def docs = documentDao.findLatest(1)
+        int id = docs[0].getId().raw()
 
         then:
         mvc.perform(get("/rest/document/" + id)).andExpect(status().isOk())
