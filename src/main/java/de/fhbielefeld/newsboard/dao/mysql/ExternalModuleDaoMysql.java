@@ -3,7 +3,7 @@ package de.fhbielefeld.newsboard.dao.mysql;
 import de.fhbielefeld.newsboard.model.access.AccessId;
 import de.fhbielefeld.newsboard.model.module.ExternalModule;
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,8 +37,8 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     @Override
-    public ExternalModule get(ModuleReference reference) {
-        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), reference.getId());
+    public ExternalModule get(ModuleId reference) {
+        return jdbcTemplate.query(GET_MODULE_WITH_ID, new RowMapperResultSetExtractor<>(rowMapper), reference.raw());
     }
 
     @Override
@@ -52,6 +52,12 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
     }
 
     private Object[] makeAttributes(ExternalModule module) {
-        return new Object[] {module.getName(), module.getAuthor(), module.getDescription(), module.getAccessReference().raw(), module.getId()};
+        return new Object[]{
+                module.getName(),
+                module.getAuthor(),
+                module.getDescription(),
+                module.getAccessId().raw(),
+                module.getId().raw()
+        };
     }
 }

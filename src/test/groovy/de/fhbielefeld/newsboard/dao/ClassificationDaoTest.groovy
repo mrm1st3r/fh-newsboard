@@ -42,7 +42,7 @@ class ClassificationDaoTest extends Specification {
         Document document = TestUtils.sampleDocumentForDb(module)
         accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
-        moduleIds.add(module.getId())
+        moduleIds.add(module.getId().raw())
         insertDocument(document)
 
         dummyModule = module
@@ -54,12 +54,16 @@ class ClassificationDaoTest extends Specification {
         ExternalModule additionalModule = new ExternalModule(
                 "additional_testing_module", "", "", "", new AccessId("test-access"))
         externalModuleDao.create(additionalModule)
-        moduleIds.add(additionalModule.getId())
+        moduleIds.add(additionalModule.getId().raw())
 
-        DocumentClassification classification = new DocumentClassification(new DocumentId(dummyDocument.getId()), null, dummyModule, [
-                ClassificationValue.of(1),
-                ClassificationValue.of(-1)
-        ])
+        DocumentClassification classification = new DocumentClassification(
+                new DocumentId(dummyDocument.getId()),
+                null,
+                dummyModule.getId(),
+                [
+                        ClassificationValue.of(1),
+                        ClassificationValue.of(-1)
+                ])
         classificationDao.create(classification)
 
         when:
@@ -69,7 +73,7 @@ class ClassificationDaoTest extends Specification {
         actual.size() == 1
         def dc = actual.get(0)
 
-        dc.getModule().getId() == dummyModule.getId()
+        dc.getModule() == dummyModule.getId()
         dc.values.size() == 2
         dc.values[0].value == 1
         dc.values[0].confidence == 1

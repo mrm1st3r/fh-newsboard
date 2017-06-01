@@ -40,7 +40,7 @@ class DocumentDaoTest extends Specification {
         dummyDocument = TestUtils.sampleDocumentForDb(dummyModule)
         accessDao.create(TestUtils.sampleAccess())
         externModuleDao.create(dummyModule)
-        moduleIds.add(dummyModule.getId())
+        moduleIds.add(dummyModule.getId().raw())
     }
 
     def "should create correctly"() {
@@ -82,7 +82,7 @@ class DocumentDaoTest extends Specification {
         assert thisDocument.getCreationTime() == thatDocument.getCreationTime()
         assert thisDocument.getSource() == thatDocument.getSource()
         assert thisDocument.getTitle() == thatDocument.getTitle()
-        assert thisDocument.getModule().getId() == thatDocument.getModule().getId()
+        assert thisDocument.getModule().raw() == thatDocument.getModule().raw()
     }
 
     def insertDocument(Document document) {

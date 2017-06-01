@@ -2,7 +2,7 @@ package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.model.ExternalDocument;
 import de.fhbielefeld.newsboard.model.ExternalDocumentDao;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,7 +33,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
             resultSet.getInt("ext_document_id"),
             resultSet.getString("title"),
             resultSet.getString("html"),
-            new ModuleReference(resultSet.getString("module_id")));
+            new ModuleId(resultSet.getString("module_id")));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -51,7 +51,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
     public int update(ExternalDocument externalDocument) {
         notNull(externalDocument.getExternalModule());
         return jdbcTemplate.update(UPDATE_EXTERNAL_DOCUMENT, externalDocument.getTitle(), externalDocument.getHtml(),
-                externalDocument.getExternalModule().getId(), externalDocument.getId());
+                externalDocument.getExternalModule().raw(), externalDocument.getId());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
             PreparedStatement pst = connection.prepareStatement(INSERT_EXTERNAL_DOCUMENT, new String[]{"ext_document_id"});
             pst.setString(1, externalDocument.getTitle());
             pst.setString(2, externalDocument.getHtml());
-            pst.setString(3, externalDocument.getExternalModule().getId());
+            pst.setString(3, externalDocument.getExternalModule().raw());
             return pst;
         }, keyHolder);
         externalDocument.setId(keyHolder.getKey().intValue());

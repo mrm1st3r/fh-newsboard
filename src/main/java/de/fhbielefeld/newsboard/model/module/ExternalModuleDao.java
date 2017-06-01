@@ -5,7 +5,7 @@ package de.fhbielefeld.newsboard.model.module;
  */
 public interface ExternalModuleDao {
 
-    ExternalModule get(ModuleReference reference);
+    ExternalModule get(ModuleId reference);
 
     int update(ExternalModule externalModule);
 

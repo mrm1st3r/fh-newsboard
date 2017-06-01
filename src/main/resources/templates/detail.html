@@ -21,7 +21,7 @@
                 <span th:each="sentence : ${doc.sentences}" th:text="${sentence.text} + ' '"></span>
             </p>
             <hr />
-            <small>Eingelesen von <span th:text="${doc.module.id}"></span>, am <span th:text="${#dates.format(doc.crawlTime, 'dd.MM.yyyy')}"></span>
+            <small>Eingelesen von <span th:text="${doc.module.raw()}"></span>, am <span th:text="${#dates.format(doc.crawlTime, 'dd.MM.yyyy')}"></span>
             auf <a th:text="${doc.source}" th:href="${doc.source}"></a></small>
         </div>
     </div>

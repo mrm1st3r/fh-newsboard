@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.model;
 
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 /**
  * Domain class representing external documents, which may not be classified.
@@ -11,9 +11,9 @@ public class ExternalDocument implements Aggregate<ExternalDocument> {
     private int id;
     private String title;
     private String html;
-    private ModuleReference externalModule;
+    private ModuleId externalModule;
 
-    public ExternalDocument(int id, String title, String html, ModuleReference module) {
+    public ExternalDocument(int id, String title, String html, ModuleId module) {
         this.id = id;
         this.title = title;
         this.html = html;
@@ -47,7 +47,7 @@ public class ExternalDocument implements Aggregate<ExternalDocument> {
         this.html = html;
     }
 
-    public ModuleReference getExternalModule() {
+    public ModuleId getExternalModule() {
         return externalModule;
     }
 }

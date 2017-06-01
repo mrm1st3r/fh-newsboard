@@ -36,7 +36,7 @@ class ExternalDocumentDaoTest extends Specification {
         ExternalModule module = TestUtils.sampleModule()
         accessDao.create(TestUtils.sampleAccess())
         externalModuleDao.create(module)
-        moduleIds.add(module.getId())
+        moduleIds.add(module.getId().raw())
         dummyModule = module
     }
 
@@ -69,7 +69,7 @@ class ExternalDocumentDaoTest extends Specification {
         assert testDocument.getId() == document.getId()
         assert testDocument.getHtml() == document.getHtml()
         assert testDocument.getTitle() == document.getTitle()
-        assert testDocument.getExternalModule().getId() == document.getExternalModule().getId()
+        assert testDocument.getExternalModule().raw() == document.getExternalModule().raw()
     }
 
     def cleanup() {

@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.model.document.*;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,7 +38,7 @@ public class DocumentDaoMysql implements DocumentDao {
             r.getString("author"), r.getString("source_url"),
             getCalendarFromTime(r.getDate("creation_time")),
             getCalendarFromTime(r.getDate("crawl_time")),
-            new ModuleReference(r.getString("module_id"))
+            new ModuleId(r.getString("module_id"))
     );
 
     private final RowMapper<Document> documentMapper = (resultSet, i) -> {
@@ -73,7 +73,7 @@ public class DocumentDaoMysql implements DocumentDao {
             pst.setString(3, document.getSource());
             pst.setDate(4, new Date(document.getCreationTime().getTimeInMillis()));
             pst.setDate(5, new Date(document.getCrawlTime().getTimeInMillis()));
-            pst.setString(6, document.getModule().getId());
+            pst.setString(6, document.getModule().raw());
             return pst;
         }, keyHolder);
         document.setId(keyHolder.getKey().intValue());
@@ -84,8 +84,8 @@ public class DocumentDaoMysql implements DocumentDao {
     }
 
     @Override
-    public List<Document> findUnclassifiedForModule(ModuleReference module) {
-        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, module.getId());
+    public List<Document> findUnclassifiedForModule(ModuleId module) {
+        return jdbcTemplate.query(GET_UNCLASSIFIED_DOCUMENTS_FOR_EXTERNAL_MODULE, documentMapper, module.raw());
     }
 
     private Calendar getCalendarFromTime(Date date) {

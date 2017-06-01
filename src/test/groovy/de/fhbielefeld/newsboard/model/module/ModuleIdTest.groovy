@@ -3,13 +3,13 @@ package de.fhbielefeld.newsboard.model.module
 import de.fhbielefeld.newsboard.model.access.AccessId
 import spock.lang.Specification
 
-class ModuleReferenceTest extends Specification {
+class ModuleIdTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def mod1 = new ModuleReference("a")
-        def mod2 = new ModuleReference("b")
-        def mod3 = new ModuleReference("a")
+        def mod1 = new ModuleId("a")
+        def mod2 = new ModuleId("b")
+        def mod3 = new ModuleId("a")
         def access = new AccessId("a")
 
         expect:

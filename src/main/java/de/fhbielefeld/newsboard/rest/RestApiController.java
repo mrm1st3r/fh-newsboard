@@ -6,7 +6,7 @@ import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.document.*;
 import de.fhbielefeld.newsboard.model.module.ExternalModule;
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 import de.fhbielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fhbielefeld.newsboard.xml.ClassificationParsedHandler;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
@@ -83,7 +83,7 @@ public class RestApiController {
         ExternalModule crawler = authenticationResult.get();
         try {
             xmlReader.readDocument(new StringReader(body), (title, author, source, creationTime, crawlTime, rawText) -> {
-                RawDocument rawDocument = new RawDocument(title, author, source, creationTime, crawlTime, crawler, rawText);
+                RawDocument rawDocument = new RawDocument(title, author, source, creationTime, crawlTime, crawler.getId(), rawText);
                 Document document = documentProcessor.processDocument(rawDocument);
                 documentDao.create(document);
             });
@@ -115,7 +115,7 @@ public class RestApiController {
      */
     @RequestMapping(path = "/unclassified/{moduleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public String getUnclassified(HttpServletResponse response, @PathVariable String moduleId) {
-        List<Document> documents = documentDao.findUnclassifiedForModule(new ModuleReference(moduleId));
+        List<Document> documents = documentDao.findUnclassifiedForModule(new ModuleId(moduleId));
         Map<Document, List<DocumentClassification>> classificationMap = new HashMap<>();
         for (Document document : documents) {
             classificationMap.put(document, classificationDao.forForDocument(document));
@@ -154,11 +154,11 @@ public class RestApiController {
 
                         @Override
                         public void onClassificationParsed(int documentId, String classifierId) {
-                            if (!classifierId.equals(classifier.getId())) {
+                            if (!classifierId.equals(classifier.getId().raw())) {
                                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
                             }
                             Document document = documentDao.get(documentId);
-                            DocumentClassification classification = document.addClassification(new ModuleReference(classifierId), values);
+                            DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values);
                             classificationDao.create(classification);
                         }
                     });
@@ -175,9 +175,9 @@ public class RestApiController {
             String base64Credentials = authorization.substring("Basic".length()).trim();
             String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
             String[] values = credentials.split(":", 2);
-            ExternalModule module = moduleDao.get(new ModuleReference(values[0]));
+            ExternalModule module = moduleDao.get(new ModuleId(values[0]));
             if (module != null) {
-                Access access = accessDao.get(module.getAccessReference());
+                Access access = accessDao.get(module.getAccessId());
                 if (access.isEnabled() && access.getPassphrase().equals(values[1])) {
                     return Optional.of(module);
                 }

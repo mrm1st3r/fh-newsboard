@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface DocumentDao {
 
     List<DocumentStub> findAllStubs();
 
-    List<Document> findUnclassifiedForModule(ModuleReference module);
+    List<Document> findUnclassifiedForModule(ModuleId module);
 }

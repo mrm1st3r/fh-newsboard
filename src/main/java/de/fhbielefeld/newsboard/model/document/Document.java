@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.model.document;
 
 import de.fhbielefeld.newsboard.model.Aggregate;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +21,7 @@ public class Document extends DocumentStub implements Aggregate<Document> {
     }
 
     public Document(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
-                    ModuleReference crawler, List<Sentence> sentences) {
+                    ModuleId crawler, List<Sentence> sentences) {
         super(id, title, author, source, creationTime, crawlTime, crawler);
         this.sentences.addAll(sentences);
     }
@@ -30,7 +30,7 @@ public class Document extends DocumentStub implements Aggregate<Document> {
         return sentences;
     }
 
-    public DocumentClassification addClassification(ModuleReference module, List<ClassificationValue> values) {
+    public DocumentClassification addClassification(ModuleId module, List<ClassificationValue> values) {
         return new DocumentClassification(new DocumentId(getId()), null, module, values);
     }
 

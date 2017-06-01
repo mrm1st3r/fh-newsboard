@@ -8,18 +8,23 @@ import de.fhbielefeld.newsboard.model.access.AccessId;
  *
  * @author Felix Meyer
  */
-public class ExternalModule extends ModuleReference implements Aggregate<ExternalModule> {
+public class ExternalModule implements Aggregate<ExternalModule> {
+    private final ModuleId id;
     private String name;
     private String author;
     private String description;
-    private AccessId access;
+    private AccessId accessId;
 
-    public ExternalModule(String id, String name, String author, String description, AccessId access) {
-        super(id);
+    public ExternalModule(String id, String name, String author, String description, AccessId accessId) {
+        this.id = new ModuleId(id);
         this.name = name;
         this.author = author;
         this.description = description;
-        this.access = access;
+        this.accessId = accessId;
+    }
+
+    public ModuleId getId() {
+        return id;
     }
 
     public String getName() {
@@ -52,7 +57,7 @@ public class ExternalModule extends ModuleReference implements Aggregate<Externa
             return false;
         }
         ExternalModule that = (ExternalModule) obj;
-        return this.getId().equals(that.getId());
+        return this.getId().raw().equals(that.getId().raw());
     }
 
     @Override
@@ -60,7 +65,7 @@ public class ExternalModule extends ModuleReference implements Aggregate<Externa
         return getId().hashCode() + getAuthor().hashCode();
     }
 
-    public AccessId getAccessReference() {
-        return access;
+    public AccessId getAccessId() {
+        return accessId;
     }
 }

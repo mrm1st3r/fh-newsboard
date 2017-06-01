@@ -32,7 +32,7 @@ class ExternalModuleDaoTest extends Specification {
         externalModuleDao.create(module)
 
         then:
-        compareModules(externalModuleDao.get(module),module)
+        compareModules(externalModuleDao.get(module.getId()),module)
     }
 
     def "should update correctly"() {
@@ -47,11 +47,12 @@ class ExternalModuleDaoTest extends Specification {
         externalModuleDao.update(module)
 
         then:
-        compareModules(externalModuleDao.get(module), module)
+        compareModules(externalModuleDao.get(module.getId()), module)
     }
 
     def cleanup() {
-        TestUtils.cleanupDatabase(jdbcTemplate, null, null, [TestUtils.sampleModule().getId()], null)
+        TestUtils.cleanupDatabase(jdbcTemplate, null, null,
+                [TestUtils.sampleModule().getId().raw()], null)
     }
 
     def compareModules(ExternalModule testingModule, ExternalModule module) {

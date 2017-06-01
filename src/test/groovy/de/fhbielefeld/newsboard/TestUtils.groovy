@@ -9,7 +9,7 @@ import de.fhbielefeld.newsboard.model.document.Document
 import de.fhbielefeld.newsboard.model.document.DocumentClassification
 import de.fhbielefeld.newsboard.model.document.Sentence
 import de.fhbielefeld.newsboard.model.module.ExternalModule
-import de.fhbielefeld.newsboard.model.module.ModuleReference
+import de.fhbielefeld.newsboard.model.module.ModuleId
 import org.springframework.jdbc.core.JdbcTemplate
 
 /**
@@ -48,7 +48,7 @@ final class TestUtils {
     }
 
     static sampleExternalDocument(ExternalModule module) {
-        new ExternalDocument(-1, "Test external document", "<body><h1>Testing html</h1></body>", module)
+        new ExternalDocument(-1, "Test external document", "<body><h1>Testing html</h1></body>", module.getId())
     }
 
     static sampleAccess() {
@@ -61,7 +61,10 @@ final class TestUtils {
             sentences.add(sampleSentence())
         }
         return new Document(-1, "Test document", "Test author", "Test source",
-                new GregorianCalendar(2017, 6, 4), new GregorianCalendar(2010, 2, 1), module, sentences)
+                new GregorianCalendar(2017, 6, 4),
+                new GregorianCalendar(2010, 2, 1),
+                module.getId(),
+                sentences)
     }
 
     static sampleDocumentForXml() {
@@ -78,7 +81,7 @@ final class TestUtils {
     }
 
     static List<DocumentClassification> classificationsForDocument(Document document) {
-        def c = document.addClassification(new ModuleReference("a"), [
+        def c = document.addClassification(new ModuleId("a"), [
                 ClassificationValue.of(1),
                 ClassificationValue.of(0.9, 0.95)
         ])

@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
 import de.fhbielefeld.newsboard.model.document.*;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,7 +51,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
         int updatedRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{"classification_id"});
             pst.setInt(1, classification.getDocumentId().getId());
-            pst.setString(2, classification.getModule().getId());
+            pst.setString(2, classification.getModule().raw());
             pst.setDate(3, Date.valueOf(LocalDate.now()));
             return pst;
         }, keyHolder);
@@ -86,7 +86,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
                 }
                 classifications.add(new DocumentClassification(
                         new DocumentId(document_id), new ClassificationId(classification_id),
-                        new ModuleReference(module_id),
+                        new ModuleId(module_id),
                         values
                 ));
             }

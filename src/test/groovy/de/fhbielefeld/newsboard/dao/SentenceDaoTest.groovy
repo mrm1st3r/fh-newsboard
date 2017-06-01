@@ -61,6 +61,6 @@ class SentenceDaoTest extends Specification {
     }
 
     def cleanup() {
-        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, [dummyDocument.getId()], [dummyModule.getId()])
+        TestUtils.cleanupDatabase(jdbcTemplate, sentenceIds, [dummyDocument.getId()], [dummyModule.getId().raw()])
     }
 }

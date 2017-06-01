@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.Calendar;
 
@@ -14,10 +14,10 @@ public class DocumentStub {
     private final String source;
     private final Calendar creationTime;
     private final Calendar crawlTime;
-    private final ModuleReference crawler;
+    private final ModuleId crawler;
 
     public DocumentStub(int id, String title, String author, String source, Calendar creationTime, Calendar crawlTime,
-                        ModuleReference crawler) {
+                        ModuleId crawler) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -68,7 +68,7 @@ public class DocumentStub {
         return crawlTime;
     }
 
-    public ModuleReference getModule() {
+    public ModuleId getModule() {
         return crawler;
     }
 }

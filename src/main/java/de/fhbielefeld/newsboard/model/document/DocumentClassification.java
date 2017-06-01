@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.model.document;
 
 import de.fhbielefeld.newsboard.model.Aggregate;
-import de.fhbielefeld.newsboard.model.module.ModuleReference;
+import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ public class DocumentClassification implements Aggregate<DocumentClassification>
 
     private final DocumentId documentId;
     private final ClassificationId id;
-    private final ModuleReference module;
+    private final ModuleId module;
     private final List<ClassificationValue> values;
 
-    public DocumentClassification(DocumentId documentId, ClassificationId id, ModuleReference module, List<ClassificationValue> values) {
+    public DocumentClassification(DocumentId documentId, ClassificationId id, ModuleId module, List<ClassificationValue> values) {
         this.documentId = documentId;
         this.id = id;
         this.module = module;
@@ -30,7 +30,7 @@ public class DocumentClassification implements Aggregate<DocumentClassification>
         return documentId;
     }
 
-    public ModuleReference getModule() {
+    public ModuleId getModule() {
         return module;
     }
 
