@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.processing;
 
+import de.fhbielefeld.newsboard.model.Service;
 import de.fhbielefeld.newsboard.model.document.RawDocument;
 import de.fhbielefeld.newsboard.model.document.Document;
 import de.fhbielefeld.newsboard.model.document.Sentence;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * Tokenizer to split up texts received from crawlers into separate sentences.
  */
 @Component
-public class RawDocumentProcessor {
+public class RawDocumentProcessor implements Service {
     private static final String MODEL_FILE = "/de-sent.bin";
     private SentenceDetectorME sentenceDetector;
 

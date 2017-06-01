@@ -3,7 +3,7 @@ package de.fhbielefeld.newsboard.model;
 /**
  * Data access interface for external documents.
  */
-public interface ExternalDocumentDao {
+public interface ExternalDocumentDao extends Repository {
 
     ExternalDocument get(int id);
 

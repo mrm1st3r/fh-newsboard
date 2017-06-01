@@ -1,10 +1,12 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import de.fhbielefeld.newsboard.model.ValueObject;
+
 /**
  * A single classification value consisting of
  * a classification value and an optional confidence.
  */
-public class ClassificationValue {
+public class ClassificationValue implements ValueObject {
 
     private static final double DEFAULT_CONFIDENCE = 1;
 

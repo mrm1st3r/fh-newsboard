@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import de.fhbielefeld.newsboard.model.Repository;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Data access interface for classifiable documents.
  */
-public interface DocumentDao {
+public interface DocumentDao extends Repository {
 
     Document get(DocumentId id);
 

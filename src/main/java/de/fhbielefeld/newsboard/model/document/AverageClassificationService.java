@@ -11,7 +11,7 @@ import java.util.Map;
  * Service to calculate average classification for documents.
  */
 @Service
-public class AverageClassificationService {
+public class AverageClassificationService implements de.fhbielefeld.newsboard.model.Service {
 
     private final ClassificationDao classificationDao;
 

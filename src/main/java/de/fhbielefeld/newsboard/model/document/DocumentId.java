@@ -1,6 +1,8 @@
 package de.fhbielefeld.newsboard.model.document;
 
-public class DocumentId {
+import de.fhbielefeld.newsboard.model.ValueObject;
+
+public class DocumentId implements ValueObject {
 
     final static DocumentId NONE = new DocumentId(-1);
 
