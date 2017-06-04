@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/mrm1st3r/fh-newsboard.svg?branch=master)](https://travis-ci.org/mrm1st3r/fh-newsboard)
 [![Quality Gate](https://sonarqube.com/api/badges/gate?key=de.fh_bielefeld:newsboard)](https://sonarqube.com/dashboard/index/de.fh_bielefeld:newsboard)
+[![Coverage](https://sonarcloud.io/api/badges/measure?key=de.fh_bielefeld:newsboard&metric=coverage)](https://sonarqube.com/dashboard/index/de.fh_bielefeld:newsboard)
 # FH Newsboard
 A Java application for storing documents (news articles by original intend)
 along with AI-generated sentiment classifications.
