@@ -18,11 +18,11 @@ public class ClassificationValue implements ValueObject {
     private final double confidence;
 
     public static ClassificationValue of(double value) {
-        if (value == 0) {
+        if (Double.compare(value, 0.0) == 0) {
             return NEUTRAL;
-        } else if (value == 1) {
+        } else if (Double.compare(value, 1.0) == 0) {
             return POSITIVE;
-        } else if (value == -1) {
+        } else if (Double.compare(value, -1.0) == 0) {
             return NEGATIVE;
         }
         return new ClassificationValue(value, DEFAULT_CONFIDENCE);
