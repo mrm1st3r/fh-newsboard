@@ -26,7 +26,7 @@
         <jacoco.it.execution.data.file>${project.build.directory}/jacoco-it.exec</jacoco.it.execution.data.file>
         <jacoco.ut.execution.data.file>${project.build.directory}/jacoco-ut.exec</jacoco.ut.execution.data.file>
 
-        <sonar.jacoco.reportPaths>target/jacoco-ut.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.reportPaths>target/jacoco-ut.exec,target/jacoco-it.exec</sonar.jacoco.reportPaths>
     </properties>
 
 	<dependencies>
