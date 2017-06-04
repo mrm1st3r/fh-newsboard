@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static org.springframework.util.Assert.notNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * MySQL implementation for document DAO.
@@ -58,7 +58,7 @@ public class DocumentDaoMysql implements DocumentDao {
     @Override
     public Document create(Document document) {
         DocumentMetaData metaData = document.getMetaData();
-        notNull(metaData.getModule());
+        checkNotNull(metaData.getModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_DOCUMENT, new String[]{"document_id"});

@@ -29,7 +29,7 @@ public class ClassificationValue implements ValueObject {
     }
 
     public static ClassificationValue of(double value, double confidence) {
-        if (confidence == DEFAULT_CONFIDENCE) {
+        if (Double.compare(confidence, DEFAULT_CONFIDENCE) == 0) {
             return of(value);
         }
         return new ClassificationValue(value, confidence);
