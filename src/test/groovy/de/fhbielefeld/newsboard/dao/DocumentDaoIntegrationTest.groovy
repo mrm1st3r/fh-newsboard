@@ -49,7 +49,11 @@ class DocumentDaoIntegrationTest extends Specification {
 
         then:
         Document testDocument = documentDao.get(dummyDocument.getId())
-        testDocument.metaData == dummyDocument.metaData
+        testDocument.metaData.title == dummyDocument.metaData.title
+        testDocument.metaData.author == dummyDocument.metaData.author
+        testDocument.metaData.source == dummyDocument.metaData.source
+        testDocument.metaData.crawlTime == dummyDocument.metaData.crawlTime
+        testDocument.metaData.creationTime == dummyDocument.metaData.creationTime
         testDocument.getSentences().size() == dummyDocument.getSentences().size()
         for (int i = 0; i < testDocument.getSentences().size(); i++) {
             testDocument.getSentences().get(i).getId() == dummyDocument.getSentences().get(i).getId()
