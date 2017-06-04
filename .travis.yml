@@ -19,4 +19,4 @@ addons:
     branches:
       - master
 
-script: mvn verify sonar:sonar -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis -Duser.timezone=Europe/Berlin
+script: mvn verify sonar:sonar -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis -Duser.timezone=Europe/Berlin -Dsonar.language=java
