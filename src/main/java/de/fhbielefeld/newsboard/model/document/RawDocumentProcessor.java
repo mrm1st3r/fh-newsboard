@@ -1,9 +1,6 @@
-package de.fhbielefeld.newsboard.processing;
+package de.fhbielefeld.newsboard.model.document;
 
 import de.fhbielefeld.newsboard.model.Service;
-import de.fhbielefeld.newsboard.model.document.RawDocument;
-import de.fhbielefeld.newsboard.model.document.Document;
-import de.fhbielefeld.newsboard.model.document.Sentence;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.springframework.stereotype.Component;
@@ -17,8 +14,10 @@ import java.util.ArrayList;
  */
 @Component
 public class RawDocumentProcessor implements Service {
+
     private static final String MODEL_FILE = "/de-sent.bin";
-    private SentenceDetectorME sentenceDetector;
+
+    private final SentenceDetectorME sentenceDetector;
 
     public RawDocumentProcessor() throws IOException {
         try (InputStream modelStream = getClass().getResourceAsStream(MODEL_FILE)) {

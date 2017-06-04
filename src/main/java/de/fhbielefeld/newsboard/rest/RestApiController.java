@@ -1,13 +1,11 @@
 package de.fhbielefeld.newsboard.rest;
 
-import de.fhbielefeld.newsboard.model.document.RawDocument;
 import de.fhbielefeld.newsboard.model.access.Access;
 import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.document.*;
 import de.fhbielefeld.newsboard.model.module.ExternalModule;
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
-import de.fhbielefeld.newsboard.processing.RawDocumentProcessor;
 import de.fhbielefeld.newsboard.xml.ClassificationParsedHandler;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
 import de.fhbielefeld.newsboard.xml.XmlDocumentWriter;

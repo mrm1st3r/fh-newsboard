@@ -1,6 +1,5 @@
-package de.fhbielefeld.newsboard.processing
+package de.fhbielefeld.newsboard.model.document
 
-import de.fhbielefeld.newsboard.model.document.RawDocument
 import spock.lang.Specification
 
 class RawDocumentProcessorTest extends Specification {
