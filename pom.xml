@@ -75,13 +75,13 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>1.1-groovy-2.4-rc-3</version>
+            <version>1.1-groovy-2.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-spring</artifactId>
-            <version>1.1-groovy-2.4-rc-3</version>
+            <version>1.1-groovy-2.4</version>
         </dependency>
 
         <dependency>
@@ -151,7 +151,7 @@
                 <version>2.20</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*IntegrationTest.groovy</exclude>
+                        <exclude>**/*IntegrationTest*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -170,8 +170,13 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>**/*IntegrationTest.groovy</include>
+                        <include>**/*IntegrationTest*</include>
                     </includes>
+                    <!-- See https://github.com/spring-projects/spring-boot/issues/6254 -->
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+                    </additionalClasspathElements>
+                    <parallel>none</parallel>
                 </configuration>
             </plugin>
 		</plugins>
