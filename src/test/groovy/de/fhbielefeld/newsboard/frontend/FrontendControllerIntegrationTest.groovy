@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class FrontendControllerTest extends Specification {
+class FrontendControllerIntegrationTest extends Specification {
 
     @Autowired
     MockMvc mvc

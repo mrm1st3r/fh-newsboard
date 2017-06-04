@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import spock.lang.Specification
 
 @SpringBootTest(classes = NewsboardApplication.class)
-class ExternalModuleDaoTest extends Specification {
+class ExternalModuleDaoIntegrationTest extends Specification {
 
     @Autowired
     JdbcTemplate jdbcTemplate

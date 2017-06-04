@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import spock.lang.Specification
 
 @SpringBootTest(classes = NewsboardApplication.class)
-class DocumentDaoTest extends Specification {
+class DocumentDaoIntegrationTest extends Specification {
     @Autowired
     JdbcTemplate jdbcTemplate
     @Autowired

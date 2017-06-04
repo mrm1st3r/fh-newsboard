@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class RestApiControllerTest extends Specification {
+class RestApiControllerIntegrationTest extends Specification {
 
     @Autowired
     MockMvc mvc
