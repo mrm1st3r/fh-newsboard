@@ -4,7 +4,7 @@ import de.fhbielefeld.newsboard.model.ValueObject;
 
 public class DocumentId implements ValueObject {
 
-    final static DocumentId NONE = new DocumentId(-1);
+    static final DocumentId NONE = new DocumentId(-1);
 
     private final int id;
 

@@ -3,7 +3,6 @@ package de.fhbielefeld.newsboard.dao.mysql;
 import de.fhbielefeld.newsboard.model.document.*;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -33,6 +32,8 @@ public class ClassificationDaoMysql implements ClassificationDao {
     private static final String INSERT_CLASSIFICATION_VALUE =
             "INSERT INTO classification_value (classification_id, order_seq, classification, confidence) VALUES (?, ?, ?, ?)";
 
+    private static final String CLASSIFICATION_ID = "classification_id";
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -49,7 +50,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
     public int create(DocumentClassification classification) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int updatedRows = jdbcTemplate.update(connection -> {
-            PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{"classification_id"});
+            PreparedStatement pst = connection.prepareStatement(INSERT_CLASSIFICATION, new String[]{CLASSIFICATION_ID});
             pst.setInt(1, classification.getDocumentId().raw());
             pst.setString(2, classification.getModule().raw());
             pst.setDate(3, Date.valueOf(LocalDate.now()));
@@ -70,14 +71,14 @@ public class ClassificationDaoMysql implements ClassificationDao {
     private class ClassificationResultExtractor implements ResultSetExtractor<List<DocumentClassification>> {
 
         @Override
-        public List<DocumentClassification> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+        public List<DocumentClassification> extractData(ResultSet resultSet) throws SQLException {
             List<DocumentClassification> classifications = new ArrayList<>();
             while (resultSet.next()) {
                 List<ClassificationValue> values = new ArrayList<>();
-                int classification_id = resultSet.getInt("classification_id");
-                int document_id = resultSet.getInt("document_id");
-                String module_id = resultSet.getString("module_id");
-                while (!resultSet.isAfterLast() && classification_id == resultSet.getInt("classification_id")) {
+                int classificationId = resultSet.getInt(CLASSIFICATION_ID);
+                int documentId = resultSet.getInt("document_id");
+                String moduleId = resultSet.getString("module_id");
+                while (!resultSet.isAfterLast() && classificationId == resultSet.getInt(CLASSIFICATION_ID)) {
                     values.add(ClassificationValue.of(
                             resultSet.getDouble("classification"),
                             resultSet.getDouble("confidence")
@@ -85,8 +86,8 @@ public class ClassificationDaoMysql implements ClassificationDao {
                     resultSet.next();
                 }
                 classifications.add(new DocumentClassification(
-                        new DocumentId(document_id), new ClassificationId(classification_id),
-                        new ModuleId(module_id),
+                        new DocumentId(documentId), new ClassificationId(classificationId),
+                        new ModuleId(moduleId),
                         values
                 ));
             }
