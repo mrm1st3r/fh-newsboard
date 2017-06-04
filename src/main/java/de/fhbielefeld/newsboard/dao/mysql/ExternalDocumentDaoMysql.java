@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 
-import static org.springframework.util.Assert.notNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * MySQL Implementation for ExternalDocument DAO.
@@ -49,14 +49,14 @@ public class ExternalDocumentDaoMysql implements ExternalDocumentDao {
 
     @Override
     public int update(ExternalDocument externalDocument) {
-        notNull(externalDocument.getExternalModule());
+        checkNotNull(externalDocument.getExternalModule());
         return jdbcTemplate.update(UPDATE_EXTERNAL_DOCUMENT, externalDocument.getTitle(), externalDocument.getHtml(),
                 externalDocument.getExternalModule().raw(), externalDocument.getId());
     }
 
     @Override
     public int create(ExternalDocument externalDocument) {
-        notNull(externalDocument.getExternalModule());
+        checkNotNull(externalDocument.getExternalModule());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int numRows = jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(INSERT_EXTERNAL_DOCUMENT, new String[]{"ext_document_id"});
