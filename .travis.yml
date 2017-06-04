@@ -20,11 +20,4 @@ addons:
       - master
 
 install: mvn install -Dskip.unitTests=true -Dskip.integrationTests=true -Dmaven.javadoc.skip=true
-script: skip
-
-jobs:
-  include:
-    - script: mvn test -Dmaven.javadoc.skip=true -Duser.timezone=Europe/Berlin
-    - script: mvn integration-test -Dspring.profiles.active=travis -Dskip.unitTests=true -Duser.timezone=Europe/Berlin
-    - stage: analysis
-      script: mvn sonar:sonar -Dsonar.language=java
+script: mvn verify sonar:sonar -Dspring.profiles.active=travis -Dskip.unitTests=true -Duser.timezone=Europe/Berlin -Dsonar.language=java
