@@ -25,8 +25,10 @@
 
         <jacoco.it.execution.data.file>${project.build.directory}/jacoco-it.exec</jacoco.it.execution.data.file>
         <jacoco.ut.execution.data.file>${project.build.directory}/jacoco-ut.exec</jacoco.ut.execution.data.file>
+        <skip.unitTests>false</skip.unitTests>
+        <skip.integrationTests>false</skip.integrationTests>
 
-        <sonar.jacoco.reportPaths>target/jacoco-ut.exec,target/jacoco-it.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.reportPaths>${project.build.directory}/jacoco-ut.exec,${project.build.directory}/jacoco-it.exec</sonar.jacoco.reportPaths>
     </properties>
 
 	<dependencies>
@@ -188,6 +190,7 @@
                 <version>2.20</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
+                    <skipTests>${skip.unitTests}</skipTests>
                     <excludes>
                         <exclude>**/*IntegrationTest*</exclude>
                     </excludes>
@@ -208,6 +211,7 @@
                 </executions>
                 <configuration>
                     <argLine>${failsafeArgLine}</argLine>
+                    <skipTests>${skip.integrationTests}</skipTests>
                     <includes>
                         <include>**/*IntegrationTest*</include>
                     </includes>

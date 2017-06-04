@@ -19,4 +19,11 @@ addons:
     branches:
       - master
 
-script: mvn verify sonar:sonar -Dmaven.javadoc.skip=true -Dspring.profiles.active=travis -Duser.timezone=Europe/Berlin -Dsonar.language=java
+jobs:
+  include:
+    - stage: Unit Test
+      script: mvn test -Dmaven.javadoc.skip=true -Duser.timezone=Europe/Berlin
+    - stage: Integration Test
+      script: mvn integration-test -Dspring.profiles.active=travis -Dskip.unitTests=true -Duser.timezone=Europe/Berlin
+    - stage: Code Analysis
+      script: mvn sonar:sonar -Dsonar.language=java
