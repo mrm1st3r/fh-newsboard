@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.dao
 
+import com.google.common.collect.ImmutableList
 import de.fhbielefeld.newsboard.NewsboardApplication
 import de.fhbielefeld.newsboard.TestUtils
 import de.fhbielefeld.newsboard.model.access.AccessDao
@@ -59,10 +60,10 @@ class ClassificationDaoTest extends Specification {
                 dummyDocument.getId(),
                 null,
                 dummyModule.getId(),
-                [
+                ImmutableList.copyOf([
                         ClassificationValue.of(1),
                         ClassificationValue.of(-1)
-                ])
+                ]))
         classificationDao.create(classification)
 
         when:

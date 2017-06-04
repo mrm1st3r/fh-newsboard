@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard
 
+import com.google.common.collect.ImmutableList
 import de.fhbielefeld.newsboard.model.ExternalDocument
 import de.fhbielefeld.newsboard.model.access.Access
 import de.fhbielefeld.newsboard.model.access.AccessId
@@ -58,7 +59,7 @@ final class TestUtils {
     }
 
     static sampleDocumentForDb(ExternalModule module) {
-        ArrayList<Sentence> sentences = new ArrayList<>()
+        ImmutableList.Builder<Sentence> sentences = ImmutableList.builder()
         for (int i = 0; i < 3; i++) {
             sentences.add(sampleSentence())
         }
@@ -67,7 +68,7 @@ final class TestUtils {
                 new GregorianCalendar(2017, 6, 4),
                 new GregorianCalendar(2010, 2, 1),
                 module.getId()),
-                sentences)
+                sentences.build())
     }
 
     static sampleDocumentForXml() {
@@ -77,7 +78,7 @@ final class TestUtils {
                 new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
                         new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
                         new GregorianCalendar(2016, Calendar.DECEMBER, 01),
-                        new ModuleId("test-module")), [s1, s2])
+                        new ModuleId("test-module")), ImmutableList.copyOf([s1, s2]))
         return document
     }
 
@@ -87,14 +88,14 @@ final class TestUtils {
                         new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
                         new GregorianCalendar(2016, Calendar.DECEMBER, 01),
                         new ModuleId("test-module")),
-                sentences)
+                ImmutableList.copyOf(sentences))
     }
 
     static List<DocumentClassification> classificationsForDocument(Document document) {
-        def c = document.addClassification(new ModuleId("a"), [
+        def c = document.addClassification(new ModuleId("a"), ImmutableList.copyOf([
                 ClassificationValue.of(1),
                 ClassificationValue.of(0.9, 0.95)
-        ])
+        ]))
         return Collections.singletonList(c)
     }
 }
