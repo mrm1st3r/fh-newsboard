@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.document.*;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
         public List<DocumentClassification> extractData(ResultSet resultSet) throws SQLException {
             List<DocumentClassification> classifications = new ArrayList<>();
             while (resultSet.next()) {
-                List<ClassificationValue> values = new ArrayList<>();
+                ImmutableList.Builder<ClassificationValue> values = ImmutableList.builder();
                 int classificationId = resultSet.getInt(CLASSIFICATION_ID);
                 int documentId = resultSet.getInt("document_id");
                 String moduleId = resultSet.getString("module_id");
@@ -88,7 +89,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
                 classifications.add(new DocumentClassification(
                         new DocumentId(documentId), new ClassificationId(classificationId),
                         new ModuleId(moduleId),
-                        values
+                        values.build()
                 ));
             }
             return classifications;

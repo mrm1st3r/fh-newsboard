@@ -1,8 +1,7 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Repository;
-
-import java.util.List;
 
 /**
  * Data access interface for sentences.
@@ -11,5 +10,5 @@ public interface SentenceDao extends Repository {
 
     int create(Sentence sentence, Document document);
 
-    List<Sentence> findForDocument(DocumentId document);
+    ImmutableList<Sentence> findForDocument(DocumentId document);
 }

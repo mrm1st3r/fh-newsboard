@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.rest;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.access.Access;
 import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.document.*;
@@ -136,7 +137,7 @@ public class RestApiController {
             return handleAuthenticationError(response);
         }
         ExternalModule classifier = authenticationResult.get();
-        List<ClassificationValue> values = new ArrayList<>();
+        ImmutableList.Builder<ClassificationValue> values = ImmutableList.builder();
         StringReader in = new StringReader(body);
         try {
             xmlReader.readClassifications(in,
@@ -156,7 +157,7 @@ public class RestApiController {
                                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
                             }
                             Document document = documentDao.get(new DocumentId(documentId));
-                            DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values);
+                            DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values.build());
                             classificationDao.create(classification);
                         }
                     });

@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.document.Document;
 import de.fhbielefeld.newsboard.model.document.DocumentId;
 import de.fhbielefeld.newsboard.model.document.Sentence;
@@ -12,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.util.List;
 
 /**
  * MySQL implementation for Sentence DAO.
@@ -36,8 +36,8 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     @Override
-    public List<Sentence> findForDocument(DocumentId id) {
-        return jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, id.raw());
+    public ImmutableList<Sentence> findForDocument(DocumentId id) {
+        return ImmutableList.copyOf(jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, id.raw()));
     }
 
     @Override
