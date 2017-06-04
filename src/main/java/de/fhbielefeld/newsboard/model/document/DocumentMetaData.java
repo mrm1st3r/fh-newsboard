@@ -49,44 +49,4 @@ public class DocumentMetaData implements ValueObject {
     public ModuleId getModule() {
         return crawler;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        DocumentMetaData metaData = (DocumentMetaData) o;
-
-        if (!title.equals(metaData.title)) {
-            return false;
-        }
-        if (!author.equals(metaData.author)) {
-            return false;
-        }
-        if (!source.equals(metaData.source)) {
-            return false;
-        }
-        if (!creationTime.equals(metaData.creationTime)) {
-            return false;
-        }
-        if (!crawlTime.equals(metaData.crawlTime)) {
-            return false;
-        }
-        return crawler.equals(metaData.crawler);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = title.hashCode();
-        result = 31 * result + author.hashCode();
-        result = 31 * result + source.hashCode();
-        result = 31 * result + creationTime.hashCode();
-        result = 31 * result + crawlTime.hashCode();
-        result = 31 * result + crawler.hashCode();
-        return result;
-    }
 }

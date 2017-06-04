@@ -60,6 +60,6 @@ public class Document implements Aggregate<Document> {
 
     @Override
     public int hashCode() {
-        return getId().hashCode() + metaData.hashCode();
+        return getId().hashCode();
     }
 }
