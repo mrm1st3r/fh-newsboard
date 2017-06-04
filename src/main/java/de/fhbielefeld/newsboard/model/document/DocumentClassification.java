@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 
@@ -13,9 +14,9 @@ public class DocumentClassification implements Aggregate<DocumentClassification>
     private final DocumentId documentId;
     private final ClassificationId id;
     private final ModuleId module;
-    private final List<ClassificationValue> values;
+    private final ImmutableList<ClassificationValue> values;
 
-    public DocumentClassification(DocumentId documentId, ClassificationId id, ModuleId module, List<ClassificationValue> values) {
+    public DocumentClassification(DocumentId documentId, ClassificationId id, ModuleId module, ImmutableList<ClassificationValue> values) {
         this.documentId = documentId;
         this.id = id;
         this.module = module;

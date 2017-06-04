@@ -1,5 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Service;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 /**
  * Tokenizer to split up texts received from crawlers into separate sentences.
@@ -28,11 +28,11 @@ public class RawDocumentProcessor implements Service {
 
     public Document processDocument(RawDocument rawDocument) {
         int sentNumber = 1;
-        ArrayList<Sentence> sentences = new ArrayList<>();
+        ImmutableList.Builder<Sentence> sentences = ImmutableList.builder();
         for (String s : tokenizePlaintext(rawDocument.getRawText())) {
             sentences.add(new Sentence(-1, sentNumber++, s));
         }
-        return new Document(rawDocument.getMetaData(), sentences);
+        return new Document(rawDocument.getMetaData(), sentences.build());
     }
 
     private String[] tokenizePlaintext(String plaintext) {

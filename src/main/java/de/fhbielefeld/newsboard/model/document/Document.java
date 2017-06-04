@@ -1,9 +1,9 @@
 package de.fhbielefeld.newsboard.model.document;
 
+import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,15 +15,15 @@ public class Document implements Aggregate<Document> {
 
     private final DocumentId id;
     private final DocumentMetaData metaData;
-    private final List<Sentence> sentences;
+    private final ImmutableList<Sentence> sentences;
 
-    public Document(DocumentMetaData metaData, List<Sentence> sentences) {
+    public Document(DocumentMetaData metaData, ImmutableList<Sentence> sentences) {
         id = DocumentId.NONE;
         this.metaData = metaData;
-        this.sentences = new ArrayList<>(sentences);
+        this.sentences = sentences;
     }
 
-    public Document(DocumentId id, DocumentMetaData metaData, List<Sentence> sentences) {
+    public Document(DocumentId id, DocumentMetaData metaData, ImmutableList<Sentence> sentences) {
         this.id = id;
         this.metaData = metaData;
         this.sentences = sentences;
@@ -45,7 +45,7 @@ public class Document implements Aggregate<Document> {
         return sentences;
     }
 
-    public DocumentClassification addClassification(ModuleId module, List<ClassificationValue> values) {
+    public DocumentClassification addClassification(ModuleId module, ImmutableList<ClassificationValue> values) {
         return new DocumentClassification(getId(), null, module, values);
     }
 
