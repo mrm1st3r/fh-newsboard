@@ -19,7 +19,8 @@ addons:
     branches:
       - master
 
-script: mvn install -Dskip.unitTests=true -Dskip.integrationTests=true -Dmaven.javadoc.skip=true
+install: mvn install -Dskip.unitTests=true -Dskip.integrationTests=true -Dmaven.javadoc.skip=true
+script: skip
 
 jobs:
   include:
