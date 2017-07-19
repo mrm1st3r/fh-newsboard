@@ -1,11 +1,11 @@
 package de.fhbielefeld.newsboard.model.access;
 
-import de.fhbielefeld.newsboard.model.Entity;
+import de.fhbielefeld.newsboard.model.ValueObject;
 
 /**
  * An Access Role grants access to specific parts of the application.
  */
-public class AccessRole implements Entity<Access> {
+public class AccessRole implements ValueObject {
 
     private final String role;
 
