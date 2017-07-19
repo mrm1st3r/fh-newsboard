@@ -1,5 +1,7 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 import java.util.OptionalDouble;
 
 /**
@@ -7,6 +9,7 @@ import java.util.OptionalDouble;
  *
  * @author Felix Meyer, Lukas Taake
  */
+@DDDEntity
 public class Classification {
     private int sentenceId;
     private ExternalModule externalModule;

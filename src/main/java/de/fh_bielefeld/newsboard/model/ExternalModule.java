@@ -1,10 +1,13 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.AggregateRoot;
+
 /**
  * Domain class representing external modules like crawler and classifiers, which are not directly part of the newsboard.
  *
  * @author Felix Meyer
  */
+@AggregateRoot
 public class ExternalModule {
     private String id;
     private String name;

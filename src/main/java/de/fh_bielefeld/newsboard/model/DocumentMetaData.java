@@ -1,10 +1,13 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDValueObject;
+
 import java.util.Calendar;
 
 /**
  * Meta-data that belongs either to a raw or processed document.
  */
+@DDDValueObject
 public class DocumentMetaData {
 
     private String title;

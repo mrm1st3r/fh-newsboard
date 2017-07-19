@@ -1,10 +1,13 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.AggregateRoot;
+
 /**
  * Domain class representing external documents, which may not be classified.
  *
  * @Author Felix Meyer
  */
+@AggregateRoot
 public class ExternalDocument {
     private int id;
     private String title;

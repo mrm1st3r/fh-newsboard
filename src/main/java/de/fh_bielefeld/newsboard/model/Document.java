@@ -1,5 +1,8 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.AggregateRoot;
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.List;
  *
  * @author Felix Meyer, Lukas Taake
  */
+@AggregateRoot
 public class Document {
     private int id;
     private DocumentMetaData metaData;

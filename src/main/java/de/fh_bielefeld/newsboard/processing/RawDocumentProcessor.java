@@ -3,6 +3,7 @@ package de.fh_bielefeld.newsboard.processing;
 import de.fh_bielefeld.newsboard.model.Document;
 import de.fh_bielefeld.newsboard.model.RawDocument;
 import de.fh_bielefeld.newsboard.model.Sentence;
+import de.smartsquare.ddd.annotations.DDDService;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import java.io.InputStream;
  * Tokenizer to split up texts received from crawlers into separate sentences.
  */
 @Component
+@DDDService
 public class RawDocumentProcessor {
     private static final String MODEL_FILE = "/de-sent.bin";
     private SentenceDetectorME sentenceDetector;

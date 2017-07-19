@@ -1,10 +1,13 @@
 package de.fh_bielefeld.newsboard.model;
 
+import de.smartsquare.ddd.annotations.DDDEntity;
+
 /**
  * Domain class representing a token for module authentication.
  *
  * @Author Felix Meyer
  */
+@DDDEntity
 public class AuthenticationToken {
     private int id;
     private String moduleId;

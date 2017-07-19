@@ -2,6 +2,7 @@ package de.fh_bielefeld.newsboard.dao;
 
 import de.fh_bielefeld.newsboard.model.AuthenticationToken;
 import de.fh_bielefeld.newsboard.model.ExternalModule;
+import de.smartsquare.ddd.annotations.DDDRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import java.util.Optional;
 /**
  * Data access interface for authentication tokens used by external modules.
  */
+@DDDRepository
 public interface AuthenticationTokenDao {
 
     AuthenticationToken get(int id);
