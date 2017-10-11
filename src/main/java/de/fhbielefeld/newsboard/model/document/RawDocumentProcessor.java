@@ -1,7 +1,8 @@
 package de.fhbielefeld.newsboard.model.document;
 
-import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Service;
+import io.vavr.collection.Iterator;
+import io.vavr.collection.List;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.springframework.stereotype.Component;
@@ -27,12 +28,11 @@ public class RawDocumentProcessor implements Service {
     }
 
     public Document processDocument(RawDocument rawDocument) {
-        int sentNumber = 1;
-        ImmutableList.Builder<Sentence> sentences = ImmutableList.builder();
-        for (String s : tokenizePlaintext(rawDocument.getRawText())) {
-            sentences.add(new Sentence(-1, sentNumber++, s));
-        }
-        return new Document(rawDocument.getMetaData(), sentences.build());
+        List<String> sentenceStrings = List.of(tokenizePlaintext(rawDocument.getRawText()));
+        List<Sentence> sentences = Iterator.range(0, sentenceStrings.size())
+                .map(num -> new Sentence(-1, num + 1, sentenceStrings.get(num)))
+                .toList();
+        return new Document(rawDocument.getMetaData(), sentences);
     }
 
     private String[] tokenizePlaintext(String plaintext) {

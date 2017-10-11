@@ -9,6 +9,7 @@ import de.fhbielefeld.newsboard.model.document.Sentence
 import de.fhbielefeld.newsboard.model.document.SentenceDao
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao
+import io.vavr.collection.List
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -27,7 +28,7 @@ class SentenceDaoIntegrationTest extends Specification {
     @Autowired
     AccessDao accessDao
 
-    List<Integer> sentenceIds
+    java.util.List<Integer> sentenceIds
 
     Document dummyDocument
     ExternalModule dummyModule

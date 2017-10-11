@@ -1,10 +1,10 @@
 package de.fhbielefeld.newsboard.dao.mysql;
 
-import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.document.Document;
 import de.fhbielefeld.newsboard.model.document.DocumentId;
 import de.fhbielefeld.newsboard.model.document.Sentence;
 import de.fhbielefeld.newsboard.model.document.SentenceDao;
+import io.vavr.collection.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,8 +36,8 @@ public class SentenceDaoMysql implements SentenceDao {
     }
 
     @Override
-    public ImmutableList<Sentence> findForDocument(DocumentId id) {
-        return ImmutableList.copyOf(jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, id.raw()));
+    public List<Sentence> findForDocument(DocumentId id) {
+        return List.ofAll(jdbcTemplate.query(GET_ALL_SENTENCES_IN_DOCUMENT, sentenceRowMapper, id.raw()));
     }
 
     @Override

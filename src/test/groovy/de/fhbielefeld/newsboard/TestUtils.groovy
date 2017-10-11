@@ -13,6 +13,8 @@ import de.fhbielefeld.newsboard.model.document.DocumentMetaData
 import de.fhbielefeld.newsboard.model.document.Sentence
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ModuleId
+import io.vavr.collection.Iterator
+import io.vavr.collection.List
 import org.springframework.jdbc.core.JdbcTemplate
 
 /**
@@ -25,8 +27,11 @@ final class TestUtils {
         return xml
     }
 
-    static cleanupDatabase(JdbcTemplate jdbcTemplate, List<Integer> sentenceIds,
-                           List<Integer> documentIds, List<String> moduleIds, List<Integer> externalDocumentIds = Collections.emptyList()) {
+    static cleanupDatabase(JdbcTemplate jdbcTemplate,
+                           java.util.List<Integer> sentenceIds,
+                           java.util.List<Integer> documentIds,
+                           java.util.List<String> moduleIds,
+                           java.util.List<Integer> externalDocumentIds = Collections.emptyList()) {
         for (Integer id : sentenceIds) {
             jdbcTemplate.update("DELETE FROM sentence WHERE sentence_id = " + id)
         }
@@ -59,16 +64,13 @@ final class TestUtils {
     }
 
     static sampleDocumentForDb(ExternalModule module) {
-        ImmutableList.Builder<Sentence> sentences = ImmutableList.builder()
-        for (int i = 0; i < 3; i++) {
-            sentences.add(sampleSentence())
-        }
+        def sentences = Iterator.range(0, 3).map({i -> sampleSentence()}).toList()
         return new Document(
                 new DocumentMetaData("Test document", "Test author", "Test source",
                 new GregorianCalendar(2017, 6, 4),
                 new GregorianCalendar(2010, 2, 1),
                 module.getId()),
-                sentences.build())
+                sentences)
     }
 
     static sampleDocumentForXml() {
@@ -78,7 +80,7 @@ final class TestUtils {
                 new DocumentMetaData("Wuppi Fluppi", "Hans Wurst", "http://example.com",
                         new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
                         new GregorianCalendar(2016, Calendar.DECEMBER, 01),
-                        new ModuleId("test-module")), ImmutableList.copyOf([s1, s2]))
+                        new ModuleId("test-module")), List.ofAll([s1, s2]))
         return document
     }
 
@@ -88,10 +90,10 @@ final class TestUtils {
                         new GregorianCalendar(2016, Calendar.NOVEMBER, 30),
                         new GregorianCalendar(2016, Calendar.DECEMBER, 01),
                         new ModuleId("test-module")),
-                ImmutableList.copyOf(sentences))
+                List.ofAll(sentences))
     }
 
-    static List<DocumentClassification> classificationsForDocument(Document document) {
+    static java.util.List<DocumentClassification> classificationsForDocument(Document document) {
         def c = document.addClassification(new ModuleId("a"), ImmutableList.copyOf([
                 ClassificationValue.of(1),
                 ClassificationValue.of(0.9, 0.95)

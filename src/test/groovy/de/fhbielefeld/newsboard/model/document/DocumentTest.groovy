@@ -1,15 +1,16 @@
 package de.fhbielefeld.newsboard.model.document
 
 import de.fhbielefeld.newsboard.TestUtils
+import io.vavr.collection.List
 import spock.lang.Specification
 
 class DocumentTest extends Specification {
 
     def "should test for equality"() {
         given:
-        def doc1 = TestUtils.emptyDocument(42, Collections.emptyList())
-        def doc2 = TestUtils.emptyDocument(12, Collections.emptyList())
-        def doc3 = TestUtils.emptyDocument(42, Collections.emptyList())
+        def doc1 = TestUtils.emptyDocument(42, List.of())
+        def doc2 = TestUtils.emptyDocument(12, List.of())
+        def doc3 = TestUtils.emptyDocument(42, List.of())
         def sent = new Sentence(42, 1, "Foo bar.")
 
         expect:
