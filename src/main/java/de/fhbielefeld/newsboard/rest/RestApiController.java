@@ -82,7 +82,8 @@ public class RestApiController {
         ExternalModule crawler = authenticationResult.get();
         try {
             xmlReader.readDocument(new StringReader(body), (title, author, source, creationTime, crawlTime, rawText) -> {
-                RawDocument rawDocument = new RawDocument(title, author, source, creationTime, crawlTime, crawler.getId(), rawText);
+                DocumentMetaData documentMetaData = new DocumentMetaData(title, author, source, creationTime, crawlTime, crawler.getId());
+                RawDocument rawDocument = new RawDocument(documentMetaData, rawText);
                 Document document = documentProcessor.processDocument(rawDocument);
                 documentDao.create(document);
             });

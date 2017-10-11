@@ -25,8 +25,8 @@ class RawDocumentProcessorTest extends Specification {
 
     def "should create document from raw"() {
         given:
-        def raw = new RawDocument("Die Entdeckung des Nichts", "Hans Wurst",
-                null, null, null, null, exampleText)
+        def raw = new RawDocument(new DocumentMetaData("Die Entdeckung des Nichts", "Hans Wurst",
+                null, null, null, null), exampleText)
 
         when:
         def doc = tokenizer.processDocument(raw)

@@ -23,7 +23,7 @@ public class AccessDaoMysql implements AccessDao {
             "INSERT INTO access (access_id, role_id, passphrase, hash_type, enabled) VALUES (?, ?, ?, ?, ?)";
 
     private final RowMapper<Access> rowMapper = (resultSet, i) -> new Access(
-            resultSet.getString("access_id"),
+            new AccessId(resultSet.getString("access_id")),
             new AccessRole(resultSet.getString("role_id")),
             resultSet.getString("passphrase"),
             resultSet.getString("hash_type"),

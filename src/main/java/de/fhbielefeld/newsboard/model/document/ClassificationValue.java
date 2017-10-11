@@ -1,6 +1,7 @@
 package de.fhbielefeld.newsboard.model.document;
 
 import de.fhbielefeld.newsboard.model.ValueObject;
+import lombok.Getter;
 
 /**
  * A single classification value consisting of
@@ -14,7 +15,9 @@ public class ClassificationValue implements ValueObject {
     private static final ClassificationValue NEUTRAL = new ClassificationValue(0, DEFAULT_CONFIDENCE);
     private static final ClassificationValue NEGATIVE = new ClassificationValue(-1, DEFAULT_CONFIDENCE);
 
+    @Getter
     private final double value;
+    @Getter
     private final double confidence;
 
     public static ClassificationValue of(double value) {
@@ -48,13 +51,5 @@ public class ClassificationValue implements ValueObject {
 
     public double effectiveValue() {
         return value * confidence;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public double getConfidence() {
-        return confidence;
     }
 }

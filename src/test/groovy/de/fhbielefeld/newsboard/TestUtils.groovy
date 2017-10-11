@@ -43,7 +43,7 @@ final class TestUtils {
     }
 
     static sampleModule() {
-        new ExternalModule("test_module", "Test module", "Tester", "Module for testing purpose", new AccessId("test-access"))
+        new ExternalModule(new ModuleId("test_module"), "Test module", "Tester", "Module for testing purpose", new AccessId("test-access"))
     }
 
     static sampleSentence() {
@@ -55,7 +55,7 @@ final class TestUtils {
     }
 
     static sampleAccess() {
-        return new Access("test-access", new AccessRole("crawler"), "passphrase", "plain", true)
+        return new Access(new AccessId("test-access"), new AccessRole("crawler"), "passphrase", "plain", true)
     }
 
     static sampleDocumentForDb(ExternalModule module) {

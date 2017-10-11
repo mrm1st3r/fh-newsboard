@@ -1,12 +1,14 @@
 package de.fhbielefeld.newsboard.model.document;
 
 import de.fhbielefeld.newsboard.model.Entity;
+import lombok.Getter;
 
 /**
  * Domain class representing a sentence inside a classifiable document.
  *
  * @author Felix Meyer, Lukas Taake
  */
+@Getter
 public class Sentence implements Entity<Document> {
     private int id;
     private final int number;
@@ -24,22 +26,10 @@ public class Sentence implements Entity<Document> {
         this.text = text;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setId(int id) {
         if (this.id != -1) {
             throw new IllegalStateException("Sentence has already an ID assigned");
         }
         this.id = id;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public String getText() {
-        return text;
     }
 }

@@ -1,72 +1,20 @@
 package de.fhbielefeld.newsboard.model.access;
 
 import de.fhbielefeld.newsboard.model.Aggregate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * An access contains login credentials and an access role
  * for authenticating and authorizing a user.
  */
+@Data
+@AllArgsConstructor
 public class Access implements Aggregate<Access> {
 
     private final AccessId id;
     private final AccessRole role;
     private String passphrase;
     private String hashType;
-    private boolean enabled;
-
-    public Access(String id, AccessRole role, String passphrase, String hashType, boolean enabled) {
-        this.id = new AccessId(id);
-        this.role = role;
-        this.passphrase = passphrase;
-        this.hashType = hashType;
-        this.enabled = enabled;
-    }
-
-    public AccessId getId() {
-        return id;
-    }
-
-    public String getPassphrase() {
-        return passphrase;
-    }
-
-    public void setPassphrase(String passphrase) {
-        this.passphrase = passphrase;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getHashType() {
-        return hashType;
-    }
-
-    public void setHashType(String hashType) {
-        this.hashType = hashType;
-    }
-
-    public AccessRole getRole() {
-        return role;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Access)) {
-            return false;
-        }
-        Access that = (Access) obj;
-        return this.getId().equals(that.getId())
-                && this.passphrase.equals(that.passphrase)
-                && this.enabled == that.enabled;
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode() + getPassphrase().hashCode() + getHashType().hashCode();
-    }
+    private boolean isEnabled;
 }

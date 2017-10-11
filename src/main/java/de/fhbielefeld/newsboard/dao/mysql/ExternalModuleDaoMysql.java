@@ -23,7 +23,7 @@ public class ExternalModuleDaoMysql implements ExternalModuleDao {
             "INSERT INTO module(title, author, description, access_id, module_id) VALUES (?, ?, ?, ?, ?)";
 
     private final RowMapper<ExternalModule> rowMapper = (resultSet, i) -> new ExternalModule(
-            resultSet.getString("module_id"),
+            new ModuleId(resultSet.getString("module_id")),
             resultSet.getString("title"),
             resultSet.getString("author"),
             resultSet.getString("description"),

@@ -7,12 +7,14 @@ class AccessTest extends Specification {
 
     def "should correctly check equality"() {
         given:
+        def id1 = new AccessId("access-1")
+        def id2 = new AccessId("access-2")
         AccessRole role = new AccessRole("crawler")
-        Access a1 = new Access("access-1", role, "password", "plain", true)
-        Access a2 = new Access("access-1", role, "password", "plain", true)
-        Access a3 = new Access("access-2", role, "password", "plain", true)
-        Access a4 = new Access("access-2", role, "password1", "plain", true)
-        Access a5 = new Access("access-2", role, "password1", "plain", false)
+        Access a1 = new Access(id1, role, "password", "plain", true)
+        Access a2 = new Access(id1, role, "password", "plain", true)
+        Access a3 = new Access(id2, role, "password", "plain", true)
+        Access a4 = new Access(id2, role, "password1", "plain", true)
+        Access a5 = new Access(id2, role, "password1", "plain", false)
 
         expect:
         a1 == a2
