@@ -64,13 +64,13 @@ final class TestUtils {
     }
 
     static sampleDocumentForDb(ExternalModule module) {
-        List<Sentence> sentences = Iterator.range(0, 3).map({i -> sampleSentence()}).toList()
+        def sentences = Iterator.range(0, 3).map({i -> sampleSentence()}).toList()
         return new Document(
                 new DocumentMetaData("Test document", "Test author", "Test source",
                 new GregorianCalendar(2017, 6, 4),
                 new GregorianCalendar(2010, 2, 1),
                 module.getId()),
-                sentences)
+                List.ofAll(sentences))
     }
 
     static sampleDocumentForXml() {
