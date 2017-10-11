@@ -8,6 +8,7 @@ import de.fhbielefeld.newsboard.model.access.AccessId
 import de.fhbielefeld.newsboard.model.document.*
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao
+import de.fhbielefeld.newsboard.model.module.ModuleId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -52,7 +53,7 @@ class ClassificationDaoIntegrationTest extends Specification {
     def "should find for document"() {
         given:
         ExternalModule additionalModule = new ExternalModule(
-                "additional_testing_module", "", "", "", new AccessId("test-access"))
+                new ModuleId("additional_testing_module"), "", "", "", new AccessId("test-access"))
         externalModuleDao.create(additionalModule)
         moduleIds.add(additionalModule.getId().raw())
 
