@@ -34,9 +34,9 @@ public class AverageClassificationService implements de.fhbielefeld.newsboard.mo
         double average = classifications
                 .stream()
                 .mapToDouble(c -> c.getValues()
-                        .stream()
-                        .mapToDouble(ClassificationValue::effectiveValue)
-                        .average().orElse(0))
+                        .map(ClassificationValue::effectiveValue)
+                        .average()
+                        .getOrElse(0.0))
                 .average().orElse(0);
         return ClassificationValue.of(average);
     }

@@ -1,16 +1,10 @@
 package de.fhbielefeld.newsboard
 
-import com.google.common.collect.ImmutableList
 import de.fhbielefeld.newsboard.model.ExternalDocument
 import de.fhbielefeld.newsboard.model.access.Access
 import de.fhbielefeld.newsboard.model.access.AccessId
 import de.fhbielefeld.newsboard.model.access.AccessRole
-import de.fhbielefeld.newsboard.model.document.ClassificationValue
-import de.fhbielefeld.newsboard.model.document.Document
-import de.fhbielefeld.newsboard.model.document.DocumentClassification
-import de.fhbielefeld.newsboard.model.document.DocumentId
-import de.fhbielefeld.newsboard.model.document.DocumentMetaData
-import de.fhbielefeld.newsboard.model.document.Sentence
+import de.fhbielefeld.newsboard.model.document.*
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ModuleId
 import io.vavr.collection.Iterator
@@ -94,10 +88,10 @@ final class TestUtils {
     }
 
     static java.util.List<DocumentClassification> classificationsForDocument(Document document) {
-        def c = document.addClassification(new ModuleId("a"), ImmutableList.copyOf([
+        def c = document.addClassification(new ModuleId("a"), List.of(
                 ClassificationValue.of(1),
                 ClassificationValue.of(0.9, 0.95)
-        ]))
+        ))
         return Collections.singletonList(c)
     }
 }

@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.dao
 
-import com.google.common.collect.ImmutableList
 import de.fhbielefeld.newsboard.NewsboardApplication
 import de.fhbielefeld.newsboard.TestUtils
 import de.fhbielefeld.newsboard.model.access.AccessDao
@@ -9,6 +8,7 @@ import de.fhbielefeld.newsboard.model.document.*
 import de.fhbielefeld.newsboard.model.module.ExternalModule
 import de.fhbielefeld.newsboard.model.module.ExternalModuleDao
 import de.fhbielefeld.newsboard.model.module.ModuleId
+import io.vavr.collection.List
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -28,9 +28,9 @@ class ClassificationDaoIntegrationTest extends Specification {
     @Autowired
     AccessDao accessDao
 
-    List<String> moduleIds
-    List<Integer> documentIds
-    List<Integer> sentenceIds
+    ArrayList<String> moduleIds
+    ArrayList<Integer> documentIds
+    ArrayList<Integer> sentenceIds
 
     Document dummyDocument
     ExternalModule dummyModule
@@ -61,14 +61,14 @@ class ClassificationDaoIntegrationTest extends Specification {
                 dummyDocument.getId(),
                 null,
                 dummyModule.getId(),
-                ImmutableList.copyOf([
+                List.of(
                         ClassificationValue.of(1),
                         ClassificationValue.of(-1)
-                ]))
+                ))
         classificationDao.create(classification)
 
         when:
-        List<DocumentClassification> actual = classificationDao.findForDocument(dummyDocument)
+        java.util.List<DocumentClassification> actual = classificationDao.findForDocument(dummyDocument)
 
         then:
         actual.size() == 1

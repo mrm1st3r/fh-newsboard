@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.rest;
 
-import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.access.Access;
 import de.fhbielefeld.newsboard.model.access.AccessDao;
 import de.fhbielefeld.newsboard.model.document.*;
@@ -138,7 +137,7 @@ public class RestApiController {
             return handleAuthenticationError(response);
         }
         ExternalModule classifier = authenticationResult.get();
-        ImmutableList.Builder<ClassificationValue> values = ImmutableList.builder();
+        io.vavr.collection.List<ClassificationValue> values = io.vavr.collection.List.of();
         StringReader in = new StringReader(body);
         try {
             xmlReader.readClassifications(in,
@@ -146,9 +145,9 @@ public class RestApiController {
                         @Override
                         public void onValueParsed(double value, OptionalDouble confidence) {
                             if (confidence.isPresent()) {
-                                values.add(ClassificationValue.of(value, confidence.getAsDouble()));
+                                values.prepend(ClassificationValue.of(value, confidence.getAsDouble()));
                             } else {
-                                values.add(ClassificationValue.of(value));
+                                values.prepend(ClassificationValue.of(value));
                             }
                         }
 
@@ -158,7 +157,7 @@ public class RestApiController {
                                 handleClientError(response, new Exception("Authentication doesn't match supplied classifier name"));
                             }
                             Document document = documentDao.get(new DocumentId(documentId));
-                            DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values.build());
+                            DocumentClassification classification = document.addClassification(new ModuleId(classifierId), values);
                             classificationDao.create(classification);
                         }
                     });

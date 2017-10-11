@@ -1,6 +1,5 @@
 package de.fhbielefeld.newsboard.model.document;
 
-import com.google.common.collect.ImmutableList;
 import de.fhbielefeld.newsboard.model.Aggregate;
 import de.fhbielefeld.newsboard.model.module.ModuleId;
 import io.vavr.collection.List;
@@ -32,7 +31,7 @@ public class Document implements Aggregate<Document> {
         return new Document(new DocumentId(id), this.metaData, this.sentences);
     }
 
-    public DocumentClassification addClassification(ModuleId module, ImmutableList<ClassificationValue> values) {
+    public DocumentClassification addClassification(ModuleId module, List<ClassificationValue> values) {
         return new DocumentClassification(getId(), null, module, values);
     }
 }
