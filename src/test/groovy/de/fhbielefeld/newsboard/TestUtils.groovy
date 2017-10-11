@@ -64,7 +64,7 @@ final class TestUtils {
     }
 
     static sampleDocumentForDb(ExternalModule module) {
-        def sentences = Iterator.range(0, 3).map({i -> sampleSentence()}).toList()
+        List<Sentence> sentences = Iterator.range(0, 3).map({i -> sampleSentence()}).toList()
         return new Document(
                 new DocumentMetaData("Test document", "Test author", "Test source",
                 new GregorianCalendar(2017, 6, 4),
