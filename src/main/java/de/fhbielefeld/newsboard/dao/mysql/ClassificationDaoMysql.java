@@ -79,7 +79,7 @@ public class ClassificationDaoMysql implements ClassificationDao {
                 int documentId = resultSet.getInt("document_id");
                 String moduleId = resultSet.getString("module_id");
                 while (!resultSet.isAfterLast() && classificationId == resultSet.getInt(CLASSIFICATION_ID)) {
-                    values.prepend(ClassificationValue.of(
+                    values = values.prepend(ClassificationValue.of(
                             resultSet.getDouble("classification"),
                             resultSet.getDouble("confidence")
                     ));
