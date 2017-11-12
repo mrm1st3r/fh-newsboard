@@ -76,9 +76,9 @@ class ClassificationDaoIntegrationTest extends Specification {
 
         dc.getModule() == dummyModule.getId()
         dc.values.size() == 2
-        dc.values[0].value == 1
-        dc.values[0].confidence == 1
-        dc.values[1].value == -1
+        dc.values[1].value == 1
+        dc.values[1].confidence == 1
+        dc.values[0].value == -1
 
         noExceptionThrown()
     }
