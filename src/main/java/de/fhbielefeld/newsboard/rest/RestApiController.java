@@ -10,9 +10,8 @@ import de.fhbielefeld.newsboard.xml.ClassificationParsedHandler;
 import de.fhbielefeld.newsboard.xml.XmlDocumentReader;
 import de.fhbielefeld.newsboard.xml.XmlDocumentWriter;
 import de.fhbielefeld.newsboard.xml.XmlException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +24,12 @@ import java.util.*;
 
 /**
  * Controller for REST-Api.
- *
- * @author Lukas Taake
  */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/rest")
 public class RestApiController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestApiController.class);
 
     private final XmlDocumentReader xmlReader;
     private final XmlDocumentWriter xmlWriter;
@@ -41,18 +38,6 @@ public class RestApiController {
     private final AccessDao accessDao;
     private final ExternalModuleDao moduleDao;
     private final ClassificationDao classificationDao;
-
-    @Autowired
-    public RestApiController(XmlDocumentReader xmlReader, XmlDocumentWriter xmlWriter, RawDocumentProcessor documentProcessor,
-                             DocumentDao documentDao, AccessDao accessDao, ExternalModuleDao moduleDao, ClassificationDao classificationDao) {
-        this.xmlReader = xmlReader;
-        this.xmlWriter = xmlWriter;
-        this.documentProcessor = documentProcessor;
-        this.documentDao = documentDao;
-        this.accessDao = accessDao;
-        this.moduleDao = moduleDao;
-        this.classificationDao = classificationDao;
-    }
 
     /**
      * Print out a list of all documents, containing only their metadata.
@@ -164,7 +149,7 @@ public class RestApiController {
         } catch (Exception e) {
             return handleClientError(response, e);
         }
-        LOGGER.info("Added new classification");
+        log.info("Added new classification");
         return "OK";
     }
 
@@ -186,13 +171,13 @@ public class RestApiController {
     }
 
     private String handleClientError(HttpServletResponse response, Exception e) {
-        LOGGER.warn("Client error: {}", e.getMessage());
+        log.warn("Client error: {}", e.getMessage());
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "FAILED: " + e.getMessage();
     }
 
     private String handleServerError(HttpServletResponse response, XMLStreamException e) {
-        LOGGER.warn("Server error occurred", e);
+        log.warn("Server error occurred", e);
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return "Internal Error: " + e.getMessage();
     }

@@ -1,7 +1,7 @@
 package de.fhbielefeld.newsboard.frontend;
 
 import de.fhbielefeld.newsboard.model.document.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +14,7 @@ import java.util.Map;
  * Controller for frontend requests
  */
 @Controller
+@RequiredArgsConstructor
 public class FrontendController {
 
     private static final int DOCUMENTS_PER_PAGE = 10;
@@ -24,12 +25,6 @@ public class FrontendController {
 
     private final DocumentDao documentDao;
     private final AverageClassificationService classificationService;
-
-    @Autowired
-    public FrontendController(DocumentDao documentDao, AverageClassificationService classificationService) {
-        this.documentDao = documentDao;
-        this.classificationService = classificationService;
-    }
 
     /**
      * Start page displaying the latest 10 documents and their average classification.

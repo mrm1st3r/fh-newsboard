@@ -1,6 +1,6 @@
 package de.fhbielefeld.newsboard.model.document;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,15 +10,11 @@ import java.util.Map;
 /**
  * Service to calculate average classification for documents.
  */
+@RequiredArgsConstructor
 @Service
 public class AverageClassificationService implements de.fhbielefeld.newsboard.model.Service {
 
     private final ClassificationDao classificationDao;
-
-    @Autowired
-    public AverageClassificationService(ClassificationDao classificationDao) {
-        this.classificationDao = classificationDao;
-    }
 
     public Map<Document, ClassificationValue> calculateAverageFor(List<Document> documents) {
         Map<Document, ClassificationValue> mapping = new HashMap<>();
